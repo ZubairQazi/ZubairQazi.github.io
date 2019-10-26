@@ -9,6 +9,14 @@ h1 {
   font-size: 85px;
 }
 
+.pic_center {
+  display: block;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+}
+
 p {
   color: #EDF5E1;
   text-align: center;
