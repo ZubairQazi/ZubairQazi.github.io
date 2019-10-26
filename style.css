@@ -15,3 +15,14 @@ p {
   font-family: 'Gravity-Regular';
   font-size: 25px;
 }
+
+.socialIcons li a img {
+   vertical-align: middle;
+   padding: 5px;
+   height: 40px;
+}
+.centerLinks {
+   padding: 0px;
+   margin: 0px;
+   text-align: center;
+}
