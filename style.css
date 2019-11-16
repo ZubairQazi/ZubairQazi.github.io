@@ -10,6 +10,14 @@ h1 {
   font-size: 85px;
 }
 
+.navbutton {
+    color: #EDF5E1;
+    text-decoration: none;
+    padding: 10px;
+    font-family: 'Gravity-Bold';
+    font-size: 20px;
+}
+
 .aboutme {
   font-family: "Gravity-Regular";
   color: #EDF5E1;
