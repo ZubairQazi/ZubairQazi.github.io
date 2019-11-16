@@ -11,6 +11,7 @@ h1 {
 }
 
 .aboutme {
+  font-family: "Gravity-Regular";
   color: #EDF5E1;
   text-align: center;
   padding-left: 200px;
@@ -21,6 +22,7 @@ h1 {
 .pic_center {
   display: block;
   border-radius: 50%;
+  border-style: inset;
   margin-left: auto;
   margin-right: auto;
   width: 20%;
@@ -34,8 +36,12 @@ h1 {
 }
 
 .socialIcons li a img {
+   display: block;
+   border-radius: 50%;
+   border-style: outset;
+   border-color: black;
    vertical-align: middle;
-   padding: 5px;
+   /* padding: 5px; */
    height: 40px;
 }
 .centerLinks {
