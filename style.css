@@ -10,6 +10,23 @@ h1 {
   font-size: 85px;
 }
 
+nav {
+ display: block;
+ width: 100%;
+ position: fixed;
+ top: 0px;
+ /* height: 500px; */
+}
+
+nav ul {
+    list-style: none;
+    padding-left: 0px;
+}
+
+nav ul li {
+    float: left;
+}
+
 .navbutton {
     color: #EDF5E1;
     text-decoration: none;
