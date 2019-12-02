@@ -85,7 +85,8 @@ nav ul li {
    text-align: center;
 }
 .resume {
-  width: 820px;
+  /* width: 1050px; */
   margin-left: auto ;
   margin-right: auto ;
+  text-align: center;
 }
