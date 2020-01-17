@@ -46,12 +46,39 @@ nav ul li {
 }
 
 .aboutme {
-  font-family: "Gravity-Regular";
-  color: #EDF5E1;
-  text-align: center;
-  padding-left: 200px;
-  padding-right: 200px;
-  font-size: 20px;
+    font-family: "Gravity-Regular";
+    color: #EDF5E1;
+    text-align: center;
+    padding-left: 200px;
+    padding-right: 200px;
+    font-size: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius:15px;
+    padding: 2px 16px;
+    width:60%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 30px; 
+}
+
+.interests {
+    font-family: "Gravity-Regular";
+    color: #EDF5E1;
+    text-align: center;
+    padding-left: 200px;
+    padding-right: 200px;
+    font-size: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius:15px;
+    padding: 2px 16px;
+    width:60%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 30px;    
 }
 
 .pic_center {
@@ -78,7 +105,7 @@ nav ul li {
    vertical-align: middle;
    /* padding: 5px; */
    height: 40px;
-}
+}
 .centerLinks {
    padding: 0px;
    margin: 0px;
