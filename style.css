@@ -64,6 +64,10 @@ nav ul li {
     margin-bottom: 30px;
 }
 
+.aboutme:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
 .interests {
     font-family: "Gravity-Regular";
     color: #EDF5E1;
@@ -81,6 +85,10 @@ nav ul li {
     left: 50%;
     transform: translateX(-50%);
     margin-bottom: 30px;    
+}
+
+.interests:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
 .pic_center {
