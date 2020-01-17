@@ -48,6 +48,7 @@ nav ul li {
 .aboutme {
     font-family: "Gravity-Regular";
     color: #EDF5E1;
+    background-color: #14b76a;
     text-align: center;
     padding-left: 200px;
     padding-right: 200px;
@@ -60,12 +61,13 @@ nav ul li {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    margin-bottom: 30px; 
+    margin-bottom: 30px;
 }
 
 .interests {
     font-family: "Gravity-Regular";
     color: #EDF5E1;
+    background-color: #14b76a;
     text-align: center;
     padding-left: 200px;
     padding-right: 200px;
@@ -88,6 +90,7 @@ nav ul li {
   margin-left: auto;
   margin-right: auto;
   width: 20%;
+  margin-bottom: 30px;
 }
 
 .links {
