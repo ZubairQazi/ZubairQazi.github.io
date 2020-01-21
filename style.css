@@ -45,7 +45,7 @@ nav ul li {
     font-size: 20px;
 }
 
-.aboutme {
+.card {
     font-family: "Gravity-Regular";
     color: #EDF5E1;
     background-color: #14b76a;
@@ -64,30 +64,7 @@ nav ul li {
     margin-bottom: 30px;
 }
 
-.aboutme:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-}
-
-.interests {
-    font-family: "Gravity-Regular";
-    color: #EDF5E1;
-    background-color: #14b76a;
-    text-align: center;
-    padding-left: 200px;
-    padding-right: 200px;
-    font-size: 20px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    border-radius:15px;
-    padding: 2px 16px;
-    width:60%;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-bottom: 30px;    
-}
-
-.interests:hover {
+.card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
