@@ -47,8 +47,9 @@ nav ul li {
 
 .card {
     font-family: "Gravity-Regular";
-    color: #EDF5E1;
-    background-color: #14b76a;
+    color: #262822;
+    background-color: #ffe47c;
+    /* background-color: #14b76a; */
     text-align: center;
     padding-left: 200px;
     padding-right: 200px;
@@ -62,10 +63,11 @@ nav ul li {
     left: 50%;
     transform: translateX(-50%);
     margin-bottom: 30px;
+    line-height: 1.5
 }
 
 .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
 }
 
 .pic_center {
