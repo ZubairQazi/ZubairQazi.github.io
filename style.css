@@ -73,7 +73,7 @@ nav ul li {
 .pic_center {
   display: block;
   border-radius: 50%;
-  border-style: inset;
+  border-style: solid;
   margin-left: auto;
   margin-right: auto;
   width: 20%;
@@ -90,7 +90,7 @@ nav ul li {
 .socialIcons li a img {
    display: block;
    border-radius: 50%;
-   border-style: outset;
+   border-style: solid;
    border-color: black;
    vertical-align: middle;
    /* padding: 5px; */
