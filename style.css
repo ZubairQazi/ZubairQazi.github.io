@@ -58,8 +58,8 @@ nav ul li {
   background-color: #ffe47c;
   /* background-color: #14b76a; */
   text-align: center;
-  padding-left: 200px;
-  padding-right: 200px;
+  padding-left: 400px;
+  padding-right: 400px;
   font-size: 20px;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
@@ -83,7 +83,7 @@ nav ul li {
   border-style: solid;
   margin-left: auto;
   margin-right: auto;
-  width: 20%;
+  width: 25%;
   margin-bottom: 30px;
 }
 
