@@ -53,4 +53,6 @@ freeline_project_description.json
 
 .DS_Store
 
+node_modules/
+
 # End of https://www.gitignore.io/api/reactnative
