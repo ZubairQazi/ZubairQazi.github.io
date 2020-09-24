@@ -11,5 +11,6 @@ deploy:
   skip_cleanup: true
   github_token: $GH_ACCESS_TOKEN
   local_dir: build
+  fqdn: zubairqazi.com
   on:
     branch: master
