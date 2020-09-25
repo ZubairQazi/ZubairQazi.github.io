@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 
-class Header extends React.Component {
+class HeaderNav extends React.Component {
   
   constructor(props) {
     super(props);
@@ -50,4 +50,4 @@ class Header extends React.Component {
   }
 }
 
-export default Header;
+export default HeaderNav;
