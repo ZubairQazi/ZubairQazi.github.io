@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
+
 import HeaderNav from './components/HeaderNav';
+import Footer from './components/Footer';
 
 class App extends React.Component {
 
@@ -8,6 +10,7 @@ class App extends React.Component {
     return (
       <div className='App'>
         <HeaderNav/>
+        <Footer/>
       </div>
     );
   }
