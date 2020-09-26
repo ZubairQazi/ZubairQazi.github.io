@@ -1,10 +1,14 @@
 import React from 'react';
-import {BrowserRouter as Router, /*Route,*/ Link } from 'react-router-dom';
+import {BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 
-class HeaderNav extends React.Component {
+import Home from './Home';
+import About from './About';
+import Contact from './Contact';
+
+class Header extends React.Component {
   
   constructor(props) {
     super(props);
@@ -44,10 +48,13 @@ class HeaderNav extends React.Component {
               </Nav>
             </Navbar.Collapse>
           </Navbar>
+          <Route path='/' exact render={() => <Home title={this.state.home.title}/>} />
+          <Route path='/about' render={() => <About title={this.state.about.title}/>} />
+          <Route path='/contact' render={() => <Contact title={this.state.contact.title}/>} />
         </Container>
       </Router>
     );
   }
 }
 
-export default HeaderNav;
+export default Header;
