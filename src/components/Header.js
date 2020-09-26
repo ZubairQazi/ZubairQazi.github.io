@@ -7,6 +7,7 @@ import Nav from 'react-bootstrap/Nav';
 import Home from './Home';
 import About from './About';
 import Contact from './Contact';
+import Projects from './Projects';
 
 class Header extends React.Component {
   
@@ -17,6 +18,7 @@ class Header extends React.Component {
       headerLinks: [
         { title: 'Home', path: '/' },
         { title: 'About', path: '/about' },
+        { title: 'Projects', path: '/projects' },
         { title: 'Contact', path: '/contact' } 
       ],
       home: {
@@ -26,6 +28,9 @@ class Header extends React.Component {
       },
       about: {
         title: 'About Me'
+      },
+      projects: {
+        title: 'Projects'
       },
       contact: {
         title: 'Contact Me'
@@ -44,12 +49,14 @@ class Header extends React.Component {
               <Nav className='ml-auto'>
                 <Link className='nav-link' to='/'>Home</Link>
                 <Link className='nav-link' to='/about'>About</Link>
+                <Link className='nav-link' to='/projects'>Projects</Link>
                 <Link className='nav-link' to='/contact'>Contact</Link>
               </Nav>
             </Navbar.Collapse>
           </Navbar>
           <Route path='/' exact render={() => <Home title={this.state.home.title}/>} />
           <Route path='/about' render={() => <About title={this.state.about.title}/>} />
+          <Route path='/projects' render={() => <Projects title={this.state.projects.title}/>} />
           <Route path='/contact' render={() => <Contact title={this.state.contact.title}/>} />
         </Container>
       </Router>

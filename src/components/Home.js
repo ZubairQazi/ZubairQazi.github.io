@@ -9,7 +9,7 @@ class Home extends React.Component {
         <Typist>
           <span> I'm Zubair! </span>
           <Typist.Backspace count={12} delay={1000} />
-          <span> Check out my projects! </span>
+          <span> Check out my Portfolio! </span>
         </Typist>
 
       </h1>
