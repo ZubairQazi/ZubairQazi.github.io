@@ -1,5 +1,7 @@
 import React from 'react';
+
 import Typist from 'react-typist';
+
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
