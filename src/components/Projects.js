@@ -7,8 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-
-class Contact extends React.Component {
+class Projects extends React.Component {
 
   render() {
 
@@ -20,7 +19,7 @@ class Contact extends React.Component {
               <Col md={10} sm={12}>
                 <h1 className='display-3 font-weight-bolder'>
                   <Typist cursor={{ hideWhenDone: true }}>
-                    <span> Contact Me </span>
+                    <span> My Projects! </span>
                   </Typist>
                 </h1>
               </Col>
@@ -28,9 +27,8 @@ class Contact extends React.Component {
           </Container>
         </Jumbotron>
       </div>
-
     );
   }
 }
 
-export default Contact;
+export default Projects;
