@@ -58,8 +58,8 @@ class Home extends React.Component {
         <Container fluid={true}>
           <Row className='justify-content-center'> 
             <Col xs={6} md={4}>
-              <a href='https://github.com/ZubairQazi' target='_blank'> <Image src={gh} rounded /> </a>
-              <a href='https://www.linkedin.com/in/zubair-qazi' target='_blank'> <Image src={li} rounded /> </a>
+              <a href='https://github.com/ZubairQazi' target='_blank' rel="noopener noreferrer"> <Image src={gh} rounded /> </a>
+              <a href='https://www.linkedin.com/in/zubair-qazi' target='_blank' rel="noopener noreferrer"> <Image src={li} rounded /> </a>
             </Col>
           </Row>
         </Container>
