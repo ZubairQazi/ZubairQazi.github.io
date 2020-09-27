@@ -13,6 +13,8 @@ import TabContainer from 'react-bootstrap/TabContainer';
 import TabPane from 'react-bootstrap/TabPane';
 import Nav from 'react-bootstrap/Nav';
 import Image from 'react-bootstrap/Image';
+import CardDeck from 'react-bootstrap/CardDeck';
+import CardColumns from 'react-bootstrap/CardColumns';
 
 import pfp from '../images/pfp.jpg';
 import gh from '../images/github.png';
@@ -73,15 +75,68 @@ class Projects extends React.Component {
             </Col>
           </Row>
         </Tab.Container> 
-        <Container fluid={true}>
-          <Row className='justify-content-center'> 
-            <Col xs={6} md={4}>
-              <a href='https://github.com/ZubairQazi' target='_blank' rel="noopener noreferrer"> <Image src={gh} rounded /> </a>
-              <a href='https://www.linkedin.com/in/zubair-qazi' target='_blank' rel="noopener noreferrer"> <Image src={li} rounded /> </a>
-            </Col>
-          </Row>
-        </Container>
       </div>
+    );
+  }
+}
+
+class CardDeckTest extends React.Component {
+  
+  render() {
+    return(
+      <Container>
+        <Row className='justify-content-center'> 
+          <CardDeck>
+            <Card style={{ width: '20rem' }}>
+              <Card.Img variant='top' src='holder.js/100px180' />
+              <Card.Body>
+                <Card.Title>Card Title</Card.Title>
+                <Card.Text>
+                  Some quick example text to build on the card title and make up the bulk of
+                  the card's content.
+                </Card.Text>
+              </Card.Body>
+              <Card.Footer>
+                <Nav justify variant='pills' className='justify-content-center'>
+                  <Nav.Item>
+                    <Nav.Link href='#link1'>Website</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link href='#link2'>GitHub</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Card.Footer>
+            </Card>
+            <Card style={{ width: '20rem' }}>
+              <Card.Img variant='top' src='holder.js/100px180' />
+              <Card.Body>
+                <Card.Title>Card Title</Card.Title>
+                <Card.Text>
+                  Some quick example text to build on the card title and make up the bulk of
+                  the card's content.
+                </Card.Text>
+              </Card.Body>
+              <Card.Footer>
+                <Nav className='justify-content-center'>
+                  <Nav.Item>
+                    <Nav.Link href='#link2'>GitHub</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Card.Footer>
+            </Card>
+            <Card style={{ width: '20rem' }}>
+              <Card.Img variant='top' src='holder.js/100px180' />
+              <Card.Body>
+                <Card.Title>Card Title</Card.Title>
+                <Card.Text>
+                  Some quick example text to build on the card title and make up the bulk of
+                  the card's content.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </CardDeck>
+        </Row>
+      </Container> 
     );
   }
 }
@@ -89,44 +144,49 @@ class Projects extends React.Component {
 class PyProjects extends React.Component {
   render() {
     return(
-      <Container fluid={true}>
+      <Container>
         <Row className='justify-content-center'> 
-          <Col>
+          <CardDeck>
             <Card style={{ width: '20rem' }}>
               <Card.Img variant='top' src='holder.js/100px180' />
               <Card.Body>
-                <Card.Title>Card Title</Card.Title>
+                <Card.Title as='h4'> Linear Regression Model </Card.Title>
                 <Card.Text>
-                  Some quick example text to build on the card title and make up the bulk of
-                  the card's content.
+                  My implementation of a linear regression model, 
+                  which currently uses a static learning rate and epoch.
+                  Written in Jupyter using numpy, pandas, matplotlib, 
+                  and sklearn datasets.
                 </Card.Text>
               </Card.Body>
-            </Card>
-          </Col>
-          <Col>
+              <Card.Footer>
+                <Nav className='justify-content-center'>
+                  <Nav.Item>
+                    <Nav.Link href='#link2'>GitHub</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Card.Footer>
+            </Card>            
             <Card style={{ width: '20rem' }}>
               <Card.Img variant='top' src='holder.js/100px180' />
               <Card.Body>
-                <Card.Title>Card Title</Card.Title>
+                <Card.Title as='h4'> Ecommerce Analysis </Card.Title>
                 <Card.Text>
-                  Some quick example text to build on the card title and make up the bulk of
-                  the card's content.
+                  An analysis of customer-base data, using numpy, 
+                  pandas, matplotlib, and seaborn. I also used the
+                  linear regression model from scikit-learn to 
+                  gauge and compare the success from developing
+                  two different platforms. 
                 </Card.Text>
               </Card.Body>
+              <Card.Footer>
+                <Nav className='justify-content-center'>
+                  <Nav.Item>
+                    <Nav.Link href='#link2'>GitHub</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Card.Footer>
             </Card>
-          </Col>
-          <Col>
-            <Card style={{ width: '20rem' }}>
-              <Card.Img variant='top' src='holder.js/100px180' />
-              <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up the bulk of
-                  the card's content.
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
+          </CardDeck>
         </Row>
       </Container>
     );
