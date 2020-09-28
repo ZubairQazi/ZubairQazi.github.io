@@ -39,7 +39,7 @@ class Projects extends React.Component {
         <Tab.Container id='language-tabs' defaultActiveKey='first'>
           <Row className='justify-content-center py-5'>
             <Col sm={3}>
-            <Nav variant='pills' className='justify-content-center'> 
+            <Nav variant='tabs' className='justify-content-center'> 
                 <Nav.Item>
                   <Nav.Link eventKey='first'>Python</Nav.Link>
                 </Nav.Item>
