@@ -7,18 +7,15 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
-import Tabs from 'react-bootstrap/Tabs'
+import CardDeck from 'react-bootstrap/CardDeck';
 import Tab from 'react-bootstrap/Tab';
-import TabContainer from 'react-bootstrap/TabContainer';
-import TabPane from 'react-bootstrap/TabPane';
 import Nav from 'react-bootstrap/Nav';
 import Image from 'react-bootstrap/Image';
-import CardDeck from 'react-bootstrap/CardDeck';
-import CardColumns from 'react-bootstrap/CardColumns';
 
-import pfp from '../images/pfp.jpg';
-import gh from '../images/github.png';
-import li from '../images/linkedin.png';
+import PyProjects from './projects/PyProjects';
+
+import linreg from '../images/linreg.png';
+import py from '../images/python.png';
 
 class Projects extends React.Component {
 
@@ -137,58 +134,6 @@ class CardDeckTest extends React.Component {
           </CardDeck>
         </Row>
       </Container> 
-    );
-  }
-}
-
-class PyProjects extends React.Component {
-  render() {
-    return(
-      <Container>
-        <Row className='justify-content-center'> 
-          <CardDeck>
-            <Card style={{ width: '20rem' }}>
-              <Card.Img variant='top' src='holder.js/100px180' />
-              <Card.Body>
-                <Card.Title as='h4'> Linear Regression Model </Card.Title>
-                <Card.Text>
-                  My implementation of a linear regression model, 
-                  which currently uses a static learning rate and epoch.
-                  Written in Jupyter using numpy, pandas, matplotlib, 
-                  and sklearn datasets.
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                <Nav className='justify-content-center'>
-                  <Nav.Item>
-                    <Nav.Link href='#link2'>GitHub</Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Card.Footer>
-            </Card>            
-            <Card style={{ width: '20rem' }}>
-              <Card.Img variant='top' src='holder.js/100px180' />
-              <Card.Body>
-                <Card.Title as='h4'> Ecommerce Analysis </Card.Title>
-                <Card.Text>
-                  An analysis of customer-base data, using numpy, 
-                  pandas, matplotlib, and seaborn. I also used the
-                  linear regression model from scikit-learn to 
-                  gauge and compare the success from developing
-                  two different platforms. 
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                <Nav className='justify-content-center'>
-                  <Nav.Item>
-                    <Nav.Link href='#link2'>GitHub</Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Card.Footer>
-            </Card>
-          </CardDeck>
-        </Row>
-      </Container>
     );
   }
 }
