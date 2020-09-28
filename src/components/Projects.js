@@ -38,8 +38,8 @@ class Projects extends React.Component {
         </Jumbotron>
         <Tab.Container id='language-tabs' defaultActiveKey='first'>
           <Row className='justify-content-center'>
-            <Col sm={3}>
-            <Nav variant='tabs' className='justify-content-center'> 
+            <Col sm={6}>
+            <Nav justify variant='tabs' className='justify-content-center'> 
                 <Nav.Item>
                   <Nav.Link eventKey='first'>Python</Nav.Link>
                 </Nav.Item>
