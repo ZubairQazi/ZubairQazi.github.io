@@ -18,9 +18,9 @@ class Projects extends React.Component {
 
     return (
       <div>
-        <Jumbotron className='bg-transparent p-0'>
+        <Jumbotron className='bg-transparent p-5'>
           <Container>
-            <Row className='justify-content-center py-5'>
+            <Row className='justify-content-center'>
               <Col md={10} sm={12}>
                 <h1 className='display-3 font-weight-bolder'>
                   <Typist cursor={{ hideWhenDone: true }}>
@@ -37,7 +37,7 @@ class Projects extends React.Component {
           </Container>
         </Jumbotron>
         <Tab.Container id='language-tabs' defaultActiveKey='first'>
-          <Row className='justify-content-center py-5'>
+          <Row className='justify-content-center'>
             <Col sm={3}>
             <Nav variant='tabs' className='justify-content-center'> 
                 <Nav.Item>
@@ -47,15 +47,15 @@ class Projects extends React.Component {
                   <Nav.Link eventKey='second'>Android</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey='third'>Javascript</Nav.Link>
+                  <Nav.Link eventKey='third' disabled>Javascript</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey='fourth'>C++</Nav.Link>
+                  <Nav.Link eventKey='fourth'disabled >C++</Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>
           </Row>
-          <Row className='justify-content-center py-5'>
+          <Row className='justify-content-center py-5 '>
             <Col sm={9}>
               <Tab.Content>
                 <Tab.Pane eventKey='first'>
