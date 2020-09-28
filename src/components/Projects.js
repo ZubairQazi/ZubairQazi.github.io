@@ -13,6 +13,7 @@ import Nav from 'react-bootstrap/Nav';
 import Image from 'react-bootstrap/Image';
 
 import PyProjects from './projects/PyProjects';
+import AndroidProjects from './projects/AndroidProjects';
 
 import linreg from '../images/linreg.png';
 import py from '../images/python.png';
@@ -67,6 +68,7 @@ class Projects extends React.Component {
                   <PyProjects/>
                 </Tab.Pane>
                 <Tab.Pane eventKey='second'>
+                  <AndroidProjects/>
                 </Tab.Pane>
               </Tab.Content>
             </Col>

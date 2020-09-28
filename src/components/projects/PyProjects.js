@@ -31,7 +31,7 @@ class PyProjects extends React.Component {
               <Card.Footer>
                 <Nav className='justify-content-center'>
                   <Nav.Item>
-                    <Nav.Link >GitHub</Nav.Link>
+                    <Nav.Link href='https://github.com/ZubairQazi/LinearRegressionModel'>GitHub</Nav.Link>
                   </Nav.Item>
                 </Nav>
               </Card.Footer>
@@ -53,7 +53,7 @@ class PyProjects extends React.Component {
               <Card.Footer>
                 <Nav className='justify-content-center'>
                   <Nav.Item>
-                    <Nav.Link href='#link2'>GitHub</Nav.Link>
+                    <Nav.Link href='https://github.com/ZubairQazi/LogisticRegression_DataAnalysis'>GitHub</Nav.Link>
                   </Nav.Item>
                 </Nav>
               </Card.Footer>
@@ -73,7 +73,7 @@ class PyProjects extends React.Component {
               <Card.Footer>
                 <Nav className='justify-content-center'>
                   <Nav.Item>
-                    <Nav.Link href='#link2'>GitHub</Nav.Link>
+                    <Nav.Link href='https://github.com/ZubairQazi/EcommerceAnalysis'>GitHub</Nav.Link>
                   </Nav.Item>
                 </Nav>
               </Card.Footer>
