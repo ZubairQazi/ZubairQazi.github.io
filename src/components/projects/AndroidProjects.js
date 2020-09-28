@@ -15,7 +15,7 @@ class AndroidProjects extends React.Component {
   render() {
     return(
       <Container>
-        <Row className='justify-content-center'> 
+        <Row className='justify-content-center py-5'> 
           <CardDeck>
             <Card style={{ width: '20rem' }}>
               <Card.Img variant='top' src={dealectable} />
@@ -82,7 +82,7 @@ class AndroidProjects extends React.Component {
             </Card>
           </CardDeck>
         </Row>
-        <Row className='justify-content-center py-5'>
+        <Row className='justify-content-center'>
           <CardDeck>
             <Card style={{ width: '20rem' }}>
               <Card.Img variant='top' src={urdude} />
