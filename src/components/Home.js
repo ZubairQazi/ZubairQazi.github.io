@@ -9,8 +9,6 @@ import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 
 import pfp from '../images/pfp.jpg';
-import gh from '../images/github.png';
-import li from '../images/linkedin.png';
 
 class Home extends React.Component {
 

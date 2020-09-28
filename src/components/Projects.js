@@ -10,13 +10,9 @@ import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/CardDeck';
 import Tab from 'react-bootstrap/Tab';
 import Nav from 'react-bootstrap/Nav';
-import Image from 'react-bootstrap/Image';
 
 import PyProjects from './projects/PyProjects';
 import AndroidProjects from './projects/AndroidProjects';
-
-import linreg from '../images/linreg.png';
-import py from '../images/python.png';
 
 class Projects extends React.Component {
 
@@ -75,67 +71,6 @@ class Projects extends React.Component {
           </Row>
         </Tab.Container> 
       </div>
-    );
-  }
-}
-
-class CardDeckTest extends React.Component {
-  
-  render() {
-    return(
-      <Container>
-        <Row className='justify-content-center'> 
-          <CardDeck>
-            <Card style={{ width: '20rem' }}>
-              <Card.Img variant='top' src='holder.js/100px180' />
-              <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up the bulk of
-                  the card's content.
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                <Nav justify variant='pills' className='justify-content-center'>
-                  <Nav.Item>
-                    <Nav.Link href='#link1'>Website</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link href='#link2'>GitHub</Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Card.Footer>
-            </Card>
-            <Card style={{ width: '20rem' }}>
-              <Card.Img variant='top' src='holder.js/100px180' />
-              <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up the bulk of
-                  the card's content.
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer>
-                <Nav className='justify-content-center'>
-                  <Nav.Item>
-                    <Nav.Link href='#link2'>GitHub</Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Card.Footer>
-            </Card>
-            <Card style={{ width: '20rem' }}>
-              <Card.Img variant='top' src='holder.js/100px180' />
-              <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up the bulk of
-                  the card's content.
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </CardDeck>
-        </Row>
-      </Container> 
     );
   }
 }
