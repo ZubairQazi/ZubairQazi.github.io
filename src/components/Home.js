@@ -29,7 +29,7 @@ class Home extends React.Component {
                     <span> Zubair Qazi </span>
                   </Typist>
                 </h1>
-                <h3 className='display-5 font-weight-light'> Student @ UCR, Mobile Dev. + Data Science </h3>
+                <h3 className='display-5 font-weight-light'>  CS Junior @ UCR, Mobile Dev. + Data Science </h3>
               </Col>
             </Row>
           </Container>
