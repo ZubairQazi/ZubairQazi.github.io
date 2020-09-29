@@ -75,7 +75,7 @@ class AndroidProjects extends React.Component {
               <Card.Footer>
                 <Nav className='justify-content-center'>
                   <Nav.Item>
-                    <Nav.Link href='#link2'>GitHub</Nav.Link>
+                    <Nav.Link href='https://github.com/ZubairQazi/CoffeeTracker'>GitHub</Nav.Link>
                   </Nav.Item>
                 </Nav>
               </Card.Footer>
