@@ -2,6 +2,8 @@ import React from 'react';
 
 import Typist from 'react-typist';
 
+import {Emojione} from 'react-emoji-render';
+
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -54,7 +56,7 @@ class Contact extends React.Component {
                     <span> Contact Me </span>
                   </Typist>
                 </h1>
-                <h3> Work In Progress... </h3>
+                <h3> <Emojione text=':warning: Work In Progress :warning:'/> </h3>
                 <p> Please contact me via <a href='mailto:zqazi004@ucr.edu'>email</a> for now! </p>
               </Col>
             </Row>
