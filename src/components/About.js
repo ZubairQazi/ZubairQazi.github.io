@@ -45,7 +45,8 @@ class About extends React.Component {
                   of assorted sets, mostly ranging from Star Wars to Creator sets.
                   Other than that, in my free time I like to read, play video games with 
                   friends, or work on fun projects! I would like to be able to travel 
-                  around the world, but I'll need a job for that first. 😉
+                  around the world, but I'll need a job for that first.
+                  <span role="img" aria-label="Wink">😉</span>
                 </p>
               </Col> 
             </Row>
