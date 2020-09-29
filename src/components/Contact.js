@@ -82,7 +82,7 @@ class Contact extends React.Component {
               <Form.Control id='body' name='body' as='textarea' row='8' value={this.state.body} onChange={this.handleChange}/>
             </Form.Group>
           </Form.Row>
-          <Button className='d-inline-block' variant='primary' type='submit' disabled={this.state.disabled}>
+          <Button className='d-inline-block' variant='dark' type='submit' disabled={this.state.disabled}>
             Send
           </Button>
 
