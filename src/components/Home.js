@@ -2,6 +2,8 @@ import React from 'react';
 
 import Typist from 'react-typist';
 
+import {Emojione} from 'react-emoji-render';
+
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -29,7 +31,7 @@ class Home extends React.Component {
                     <span> Zubair Qazi </span>
                   </Typist>
                 </h1>
-                <h3 className='display-5 font-weight-light'>  CS Junior @ UCR, Mobile Dev. + Data Science </h3>
+                <h3 className='display-5 font-weight-light'> <Emojione text=':wave:'/> CS Junior @ UCR, Mobile Dev. + Data Science </h3>
               </Col>
             </Row>
           </Container>
