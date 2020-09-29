@@ -2,6 +2,8 @@ import React from 'react';
 
 import Typist from 'react-typist';
 
+import {Emojione} from 'react-emoji-render';
+
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -19,7 +21,7 @@ class About extends React.Component {
               <Col md={8} sm={12}>
                 <h1 className='display-3 font-weight-bolder'>
                   <Typist cursor={{ hideWhenDone: true }}>
-                    <span> About Me </span>
+                    <span> About Me <Emojione text=':owl:'/> </span>
                   </Typist>
                 </h1>
               </Col>
@@ -46,7 +48,7 @@ class About extends React.Component {
                   Other than that, in my free time I like to read, play video games with 
                   friends, or work on fun projects! I would like to be able to travel 
                   around the world, but I'll need a job for that first.
-                  <span role="img" aria-label="Wink">😉</span>
+                  <Emojione text=':wink:'/> 
                 </p>
               </Col> 
             </Row>
