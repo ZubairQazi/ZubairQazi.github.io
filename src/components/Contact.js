@@ -86,8 +86,8 @@ class Contact extends React.Component {
             Send
           </Button>
 
-          {this.state.emailSent == true && <p className='d-inline success-msg'>Email Sent!</p>}
-          {this.state.emailSent == false && <p className='d-inline error-msg'>Email Failed to Send!</p>}
+          {this.state.emailSent === true && <p className='d-inline success-msg'>Email Sent!</p>}
+          {this.state.emailSent === false && <p className='d-inline error-msg'>Email Failed to Send!</p>}
         </Form>
       </div>
 
