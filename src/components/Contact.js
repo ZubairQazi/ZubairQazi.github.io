@@ -54,6 +54,8 @@ class Contact extends React.Component {
                     <span> Contact Me </span>
                   </Typist>
                 </h1>
+                <h3> Work In Progress... </h3>
+                <p> Please contact me via <a href='mailto:zqazi004@ucr.edu'>email</a> for now! </p>
               </Col>
             </Row>
           </Container>
