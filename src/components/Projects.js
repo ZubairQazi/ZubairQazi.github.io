@@ -30,7 +30,7 @@ class Projects extends React.Component {
                 <h4 className='display-5 font-weight-light'>
                   See some of the projects that I've done! They're separated by language or 
                   platform to make it easier to look through. If you have questions or 
-                  feedback, please contact me!
+                  feedback, please <a href='mailto:zqazi004@ucr.edu'>contact</a> me!
                 </h4>
               </Col>
             </Row>
