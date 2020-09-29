@@ -9,14 +9,16 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
+import Button from 'react-bootstrap/Button';
+import Nav from 'react-bootstrap/Nav';
 
 import pfp from '../images/pfp.jpg';
 
 class Home extends React.Component {
 
+
   render() {
     return (
-
       <div>
         <Jumbotron className='bg-transparent jumbotron-fluid p-0'>
           <Container fluid={true}>
@@ -51,6 +53,13 @@ class Home extends React.Component {
             <Row className='justify-content-center py-5'>
               <Col md={10} sm={12}>
                 <h4 className='display-6 font-weight-light'> Python | Kotlin | Java | Swift | C++ | HTML/CSS | Javascript</h4>
+              </Col>
+            </Row>
+            <Row className='justify-content-center'>
+              <Col>
+                <Button variant='dark'>
+                  Download Resume
+                </Button>
               </Col>
             </Row>
           </Container>
