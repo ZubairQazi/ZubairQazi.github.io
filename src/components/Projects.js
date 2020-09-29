@@ -11,6 +11,7 @@ import Nav from 'react-bootstrap/Nav';
 
 import PyProjects from './projects/PyProjects';
 import AndroidProjects from './projects/AndroidProjects';
+import JsProjects from './projects/JsProjects';
 
 class Projects extends React.Component {
 
@@ -30,7 +31,7 @@ class Projects extends React.Component {
                 <h4 className='display-5 font-weight-light'>
                   See some of the projects that I've done! They're separated by language or 
                   platform to make it easier to look through. If you have questions or 
-                  feedback, please contact me!
+                  feedback, please <a href='mailto:zqazi004@ucr.edu'>contact</a> me!
                 </h4>
               </Col>
             </Row>
@@ -38,8 +39,8 @@ class Projects extends React.Component {
         </Jumbotron>
         <Tab.Container id='language-tabs' defaultActiveKey='first'>
           <Row className='justify-content-center'>
-            <Col sm={3}>
-            <Nav variant='tabs' className='justify-content-center'> 
+            <Col sm={6}>
+            <Nav justify variant='tabs' className='justify-content-center'> 
                 <Nav.Item>
                   <Nav.Link eventKey='first'>Python</Nav.Link>
                 </Nav.Item>
@@ -47,7 +48,7 @@ class Projects extends React.Component {
                   <Nav.Link eventKey='second'>Android</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey='third' disabled>Javascript</Nav.Link>
+                  <Nav.Link eventKey='third'>Javascript</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                   <Nav.Link eventKey='fourth'disabled >C++</Nav.Link>
@@ -63,6 +64,9 @@ class Projects extends React.Component {
                 </Tab.Pane>
                 <Tab.Pane eventKey='second'>
                   <AndroidProjects/>
+                </Tab.Pane>
+                <Tab.Pane eventKey='third'> 
+                  <JsProjects/>
                 </Tab.Pane>
               </Tab.Content>
             </Col>
