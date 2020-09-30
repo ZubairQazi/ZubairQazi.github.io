@@ -13,6 +13,7 @@ import Button from 'react-bootstrap/Button';
 import Nav from 'react-bootstrap/Nav';
 
 import pfp from '../images/pfp.jpg';
+import resume from '../documents/Zubairs_Resume_.pdf';
 
 class Home extends React.Component {
 
@@ -56,10 +57,10 @@ class Home extends React.Component {
               </Col>
             </Row>
             <Row className='justify-content-center'>
-              <Col>
-                <Nav.Link href='' target='_blank'>
-                <Button variant='dark'>
-                  Download Resume
+              <Col md={2} sm={6}>
+                <Nav.Link href={resume} target='_blank'>
+                <Button variant='dark' size='md'>
+                  View Resume
                 </Button>
                 </Nav.Link>
               </Col>
