@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-This project contains my portfolio website, hosted at https://zubairqazi.com. It is written in Javascript using the React library, and various subcomponents. This is my first React project!
+This project contains my portfolio website, hosted at https://zubairqazi.com. It is written in Javascript using the React library, React-Bootstrap framework, and various subcomponents. This is my first React project!
 
 ## Set-up
 
