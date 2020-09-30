@@ -59,7 +59,7 @@ class Home extends React.Component {
             <Row className='justify-content-center'>
               <Col md={2} sm={6}>
                 <Nav.Link href={resume} target='_blank'>
-                <Button variant='dark' size='md'>
+                <Button variant='dark' size='lg'>
                   View Resume
                 </Button>
                 </Nav.Link>
