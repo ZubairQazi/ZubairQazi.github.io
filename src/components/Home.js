@@ -57,9 +57,11 @@ class Home extends React.Component {
             </Row>
             <Row className='justify-content-center'>
               <Col>
+                <Nav.Link href=''>
                 <Button variant='dark'>
                   Download Resume
                 </Button>
+                </Nav.Link>
               </Col>
             </Row>
           </Container>
