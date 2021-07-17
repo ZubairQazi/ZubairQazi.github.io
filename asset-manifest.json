@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/ZubairQazi.github.io/static/css/main.d0e96308.chunk.css",
+    "main.js": "/ZubairQazi.github.io/static/js/main.e7a71014.chunk.js",
+    "main.js.map": "/ZubairQazi.github.io/static/js/main.e7a71014.chunk.js.map",
+    "runtime-main.js": "/ZubairQazi.github.io/static/js/runtime-main.a9b3790c.js",
+    "runtime-main.js.map": "/ZubairQazi.github.io/static/js/runtime-main.a9b3790c.js.map",
+    "static/css/2.8aa5a7f8.chunk.css": "/ZubairQazi.github.io/static/css/2.8aa5a7f8.chunk.css",
+    "static/js/2.0428f67e.chunk.js": "/ZubairQazi.github.io/static/js/2.0428f67e.chunk.js",
+    "static/js/2.0428f67e.chunk.js.map": "/ZubairQazi.github.io/static/js/2.0428f67e.chunk.js.map",
+    "index.html": "/ZubairQazi.github.io/index.html",
+    "precache-manifest.80a29e5df678c18dc86bf52063a7cb76.js": "/ZubairQazi.github.io/precache-manifest.80a29e5df678c18dc86bf52063a7cb76.js",
+    "service-worker.js": "/ZubairQazi.github.io/service-worker.js",
+    "static/css/2.8aa5a7f8.chunk.css.map": "/ZubairQazi.github.io/static/css/2.8aa5a7f8.chunk.css.map",
+    "static/css/main.d0e96308.chunk.css.map": "/ZubairQazi.github.io/static/css/main.d0e96308.chunk.css.map",
+    "static/js/2.0428f67e.chunk.js.LICENSE.txt": "/ZubairQazi.github.io/static/js/2.0428f67e.chunk.js.LICENSE.txt",
+    "static/media/Zubair_Qazi_CV.pdf": "/ZubairQazi.github.io/static/media/Zubair_Qazi_CV.107278af.pdf",
+    "static/media/android.png": "/ZubairQazi.github.io/static/media/android.470bb174.png",
+    "static/media/dealectable.png": "/ZubairQazi.github.io/static/media/dealectable.f83ce63a.png",
+    "static/media/linreg.png": "/ZubairQazi.github.io/static/media/linreg.42253a0d.png",
+    "static/media/pfp.jpg": "/ZubairQazi.github.io/static/media/pfp.680d3aa5.jpg",
+    "static/media/portfolio.png": "/ZubairQazi.github.io/static/media/portfolio.1ef745a3.png",
+    "static/media/python.png": "/ZubairQazi.github.io/static/media/python.f073c986.png",
+    "static/media/urdude.png": "/ZubairQazi.github.io/static/media/urdude.ba412ffd.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a9b3790c.js",
+    "static/css/2.8aa5a7f8.chunk.css",
+    "static/js/2.0428f67e.chunk.js",
+    "static/css/main.d0e96308.chunk.css",
+    "static/js/main.e7a71014.chunk.js"
+  ]
+}
