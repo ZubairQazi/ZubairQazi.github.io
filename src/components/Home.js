@@ -34,7 +34,7 @@ class Home extends React.Component {
                     <span> Zubair Qazi </span>
                   </Typist>
                 </h1>
-                <h3 className='display-5 font-weight-light'> <Emojione text=':wave:'/> CS Junior @ UCR, Mobile Dev. + Data Science </h3>
+                <h3 className='display-5 font-weight-light'> <Emojione text=':wave:'/> CS Senior @ UCR, Data Science (ML)+ Mobile Dev. </h3>
               </Col>
             </Row>
           </Container>
@@ -53,7 +53,7 @@ class Home extends React.Component {
           <Container fluid={true}>
             <Row className='justify-content-center py-5'>
               <Col md={10} sm={12}>
-                <h4 className='display-6 font-weight-light'> Python | Kotlin | Java | Swift | C++ | HTML/CSS | Javascript</h4>
+                <h4 className='display-6 font-weight-light'> Python | C++ | Kotlin | Swift | HTML/CSS | Javascript</h4>
               </Col>
             </Row>
             <Row className='justify-content-center'>
