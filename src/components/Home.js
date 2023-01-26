@@ -34,7 +34,7 @@ class Home extends React.Component {
                     <span> Zubair Qazi </span>
                   </Typist>
                 </h1>
-                <h3 className='display-5 font-weight-light'> <Emojione text=':wave:'/> CS Senior @ UCR, Data Science (ML)+ Mobile Dev. </h3>
+                <h3 className='display-5 font-weight-light'> <Emojione text=':wave:'/> CS Masters @ UCR, Data Science (ML/DL). </h3>
               </Col>
             </Row>
           </Container>
