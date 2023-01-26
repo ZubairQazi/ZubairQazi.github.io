@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c7aa2d7b76624175bca389ecbcc5b880",
+    "revision": "b706e7ad421505245ce49cfb0c00ada0",
     "url": "/ZubairQazi.github.io/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ZubairQazi.github.io/static/css/2.8aa5a7f8.chunk.css"
   },
   {
-    "revision": "abf0be05a0d3d1db4298",
+    "revision": "f057714b51ec4c42a791",
     "url": "/ZubairQazi.github.io/static/css/main.d0e96308.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ZubairQazi.github.io/static/js/2.0428f67e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "abf0be05a0d3d1db4298",
-    "url": "/ZubairQazi.github.io/static/js/main.e7a71014.chunk.js"
+    "revision": "f057714b51ec4c42a791",
+    "url": "/ZubairQazi.github.io/static/js/main.77e64f55.chunk.js"
   },
   {
     "revision": "c17b9e675f4267dc2254",
