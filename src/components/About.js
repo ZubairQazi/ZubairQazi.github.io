@@ -29,9 +29,9 @@ class About extends React.Component {
             <Row className='justify-content-center'> 
               <Col md={6} sm={8}> 
                <p> 
-                  I'm Zubair (pronounced Zoo-bear). I am currently a junior at 
-                  University of California, Riverside studying Computer Science. 
-                  I tend to focus on mobile application development and data science/analytics, 
+                  I'm Zubair (pronounced Zoo-bear). I am currently a Masters student at 
+                  University of California, Riverside studying Computer Science with an emphasis on Data Mining. 
+                  I tend to focus on graph mining and deep learning methods, 
                   however I also enjoy dabbling in other concentrations that
                   my friends and professors are willing to teach me about! A perfect 
                   example is this website, which was built with some help from my friends,
