@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "3c76ffef136186bc26dd988b42dff04b",
+    "revision": "0e3eeedc02e08ca174f77ee42ae17be6",
     "url": "/ZubairQazi.github.io/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ZubairQazi.github.io/static/css/2.8aa5a7f8.chunk.css"
   },
   {
-    "revision": "03e0218217797a0ad830",
+    "revision": "7d9091364627318c185f",
     "url": "/ZubairQazi.github.io/static/css/main.d0e96308.chunk.css"
   },
   {
@@ -20,16 +20,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ZubairQazi.github.io/static/js/2.0428f67e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "03e0218217797a0ad830",
-    "url": "/ZubairQazi.github.io/static/js/main.bd485394.chunk.js"
+    "revision": "7d9091364627318c185f",
+    "url": "/ZubairQazi.github.io/static/js/main.08fda1bc.chunk.js"
   },
   {
     "revision": "c17b9e675f4267dc2254",
     "url": "/ZubairQazi.github.io/static/js/runtime-main.a9b3790c.js"
   },
   {
-    "revision": "107278afe4196ab1c57329ba272530ca",
-    "url": "/ZubairQazi.github.io/static/media/Zubair_Qazi_CV.107278af.pdf"
+    "revision": "9de8234fa5ccd736be6610690c896d43",
+    "url": "/ZubairQazi.github.io/static/media/Zubair_Qazi_CV.9de8234f.pdf"
   },
   {
     "revision": "470bb174cb985d26cfeb8e949400c4be",
