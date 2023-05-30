@@ -1,23 +1,27 @@
 {
   "files": {
-    "main.css": "/ZubairQazi.github.io/static/css/main.d0e96308.chunk.css",
-    "main.js": "/ZubairQazi.github.io/static/js/main.08fda1bc.chunk.js",
-    "main.js.map": "/ZubairQazi.github.io/static/js/main.08fda1bc.chunk.js.map",
+    "main.css": "/ZubairQazi.github.io/static/css/main.c58437d4.chunk.css",
+    "main.js": "/ZubairQazi.github.io/static/js/main.a93485a8.chunk.js",
+    "main.js.map": "/ZubairQazi.github.io/static/js/main.a93485a8.chunk.js.map",
     "runtime-main.js": "/ZubairQazi.github.io/static/js/runtime-main.a9b3790c.js",
     "runtime-main.js.map": "/ZubairQazi.github.io/static/js/runtime-main.a9b3790c.js.map",
     "static/css/2.8aa5a7f8.chunk.css": "/ZubairQazi.github.io/static/css/2.8aa5a7f8.chunk.css",
-    "static/js/2.0428f67e.chunk.js": "/ZubairQazi.github.io/static/js/2.0428f67e.chunk.js",
-    "static/js/2.0428f67e.chunk.js.map": "/ZubairQazi.github.io/static/js/2.0428f67e.chunk.js.map",
+    "static/js/2.d987ca28.chunk.js": "/ZubairQazi.github.io/static/js/2.d987ca28.chunk.js",
+    "static/js/2.d987ca28.chunk.js.map": "/ZubairQazi.github.io/static/js/2.d987ca28.chunk.js.map",
     "index.html": "/ZubairQazi.github.io/index.html",
-    "precache-manifest.56fa9d1065f869c58c5585f245ce2d0d.js": "/ZubairQazi.github.io/precache-manifest.56fa9d1065f869c58c5585f245ce2d0d.js",
+    "precache-manifest.0b8aaca6d6ceec28259381bb2af2efb0.js": "/ZubairQazi.github.io/precache-manifest.0b8aaca6d6ceec28259381bb2af2efb0.js",
     "service-worker.js": "/ZubairQazi.github.io/service-worker.js",
     "static/css/2.8aa5a7f8.chunk.css.map": "/ZubairQazi.github.io/static/css/2.8aa5a7f8.chunk.css.map",
-    "static/css/main.d0e96308.chunk.css.map": "/ZubairQazi.github.io/static/css/main.d0e96308.chunk.css.map",
-    "static/js/2.0428f67e.chunk.js.LICENSE.txt": "/ZubairQazi.github.io/static/js/2.0428f67e.chunk.js.LICENSE.txt",
+    "static/css/main.c58437d4.chunk.css.map": "/ZubairQazi.github.io/static/css/main.c58437d4.chunk.css.map",
+    "static/js/2.d987ca28.chunk.js.LICENSE.txt": "/ZubairQazi.github.io/static/js/2.d987ca28.chunk.js.LICENSE.txt",
     "static/media/Zubair_Qazi_CV.pdf": "/ZubairQazi.github.io/static/media/Zubair_Qazi_CV.9de8234f.pdf",
     "static/media/android.png": "/ZubairQazi.github.io/static/media/android.470bb174.png",
+    "static/media/c_logo.png": "/ZubairQazi.github.io/static/media/c_logo.7fd39f3d.png",
+    "static/media/container-ship.png": "/ZubairQazi.github.io/static/media/container-ship.691f98d6.png",
     "static/media/dealectable.png": "/ZubairQazi.github.io/static/media/dealectable.f83ce63a.png",
     "static/media/linreg.png": "/ZubairQazi.github.io/static/media/linreg.42253a0d.png",
+    "static/media/melanoma.png": "/ZubairQazi.github.io/static/media/melanoma.8b4963d1.png",
+    "static/media/multilayer-perceptron.png": "/ZubairQazi.github.io/static/media/multilayer-perceptron.8cede563.png",
     "static/media/pfp.jpg": "/ZubairQazi.github.io/static/media/pfp.680d3aa5.jpg",
     "static/media/portfolio.png": "/ZubairQazi.github.io/static/media/portfolio.1ef745a3.png",
     "static/media/python.png": "/ZubairQazi.github.io/static/media/python.f073c986.png",
@@ -26,8 +30,8 @@
   "entrypoints": [
     "static/js/runtime-main.a9b3790c.js",
     "static/css/2.8aa5a7f8.chunk.css",
-    "static/js/2.0428f67e.chunk.js",
-    "static/css/main.d0e96308.chunk.css",
-    "static/js/main.08fda1bc.chunk.js"
+    "static/js/2.d987ca28.chunk.js",
+    "static/css/main.c58437d4.chunk.css",
+    "static/js/main.a93485a8.chunk.js"
   ]
 }

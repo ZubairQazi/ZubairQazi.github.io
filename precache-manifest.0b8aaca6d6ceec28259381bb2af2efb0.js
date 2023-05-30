@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0e3eeedc02e08ca174f77ee42ae17be6",
+    "revision": "6d66486c0a231fc87d5e2e1bf5b62199",
     "url": "/ZubairQazi.github.io/index.html"
   },
   {
-    "revision": "99e4e3712aa6a966dd34",
+    "revision": "ab4c6954f4ed1f59f658",
     "url": "/ZubairQazi.github.io/static/css/2.8aa5a7f8.chunk.css"
   },
   {
-    "revision": "7d9091364627318c185f",
-    "url": "/ZubairQazi.github.io/static/css/main.d0e96308.chunk.css"
+    "revision": "a1bd2f8131469e491baf",
+    "url": "/ZubairQazi.github.io/static/css/main.c58437d4.chunk.css"
   },
   {
-    "revision": "99e4e3712aa6a966dd34",
-    "url": "/ZubairQazi.github.io/static/js/2.0428f67e.chunk.js"
+    "revision": "ab4c6954f4ed1f59f658",
+    "url": "/ZubairQazi.github.io/static/js/2.d987ca28.chunk.js"
   },
   {
     "revision": "3453b8997016469371284a28c0e873e2",
-    "url": "/ZubairQazi.github.io/static/js/2.0428f67e.chunk.js.LICENSE.txt"
+    "url": "/ZubairQazi.github.io/static/js/2.d987ca28.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "7d9091364627318c185f",
-    "url": "/ZubairQazi.github.io/static/js/main.08fda1bc.chunk.js"
+    "revision": "a1bd2f8131469e491baf",
+    "url": "/ZubairQazi.github.io/static/js/main.a93485a8.chunk.js"
   },
   {
     "revision": "c17b9e675f4267dc2254",
@@ -36,12 +36,28 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ZubairQazi.github.io/static/media/android.470bb174.png"
   },
   {
+    "revision": "7fd39f3d0d88f4073b7ec20ecd97152f",
+    "url": "/ZubairQazi.github.io/static/media/c_logo.7fd39f3d.png"
+  },
+  {
+    "revision": "691f98d619b0b5405ad7980acf4a8eb5",
+    "url": "/ZubairQazi.github.io/static/media/container-ship.691f98d6.png"
+  },
+  {
     "revision": "f83ce63a3bf00d03627d70600d0d85e6",
     "url": "/ZubairQazi.github.io/static/media/dealectable.f83ce63a.png"
   },
   {
     "revision": "42253a0dc3ffafda962f39ccc34f8cfd",
     "url": "/ZubairQazi.github.io/static/media/linreg.42253a0d.png"
+  },
+  {
+    "revision": "8b4963d1160acc4f65005d76e695e83d",
+    "url": "/ZubairQazi.github.io/static/media/melanoma.8b4963d1.png"
+  },
+  {
+    "revision": "8cede563e0d477048968ae1cf69b7a8a",
+    "url": "/ZubairQazi.github.io/static/media/multilayer-perceptron.8cede563.png"
   },
   {
     "revision": "680d3aa576d805cce069561f1c7a6280",
