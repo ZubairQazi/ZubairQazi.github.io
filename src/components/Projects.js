@@ -12,6 +12,7 @@ import Nav from 'react-bootstrap/Nav';
 import PyProjects from './projects/PyProjects';
 import AndroidProjects from './projects/AndroidProjects';
 import JsProjects from './projects/JsProjects';
+import CppProjects from './projects/CppProjects';
 
 class Projects extends React.Component {
 
@@ -51,7 +52,7 @@ class Projects extends React.Component {
                   <Nav.Link eventKey='third'>Javascript</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey='fourth'disabled >C++</Nav.Link>
+                  <Nav.Link eventKey='fourth'>C/C++</Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>
@@ -67,6 +68,9 @@ class Projects extends React.Component {
                 </Tab.Pane>
                 <Tab.Pane eventKey='third'> 
                   <JsProjects/>
+                </Tab.Pane>
+                <Tab.Pane eventKey='fourth'> 
+                  <CppProjects/>
                 </Tab.Pane>
               </Tab.Content>
             </Col>
