@@ -35,6 +35,7 @@ class AndroidProjects extends React.Component {
                   <Nav.Item>
                     <Nav.Link href='https://devpost.com/software/dealectable'>Website</Nav.Link>
                   </Nav.Item>
+                  <div className="vertical-line"></div> 
                   <Nav.Item>
                     <Nav.Link href='https://github.com/DanialBeg/Dealectable'>GitHub</Nav.Link>
                   </Nav.Item>
@@ -99,6 +100,7 @@ class AndroidProjects extends React.Component {
                   <Nav.Item>
                     <Nav.Link href='https://play.google.com/store/apps/details?id=com.urdu.benbair.urdude'>Play Store</Nav.Link>
                   </Nav.Item>
+                  <div className="vertical-line"></div> 
                   <Nav.Item>
                     <Nav.Link href='https://github.com/ZubairQazi/Urdude'>GitHub</Nav.Link>
                   </Nav.Item>
