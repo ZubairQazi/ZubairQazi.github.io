@@ -33,6 +33,7 @@ class JsProjects extends React.Component {
                   <Nav.Item>
                     <Nav.Link href='https://zubairqazi.com'>Website</Nav.Link>
                   </Nav.Item>
+                  <div className="vertical-line"></div> 
                   <Nav.Item>
                     <Nav.Link href='https://github.com/ZubairQazi/ZubairQazi.github.io'>GitHub</Nav.Link>
                   </Nav.Item>
