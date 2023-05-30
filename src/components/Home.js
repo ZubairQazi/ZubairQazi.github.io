@@ -53,7 +53,7 @@ class Home extends React.Component {
           <Container fluid={true}>
             <Row className='justify-content-center py-5'>
               <Col md={10} sm={12}>
-                <h4 className='display-6 font-weight-light'> Python | C++ | Kotlin | Swift | HTML/CSS | Javascript</h4>
+                <h4 className='display-6 font-weight-light'> Python | C++ | HTML/CSS | Javascript | Kotlin | Swift </h4>
               </Col>
             </Row>
             <Row className='justify-content-center'>
