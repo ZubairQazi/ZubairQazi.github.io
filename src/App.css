@@ -35,6 +35,11 @@
   margin: 0 10px; 
 }
 
+.social-logo {
+  max-width: 25%;
+  max-height: 25%;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

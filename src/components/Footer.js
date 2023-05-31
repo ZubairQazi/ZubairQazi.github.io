@@ -17,8 +17,13 @@ class Footer extends React.Component {
           <Container fluid={true}>
             <Row className='border-top p-3'>
               <Col className='justify-content-center' md={12}>
-                <a href='https://github.com/ZubairQazi' target='_blank' rel="noopener noreferrer"> <Image className='px-2' src={gh} rounded /> </a>
-                <a href='https://www.linkedin.com/in/zubair-qazi' target='_blank' rel="noopener noreferrer"> <Image className='px-2' src={li} rounded /> </a>
+                <a href='https://github.com/ZubairQazi' target='_blank' rel="noopener noreferrer"> <Image className='px-2 social-logo' src={gh} rounded /> </a>
+                <a href='https://www.linkedin.com/in/zubair-qazi' target='_blank' rel="noopener noreferrer"> <Image className='px-2 social-logo' src={li} rounded /> </a>
+              </Col>
+              <Col className='text-center' md={12}>
+                <p className='text-muted'>
+                  &copy; 2023 Zubair Qazi. All rights reserved.
+                </p>
               </Col>
             </Row>
           </Container>
