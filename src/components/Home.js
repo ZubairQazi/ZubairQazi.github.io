@@ -13,7 +13,7 @@ import Button from 'react-bootstrap/Button';
 import Nav from 'react-bootstrap/Nav';
 
 import pfp from '../images/pfp.jpg';
-import resume from '../documents/Zubair_Qazi_CV.pdf';
+import resume from '../documents/Zubair_Qazi_Resume.pdf';
 
 class Home extends React.Component {
 
@@ -60,7 +60,7 @@ class Home extends React.Component {
               <Col md={2} sm={6}>
                 <Nav.Link href={resume} target='_blank'>
                 <Button variant='dark' size='lg'>
-                  View CV
+                  View Resume
                 </Button>
                 </Nav.Link>
               </Col>
