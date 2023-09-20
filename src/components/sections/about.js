@@ -125,7 +125,7 @@ const About = () => {
     sr.reveal(revealContainer.current, srConfig());
   }, []);
 
-  const skills = ['JavaScript (ES6+)', 'TypeScript', 'React', 'Eleventy', 'Node.js', 'WordPress'];
+  const skills = ['PyTorch', 'Jupyter', 'Huggingface', 'GCP/AWS', 'Docker', 'JavaScript (ES6+)', 'React', 'Node.js'];
 
   return (
     <StyledAboutSection id="about" ref={revealContainer}>
@@ -135,13 +135,14 @@ const About = () => {
         <StyledText>
           <div>
             <p>
-              Hello! My name is Brittany and I enjoy creating things that live on the internet. My
-              interest in web development started back in 2012 when I decided to try editing custom
-              Tumblr themes — turns out hacking together a custom reblog button taught me a lot
-              about HTML &amp; CSS!
+              Hello there! I'm Zubair (Zoo-Bear) and I am a builder, specifically software applications and ML systems
+              but occasionally also LEGO. I've had an interest in software development since I was in middle school, picked 
+              up an interest in Machine Learning during my undergrad years through research work and by following the growth of ML to
+              where it's come to today. That's not to say there isn't a lot of room left for improvement. Applying ML to products is
+              a relatively recent endeavour of mine, but I pride myself on staying up to date in that world. 
             </p>
 
-            <p>
+            {/* <p>
               Fast-forward to today, and I’ve had the privilege of working at{' '}
               <a href="https://us.mullenlowe.com/">an advertising agency</a>,{' '}
               <a href="https://starry.com/">a start-up</a>,{' '}
@@ -150,15 +151,14 @@ const About = () => {
               main focus these days is building accessible, inclusive products and digital
               experiences at <a href="https://upstatement.com/">Upstatement</a> for a variety of
               clients.
-            </p>
+            </p> */}
 
             <p>
-              I also recently{' '}
-              <a href="https://www.newline.co/courses/build-a-spotify-connected-app">
-                launched a course
+              I've recently been working on projects which harness {' '}
+              <a href="https://www.huggingface.co">
+                Huggingface models
               </a>{' '}
-              that covers everything you need to build a web app with the Spotify API using Node
-              &amp; React.
+              , fine-tuning them to cater to specific tasks, and then seamlessly integrate them into product pipelines.
             </p>
 
             <p>Here are a few technologies I’ve been working with recently:</p>
@@ -173,7 +173,7 @@ const About = () => {
           <div className="wrapper">
             <StaticImage
               className="img"
-              src="../../images/me.jpg"
+              src="../../images/pfp_2.jpg"
               width={500}
               quality={95}
               formats={['AUTO', 'WEBP', 'AVIF']}
