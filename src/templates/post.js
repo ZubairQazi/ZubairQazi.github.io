@@ -51,7 +51,11 @@ const StyledPostContent = styled.div`
 `;
 
 const PostTemplate = ({ data, location }) => {
-  const { frontmatter, html } = data.markdownRemark;
+  const { frontmatter, html } = data.markdownRemark || {};
+  if (!frontmatter || !html) {
+    // Handle the case where data is null or missing
+    return <div>Post not found or data is missing.</div>;
+  }
   const { title, date, tags } = frontmatter;
 
   return (
