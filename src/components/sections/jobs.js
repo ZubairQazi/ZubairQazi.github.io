@@ -91,12 +91,13 @@ const StyledTabButton = styled.button`
     border-left: 0;
     border-bottom: 2px solid var(--lightest-navy);
     text-align: center;
-  }
+  } 
 
   &:hover,
   &:focus {
     background-color: var(--light-navy);
   }
+  
 `;
 
 const StyledHighlight = styled.div`
@@ -112,15 +113,17 @@ const StyledHighlight = styled.div`
   transition: transform 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition-delay: 0.1s;
 
+  /*
   @media (max-width: 600px) {
     top: auto;
     bottom: 0;
     width: 100%;
-    max-width: var(--tab-width);
+    max-width: var(--tab-height);
     height: 2px;
     margin-left: 50px;
-    transform: translateX(calc(${({ activeTabId }) => activeTabId} * var(--tab-width)));
+    transform: translateX(calc(${({ activeTabId }) => activeTabId} * var(--tab-height)));
   }
+  */
   @media (max-width: 480px) {
     margin-left: 25px;
   }
@@ -242,30 +245,37 @@ const Jobs = () => {
     }
   };
 
+  const StyledTabButtonContainer = styled.div`
+    display: flex;
+    flex-direction: column; /* Ensure titles stack vertically */
+  `;
+
   return (
     <StyledJobsSection id="jobs" ref={revealContainer}>
       <h2 className="numbered-heading">Where I’ve Worked</h2>
 
       <div className="inner">
         <StyledTabList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
-          {jobsData &&
-            jobsData.map(({ node }, i) => {
-              const { company } = node.frontmatter;
-              return (
-                <StyledTabButton
-                  key={i}
-                  isActive={activeTabId === i}
-                  onClick={() => setActiveTabId(i)}
-                  ref={el => (tabs.current[i] = el)}
-                  id={`tab-${i}`}
-                  role="tab"
-                  tabIndex={activeTabId === i ? '0' : '-1'}
-                  aria-selected={activeTabId === i ? true : false}
-                  aria-controls={`panel-${i}`}>
-                  <span>{company}</span>
-                </StyledTabButton>
-              );
-            })}
+          <StyledTabButtonContainer>
+            {jobsData &&
+              jobsData.map(({ node }, i) => {
+                const { company } = node.frontmatter;
+                return (
+                  <StyledTabButton
+                    key={i}
+                    isActive={activeTabId === i}
+                    onClick={() => setActiveTabId(i)}
+                    ref={el => (tabs.current[i] = el)}
+                    id={`tab-${i}`}
+                    role="tab"
+                    tabIndex={activeTabId === i ? '0' : '-1'}
+                    aria-selected={activeTabId === i ? true : false}
+                    aria-controls={`panel-${i}`}>
+                    <span>{company}</span>
+                  </StyledTabButton>
+                );
+              })}
+            </StyledTabButtonContainer>
           <StyledHighlight activeTabId={activeTabId} />
         </StyledTabList>
 
