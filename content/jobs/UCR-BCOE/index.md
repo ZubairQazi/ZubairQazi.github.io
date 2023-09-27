@@ -1,7 +1,7 @@
 ---
 date: '2022-09-01'
 title: 'Graduate Teaching Assistant'
-company: 'UCR - Bourns College of Engineering'
+company: 'Bourns College of Engineering'
 location: 'Riverside, CA'
 range: 'September 2022 - June 2023'
 url: 'https://www.engr.ucr.edu/'
