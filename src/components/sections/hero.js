@@ -43,7 +43,8 @@ const StyledHeroSection = styled.section`
 
   .email-link {
     ${({ theme }) => theme.mixins.bigButton};
-    margin-top: 50px;
+    margin-top: 30px;
+    margin-bottom: 10px;
   }
 `;
 
@@ -76,11 +77,18 @@ const Hero = () => {
       href={resumePDF}
       target="_blank"
       rel="noreferrer">
-      Check out my resume!
+      View Resume
     </a>
   );
+  const six = (
+    <>
+      <p>
+        Or scroll through my portfolio! <b>⤵</b>
+      </p>
+    </>
+  );
 
-  const items = [one, two, three, four, five];
+  const items = [one, two, three, four, five, six];
 
   return (
     <StyledHeroSection>
