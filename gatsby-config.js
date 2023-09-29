@@ -6,7 +6,6 @@ module.exports = {
     description:
       'Zubair Qazi is a software engineer who specializes in bringing machine learning to products.',
     siteUrl: 'https://zubairqazi.com', // No trailing slash allowed!
-    // TODO: Change this
     image: '/og.png', // Path to your image you placed in the 'static' folder
     twitterUsername: '',
   },
