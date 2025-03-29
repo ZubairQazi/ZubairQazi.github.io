@@ -125,7 +125,7 @@ const About = () => {
     sr.reveal(revealContainer.current, srConfig());
   }, []);
 
-  const skills = ['PyTorch', 'Jupyter', 'Huggingface', 'GCP/AWS', 'Docker', 'JavaScript (ES6+)', 'React', 'Node.js'];
+  const skills = ['PyTorch', 'Jupyter', 'Huggingface', 'GCP/AWS', 'Docker',   'LlamaIndex / LangChain', 'Weights & Biases', 'JavaScript (ES6+)'];
 
   return (
     <StyledAboutSection id="about" ref={revealContainer}>
@@ -136,8 +136,8 @@ const About = () => {
           <div>
             <p>
               Hello there! I'm Zubair (Zoo-Bear) and I am a builder, specifically software applications and ML systems
-              but occasionally also LEGO. I've had an interest in software development since I was in middle school, picked 
-              up an interest in Machine Learning during my undergrad years through research work and by following the growth of ML to
+              but occasionally also LEGO. I've had an interest in software since I was in middle school, picked 
+              up an interest in Machine Learning during my bachelor's and master's through research work and by following the growth of ML to
               where it's come to today. That's not to say there isn't a lot of room left for improvement. Applying ML to products is
               a relatively recent endeavour of mine, but I pride myself on staying up to date in that world. 
             </p>
@@ -157,7 +157,7 @@ const About = () => {
               I've recently been working on projects which harness {' '}
               <a href="https://www.huggingface.co">
                 Huggingface models
-              </a>{' '}
+              </a>{''}
               , fine-tuning them to cater to specific tasks, and then seamlessly integrate them into product pipelines.
             </p>
 
@@ -173,7 +173,7 @@ const About = () => {
           <div className="wrapper">
             <StaticImage
               className="img"
-              src="../../images/pfp_2.jpg"
+              src="../../images/pfp_2025.jpg"
               width={500}
               quality={95}
               formats={['AUTO', 'WEBP', 'AVIF']}

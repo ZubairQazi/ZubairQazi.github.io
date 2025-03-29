@@ -63,11 +63,11 @@ const Hero = () => {
 
   const one = <h1>Hi, my name is</h1>;
   const two = <h2 className="big-heading">Zubair Qazi.</h2>;
-  const three = <h3 className="big-heading">Software Development, Machine Learning.</h3>;
+  const three = <h3 className="big-heading">Data Mining, Graphs, & Machine Learning.</h3>;
   const four = (
     <>
       <p>
-        I'm a software engineer specializing in applying the latest and greatest machine learning techniques.
+        I'm a software engineer specializing in applying machine learning techniques for various data mining and graph mining problems.
       </p>
     </>
   );
