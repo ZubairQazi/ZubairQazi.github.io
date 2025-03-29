@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://zubairqazi.com/sitemap-index.xml
-Host: https://zubairqazi.com
