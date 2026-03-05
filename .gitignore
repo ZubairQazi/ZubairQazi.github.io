@@ -37,3 +37,5 @@ scripts/guests.csv
 scripts/seed.sql
 scripts/import.csv
 academicpages.github.io/
+wedding-rsvp-worker/
+worker/.wrangler/
