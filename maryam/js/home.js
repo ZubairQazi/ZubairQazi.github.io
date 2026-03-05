@@ -227,17 +227,17 @@ window.addEventListener('load', () => {
     handle.style.left    = (pct * 100).toFixed(2) + '%';
   }
 
-  // Start at 22% (mostly before) and oscillate to 78% (mostly after), forever
-  const obj = { v: 0.22 };
-  setPos(0.22);
+  // Start at far left and oscillate all the way to far right, forever
+  const obj = { v: 0.02 };
+  setPos(0.02);
 
   let autoTween = null;
 
   function startAuto(delay) {
     if (typeof gsap === 'undefined') return;
     autoTween = gsap.to(obj, {
-      v: 0.78,
-      duration: 3.8,
+      v: 0.98,
+      duration: 7.0,
       ease: 'sine.inOut',
       yoyo: true,
       repeat: -1,
