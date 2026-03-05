@@ -214,56 +214,40 @@ window.addEventListener('load', () => {
   });
 })();
 
-// ── Before / After drag slider ────────────────────────────────────
+// ── Before / After auto-oscillating reveal ──────────────────────
 (function initBeforeAfter() {
-  const slider  = document.getElementById('ba-slider');
-  const after   = document.getElementById('ba-after');
-  const handle  = document.getElementById('ba-handle');
+  const slider = document.getElementById('ba-slider');
+  const after  = document.getElementById('ba-after');
+  const handle = document.getElementById('ba-handle');
   if (!slider || !after || !handle) return;
 
-  let dragging = false;
-
-  function setPos(clientX) {
-    const rect = slider.getBoundingClientRect();
-    let pct = (clientX - rect.left) / rect.width;
+  function setPos(pct) {
     pct = Math.min(Math.max(pct, 0.02), 0.98);
-    const p = (pct * 100).toFixed(2);
-    after.style.clipPath  = `inset(0 ${(100 - pct * 100).toFixed(2)}% 0 0)`;
-    handle.style.left     = p + '%';
+    after.style.clipPath = `inset(0 ${((1 - pct) * 100).toFixed(2)}% 0 0)`;
+    handle.style.left    = (pct * 100).toFixed(2) + '%';
   }
 
-  // Animate in on first interaction
-  let introduced = false;
-  function introAnim() {
-    if (introduced) return;
-    introduced = true;
-  }
+  // Start at 22% (mostly before) and oscillate to 78% (mostly after), forever
+  const obj = { v: 0.22 };
+  setPos(0.22);
 
-  slider.addEventListener('mousedown',  (e) => { dragging = true; introAnim(); setPos(e.clientX); e.preventDefault(); });
-  window.addEventListener('mousemove',  (e) => { if (dragging) setPos(e.clientX); });
-  window.addEventListener('mouseup',    ()  => { dragging = false; });
+  let autoTween = null;
 
-  slider.addEventListener('touchstart', (e) => { dragging = true; introAnim(); setPos(e.touches[0].clientX); }, { passive: true });
-  window.addEventListener('touchmove',  (e) => { if (dragging) setPos(e.touches[0].clientX); }, { passive: true });
-  window.addEventListener('touchend',   ()  => { dragging = false; });
-
-  // Subtle auto-nudge on load to hint draggability
-  setTimeout(() => {
+  function startAuto(delay) {
     if (typeof gsap === 'undefined') return;
-    const rect = slider.getBoundingClientRect();
-    if (rect.width === 0) return; // not visible yet
-    gsap.to({}, {
-      duration: 1.4,
-      ease: 'power1.inOut',
-      onUpdate() {
-        const p = this.progress();
-        // swing from 50% → 38% → 50%
-        const pct = 0.50 - Math.sin(p * Math.PI) * 0.12;
-        after.style.clipPath = `inset(0 ${((1 - pct) * 100).toFixed(2)}% 0 0)`;
-        handle.style.left    = (pct * 100).toFixed(2) + '%';
-      }
+    autoTween = gsap.to(obj, {
+      v: 0.78,
+      duration: 3.8,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+      delay: delay || 0,
+      onUpdate() { setPos(obj.v); }
     });
-  }, 1800);
+  }
+
+  // Wait for page entrance animation then begin
+  setTimeout(() => startAuto(0), prefersReduced ? 0 : 2200);
 })();
 
 // ── Nav active indicator ───────────────────────────────────────────

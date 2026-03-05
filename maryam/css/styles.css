@@ -1249,6 +1249,13 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 0;
 }
 
+/* On the RSVP page, keep main above the footer floral so the submit button
+   is never obscured — home page intentionally allows floral to overlay */
+.page-rsvp main {
+  position: relative;
+  z-index: 1;
+}
+
 .footer-floral img {
   width: 100%;
   height: auto;
