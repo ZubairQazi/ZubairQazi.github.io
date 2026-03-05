@@ -161,11 +161,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .petal {
   position: absolute;
-  top: -30px;
-  left: var(--px, 10%);
-  width: var(--ps, 12px);
-  height: calc(var(--ps, 12px) * 1.65);
-  background: linear-gradient(135deg, #F8F3E5 0%, #DFC9A0 100%);
+  top: 0;
+  width: 12px;
+  height: 20px;
+  background: linear-gradient(135deg, #EDAAB8 0%, #C97A8E 100%);
   pointer-events: none;
   opacity: 0;
   will-change: transform, opacity;
