@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Join us to celebrate the wedding of Maryam &amp; Zubair — June 11–13, 2026 in San Diego, CA.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Maryam &amp; Zubair · June 2026</title>
+
+  <!-- Preconnect for Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Site CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Floating petals (populated by JS, fixed overlay outside stacking ctx) -->
+  <div id="petals-layer" aria-hidden="true"></div>
+
+  <div class="site-wrapper">
+
+    <!-- ══════════════════════════ HERO ══════════════════════════ -->
+    <header id="hero" class="container">
+
+      <!-- Floral Photo Overlay -->
+      <div class="hero-floral">
+        <img
+          src="assets/floral-photo.png"
+          alt="Floral arrangement"
+          loading="eager"
+        >
+      </div>
+
+      <!-- Text content sits above the photo -->
+      <div class="hero-text">
+        <!-- Names -->
+        <h1 class="hero-names">
+          Maryam <span class="ampersand">&amp;</span> Zubair
+        </h1>
+
+        <!-- Date + Location tagline -->
+        <p class="hero-tagline">
+          June 11–13, 2026 &nbsp;&middot;&nbsp; San Diego, CA
+        </p>
+
+        <!-- Countdown -->
+        <div class="hero-countdown" aria-live="polite" aria-atomic="true">
+          <span class="countdown-number" id="countdown-days">—</span>
+          <span>Days to Go</span>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- ══════════════════════════ NAV ══════════════════════════ -->
+    <nav id="main-nav" aria-label="Site navigation">
+      <ul class="nav-list container">
+        <li><a href="../" class="nav-link active" data-page="home">Home</a></li>
+        <li><a href="../schedule/" class="nav-link" data-page="schedule">Schedule</a></li>
+        <li><a href="../rsvp/" class="nav-link rsvp-nav-link" data-page="rsvp">RSVP</a></li>
+      </ul>
+    </nav>
+
+    <!-- ══════════════════════════ MAIN ══════════════════════════ -->
+    <main>
+
+      <!-- Centered details strip -->
+      <section class="main-details container">
+        <p class="main-quote">Join us as we begin our forever</p>
+        <div class="main-meta">
+          <div class="meta-item">
+            <span class="meta-label">Date</span>
+            <span class="meta-value">June 11–13, 2026</span>
+          </div>
+          <div class="meta-sep" aria-hidden="true"></div>
+          <div class="meta-item">
+            <span class="meta-label">Location</span>
+            <span class="meta-value">San Diego, California</span>
+          </div>
+        </div>
+        <a href="rsvp/" class="rsvp-btn" aria-label="RSVP to our wedding">
+          RSVP
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </section>
+
+      <!-- Before / After reveal slider -->
+      <section class="ba-section container">
+        <p class="ba-label-hint">drag to reveal</p>
+        <div class="ba-slider" id="ba-slider" role="img" aria-label="Before and after photo comparison">
+
+          <!-- BEFORE (childhood) -->
+          <div class="ba-before">
+            <img src="assets/photo-small.jpg" alt="Childhood photo" width="989" height="772" loading="lazy">
+            <span class="ba-label ba-label--before">Before</span>
+          </div>
+
+          <!-- AFTER (engagement) -->
+          <div class="ba-after" id="ba-after">
+            <img src="assets/photo-main.jpg" alt="Engagement portrait of Maryam and Zubair" width="899" height="1281" loading="lazy">
+            <span class="ba-label ba-label--after">After</span>
+          </div>
+
+          <!-- Drag handle -->
+          <div class="ba-handle" id="ba-handle" aria-hidden="true">
+            <div class="ba-line"></div>
+            <div class="ba-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </div>
+            <div class="ba-line"></div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+    <footer class="site-footer">
+      <div class="footer-floral">
+        <img src="assets/floral-footer.png" alt="" aria-hidden="true" width="1387" height="752" loading="lazy">
+      </div>
+      <p class="footer-text">Made with love &middot; 2026</p>
+    </footer>
+
+  </div><!-- /.site-wrapper -->
+
+  <!-- GSAP via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <!-- Home-specific JS -->
+  <script src="js/home.js" defer></script>
+</body>
+</html>
