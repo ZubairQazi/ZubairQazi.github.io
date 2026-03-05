@@ -194,12 +194,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-floral {
   position: absolute;
-  top: 0;
+  top: clamp(40px, 7vw, 110px);
   left: 0;
   width: 100%;
   pointer-events: none;
   will-change: transform, opacity;
-  z-index: 0;
+  z-index: 2;
 }
 
 .hero-floral img,
@@ -212,7 +212,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-text {
   position: relative;
-  z-index: 1;
+  z-index: 3;
 }
 
 .hero-names {
