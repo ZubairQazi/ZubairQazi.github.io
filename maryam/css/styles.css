@@ -98,9 +98,6 @@ body {
   line-height: 1.65;
   color: var(--color-text);
   background-color: var(--color-bg);
-  background-image:
-    radial-gradient(ellipse 80% 45% at 12% 0%,  rgba(215,190,145,0.28) 0%, transparent 65%),
-    radial-gradient(ellipse 65% 40% at 88% 100%, rgba(200,170,120,0.22) 0%, transparent 60%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -212,12 +209,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-names {
   font-family: var(--font-serif);
-  font-size: var(--text-5xl);
+  font-size: clamp(2.60rem, 5.2vw, 4.40rem);
   font-weight: 300;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-text);
   line-height: 1.05;
+  white-space: nowrap;
   will-change: transform, opacity;
 }
 
