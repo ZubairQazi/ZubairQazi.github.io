@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zubair Qazi — PhD Student</title>
+    <meta name="description" content="Zubair Qazi is a PhD student in Computer Science focused on machine learning and applied AI." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Fira+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="/src/images/favicons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/src/images/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/src/images/favicons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/src/images/favicons/apple-icon-180x180.png">
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="inner">
+        <a class="brand" href="#">Zubair Qazi</a>
+        <nav class="tabs tabs--bar">
+          <button data-tab="about" class="active">About</button>
+          <button data-tab="jobs">Experience</button>
+          <button data-tab="projects">Projects</button>
+          <button data-tab="posts">Posts</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <aside class="photo">
+          <img class="portrait" src="/src/images/pfp_2.jpg" alt="Portrait of Zubair Qazi" />
+        </aside>
+        <div class="intro">
+          <h1 class="name">Zubair Qazi</h1>
+          <p class="tagline">PhD Student, Computer Science</p>
+          <p class="blurb">
+            I research and build applied machine learning systems. My interests include trustworthy ML,
+            ML systems, and real-world deployment of AI.
+          </p>
+          <div class="links">
+            <a class="inline" href="/static/resume.pdf">CV</a>
+            <a class="inline" href="mailto:zqazi004@ucr.edu">Email</a>
+            <a class="inline" href="https://github.com/ZubairQazi">GitHub</a>
+            <a class="inline" href="https://www.linkedin.com/in/zubair-qazi">LinkedIn</a>
+          </div>
+          <div class="about-grid hero-grid">
+            <div>
+              <h3>Interests</h3>
+              <ul class="tick">
+                <li>Trustworthy ML</li>
+                <li>ML Systems</li>
+                <li>Responsible deployment of AI</li>
+                <li>Applied deep learning</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Education</h3>
+              <ul class="edu">
+                <li>
+                  <strong>PhD in Computer Science</strong>
+                  <div class="muted">University of California, Riverside — Present</div>
+                </li>
+                <li>
+                  <strong>B.S. in Computer Science</strong>
+                  <div class="muted">Institution — Year</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel"></section>
+
+      <footer class="footer">
+        <small>© <span id="y"></span> Zubair Qazi • <a class="inline" href="https://zubairqazi.com">zubairqazi.com</a></small>
+      </footer>
+    </main>
+
+    <script src="/app.js"></script>
+    <script>
+      document.getElementById('y').textContent = new Date().getFullYear();
+    </script>
+  </body>
+  </html>

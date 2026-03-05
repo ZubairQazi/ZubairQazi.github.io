@@ -102,9 +102,9 @@ Preflight returns `Access-Control-Allow-Origin`, `Access-Control-Allow-Methods`,
 
 | URL | File | Description |
 |-----|------|-------------|
-| `/` | `frontend/index.html` | Hero landing page |
-| `/schedule/` | `frontend/schedule/index.html` | Wedding day schedule |
-| `/rsvp/` | `frontend/rsvp/index.html` | RSVP form (token required) |
+| `/` | `maryam/index.html` | Hero landing page |
+| `/schedule/` | `maryam/schedule/index.html` | Wedding day schedule |
+| `/rsvp/` | `maryam/rsvp/index.html` | RSVP form (token required) |
 
 ---
 
@@ -141,7 +141,7 @@ Reduced motion: JS checks `window.matchMedia('(prefers-reduced-motion: reduce)')
 
 ```
 /
-├── frontend/
+├── maryam/
 │   ├── index.html              ← landing page
 │   ├── schedule/
 │   │   └── index.html          ← schedule page

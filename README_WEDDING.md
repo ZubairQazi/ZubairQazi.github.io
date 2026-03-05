@@ -8,7 +8,7 @@ A polished, fully private wedding website with a Cloudflare Worker + D1 backend 
 
 ```
 Browser (GitHub Pages)       Cloudflare Worker              D1 (SQLite)
-/frontend/                   /worker/                       schema.sql
+/maryam/                   /worker/                       schema.sql
   index.html      ──GET──▶  /api/invite?t=TOKEN ──▶  invites + guests
   rsvp/index.html ──POST──▶ /api/rsvp?t=TOKEN  ──▶  rsvps (upsert)
 
@@ -26,7 +26,7 @@ See [`ARCHITECTURE.md`](ARCHITECTURE.md) for full design docs.
 
 ```
 /
-├── frontend/            ← Static site (GitHub Pages)
+├── maryam/            ← Static site (GitHub Pages)
 │   ├── index.html
 │   ├── schedule/index.html
 │   ├── rsvp/index.html
@@ -54,16 +54,16 @@ Edit these files with your actual info:
 
 | File | What to change |
 |------|---------------|
-| `frontend/index.html` | Names, date, location |
-| `frontend/schedule/index.html` | Schedule times + descriptions |
-| `frontend/js/home.js` | `WEDDING_DATE` constant (line ~5) |
-| `frontend/js/rsvp.js` | `API_BASE` URL (line ~15) |
+| `maryam/index.html` | Names, date, location |
+| `maryam/schedule/index.html` | Schedule times + descriptions |
+| `maryam/js/home.js` | `WEDDING_DATE` constant (line ~5) |
+| `maryam/js/rsvp.js` | `API_BASE` URL (line ~15) |
 | `worker/wrangler.toml` | `database_id`, `ALLOWED_ORIGINS`, `WEDDING_DATE` |
 
 Replace placeholder images:
-- `frontend/assets/floral-header.svg` → your floral/calligraphy header image
-- `frontend/assets/photo-main.svg` → your main engagement/couple photo
-- `frontend/assets/photo-small.svg` → your secondary photo
+- `maryam/assets/floral-header.svg` → your floral/calligraphy header image
+- `maryam/assets/photo-main.svg` → your main engagement/couple photo
+- `maryam/assets/photo-small.svg` → your secondary photo
 
 ### 2. Set up Cloudflare D1
 
@@ -110,7 +110,7 @@ Option A — deploy the whole repo and set Pages source to `/frontend`:
 GitHub → Repo Settings → Pages → Branch: feature/wedding-site-rsvp → Folder: /frontend
 ```
 
-Option B — copy `frontend/` to your `gh-pages` branch root.
+Option B — copy `maryam/` to your `gh-pages` branch root.
 
 ### 5. Import guest list
 
@@ -179,25 +179,25 @@ npm run dev
 ```
 
 ### Frontend
-Open `frontend/index.html` in a browser, or use a simple server:
+Open `maryam/index.html` in a browser, or use a simple server:
 ```bash
 npx serve frontend
 ```
 
-Update `API_BASE` in `frontend/js/rsvp.js` to `http://localhost:8787` during development.
+Update `API_BASE` in `maryam/js/rsvp.js` to `http://localhost:8787` during development.
 
 ---
 
 ## Customization
 
 ### Change meal options
-Edit `MEAL_OPTIONS` array in `frontend/js/rsvp.js`. Update validation in `worker/src/index.ts` (`validMeals` array).
+Edit `MEAL_OPTIONS` array in `maryam/js/rsvp.js`. Update validation in `worker/src/index.ts` (`validMeals` array).
 
 ### Change RSVP deadline
-Update the deadline text in `frontend/rsvp/index.html`.
+Update the deadline text in `maryam/rsvp/index.html`.
 
 ### Change wedding date
-- `frontend/js/home.js` → `WEDDING_DATE` constant
+- `maryam/js/home.js` → `WEDDING_DATE` constant
 - `worker/wrangler.toml` → `WEDDING_DATE` var
 
 ### Add a custom domain

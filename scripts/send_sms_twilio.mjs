@@ -100,7 +100,7 @@ async function readSmsCsv() {
 // ── SMS message template ─────────────────────────────────────────────
 function buildMessage(row) {
   return (
-    `You're invited to Zubair & Amina's wedding! 🌸\n` +
+    `You're invited to Zubair & Maryam's wedding! 🌸\n` +
     `Please RSVP here: ${row.rsvp_link}\n` +
     `One link per household — reply STOP to opt out.`
   );

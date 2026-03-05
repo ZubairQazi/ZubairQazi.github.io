@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="Main wedding photo placeholder">
+  <rect width="600" height="800" fill="#EDE5DC"/>
+  <!-- Subtle texture overlay -->
+  <rect width="600" height="800" fill="url(#grain)" opacity="0.4"/>
+  <!-- Decorative frame -->
+  <rect x="24" y="24" width="552" height="752" fill="none" stroke="#C8B89A" stroke-width="1" opacity="0.6"/>
+  <rect x="36" y="36" width="528" height="728" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.4"/>
+  <!-- Center monogram area -->
+  <circle cx="300" cy="380" r="80" fill="#D4B896" opacity="0.25"/>
+  <circle cx="300" cy="380" r="60" fill="none" stroke="#8B6F4E" stroke-width="1" opacity="0.4"/>
+  <!-- Replace with your photo -->
+  <text x="300" y="490" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#8B6F4E" opacity="0.7" letter-spacing="3">PLACE PHOTO HERE</text>
+  <text x="300" y="360" text-anchor="middle" font-family="Georgia,serif" font-size="48" fill="#8B6F4E" opacity="0.35" letter-spacing="2">Z &amp; M</text>
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+</svg>

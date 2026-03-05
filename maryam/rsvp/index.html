@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RSVP for the wedding of Zubair &amp; Maryam — September 12, 2026.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>RSVP · Zubair &amp; Maryam</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <div class="site-wrapper">
+
+    <!-- ══════════════════════════ HERO (compact) ══════════════════════════ -->
+    <header id="hero" class="container" style="padding-bottom: 0;">
+      <div class="hero-floral">
+        <img src="../assets/floral-header.svg" alt="Floral botanical illustration" width="280" height="108" loading="eager">
+      </div>
+      <h1 class="hero-names" style="font-size: var(--text-3xl);">
+        Zubair <span class="ampersand">&amp;</span> Maryam
+      </h1>
+    </header>
+
+    <!-- ══════════════════════════ NAV ══════════════════════════ -->
+    <nav id="main-nav" aria-label="Site navigation">
+      <ul class="nav-list container">
+        <li><a href="../" class="nav-link" data-page="home">Home</a></li>
+        <li><a href="../schedule/" class="nav-link" data-page="schedule">Schedule</a></li>
+        <li><a href="../rsvp/" class="nav-link active" data-page="rsvp">RSVP</a></li>
+      </ul>
+    </nav>
+
+    <!-- ══════════════════════════ RSVP CONTENT ══════════════════════════ -->
+    <main>
+      <div class="container">
+        <section class="rsvp-page" id="rsvp-section">
+
+          <!-- Loading state -->
+          <div id="rsvp-loading" aria-live="polite" aria-label="Loading your invitation">
+            <div class="rsvp-header">
+              <div class="skeleton-wrap">
+                <div class="skeleton skeleton-title"></div>
+              </div>
+            </div>
+            <div class="skeleton-wrap">
+              <div class="skeleton skeleton-card"></div>
+              <div class="skeleton skeleton-card"></div>
+            </div>
+          </div>
+
+          <!-- Error: no/invalid token -->
+          <div id="rsvp-error-screen" class="rsvp-error-screen" aria-live="polite" role="alert">
+            <div class="divider" aria-hidden="true"></div>
+            <h2>Invalid Invitation Link</h2>
+            <p>This link is invalid or has expired. Please check your message and try again, or contact us directly.</p>
+            <div class="divider" aria-hidden="true"></div>
+          </div>
+
+          <!-- RSVP Form (hidden until data loads) -->
+          <div id="rsvp-form-wrap" style="display:none;">
+            <div class="rsvp-header">
+              <h2 style="font-size: var(--text-4xl); font-weight:300; letter-spacing:0.06em; text-transform:uppercase;">
+                You're Invited
+              </h2>
+              <p class="rsvp-household" id="rsvp-household-label"></p>
+              <div class="divider" aria-hidden="true"></div>
+              <p style="font-family: var(--font-serif); font-size: var(--text-base); font-style: italic; color: var(--color-text-mid); margin-top: var(--space-2);">
+                Please let us know by <strong>August 1, 2026</strong>
+              </p>
+            </div>
+
+            <form id="rsvp-form" novalidate>
+              <div class="guest-list" id="guest-list" aria-label="Guest responses">
+                <!-- Guest cards injected by rsvp.js -->
+              </div>
+
+              <div class="rsvp-submit-row">
+                <button type="submit" class="rsvp-submit-btn" id="rsvp-submit">
+                  Submit RSVP
+                </button>
+              </div>
+
+              <!-- Inline status message -->
+              <div class="rsvp-status" id="rsvp-status" role="alert" aria-live="polite"></div>
+            </form>
+          </div>
+
+          <!-- Success screen (shown after submit) -->
+          <div id="rsvp-success-screen" class="rsvp-success-screen" aria-live="polite">
+            <div class="rsvp-success-icon" aria-hidden="true">
+              <!-- Checkmark -->
+              <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <h2>We Can't Wait!</h2>
+            <div class="divider" aria-hidden="true"></div>
+            <p id="rsvp-success-msg">
+              Your RSVP has been received. We look forward to celebrating with you!
+            </p>
+            <p style="margin-top: var(--space-8); font-size: var(--text-sm); color: var(--color-text-light);">
+              Need to update your response? Use the same link to resubmit.
+            </p>
+          </div>
+
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>Made with love &middot; 2026</p>
+    </footer>
+
+  </div><!-- /.site-wrapper -->
+
+  <!-- GSAP (for card stagger on load) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <!-- RSVP logic -->
+  <script src="../js/rsvp.js" defer></script>
+</body>
+</html>

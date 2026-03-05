@@ -138,7 +138,7 @@ Run through this before deploy. Check each item manually.
 # Verify no secrets in repo
 git log --oneline | head -20
 git show HEAD --stat
-grep -r "TWILIO" frontend/ worker/src/  # should be empty
+grep -r "TWILIO" maryam/ worker/src/  # should be empty
 grep -r "rawToken\|raw_token" worker/src/ scripts/import_to_d1.mjs  # should be empty
 
 # Check .gitignore is covering sensitive files
@@ -146,5 +146,5 @@ git check-ignore -v scripts/sms.csv      # should output matching rule
 git check-ignore -v scripts/guests.csv   # should output matching rule
 
 # Confirm all required files committed
-git ls-files frontend/ worker/ scripts/ schema.sql ARCHITECTURE.md
+git ls-files maryam/ worker/ scripts/ schema.sql ARCHITECTURE.md
 ```

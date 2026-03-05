@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Melanoma Detection",
+    "slug": "/featured/melanoma-detection",
+    "image": "/content/featured/MelanomaDetection/melanoma_detection.png",
+    "summary": "Featured project: Melanoma Detection using deep learning.",
+    "link": ""
+  },
+  {
+    "title": "Pneumonia Detection",
+    "slug": "/featured/pneumonia-detection",
+    "image": "/content/featured/PneumoniaDetection/pneumonia.jpeg",
+    "summary": "Featured project: Pneumonia Detection using chest X-rays.",
+    "link": ""
+  }
+]
