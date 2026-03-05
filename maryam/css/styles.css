@@ -185,26 +185,34 @@ h1, h2, h3, h4, h5, h6 {
    ══════════════════════════════════════════════════════════════════ */
 #hero {
   text-align: center;
-  padding-top: var(--space-12);
+  padding-top: clamp(220px, 28vw, 400px);
   padding-bottom: var(--space-8);
   position: relative;
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 30%, rgba(255,248,228,0.60) 0%, transparent 72%),
-    var(--color-bg);
+  overflow: visible;
+  background: var(--color-bg);
 }
 
 .hero-floral {
-  display: flex;
-  justify-content: center;
-  margin-bottom: var(--space-6);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
   will-change: transform, opacity;
+  z-index: 0;
 }
 
 .hero-floral img,
 .hero-floral svg {
-  width: clamp(340px, 90vw, 1060px);
+  width: 100%;
   height: auto;
-  filter: drop-shadow(0 6px 20px rgba(44,36,22,0.10));
+  mix-blend-mode: multiply;
+  display: block;
+}
+
+.hero-text {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-names {

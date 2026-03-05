@@ -139,12 +139,6 @@ window.addEventListener('load', () => {
   // ── Entrance timeline
   const tl = gsap.timeline({
     defaults: { ease: 'power3.out' },
-    onComplete() {
-      // Gentle perpetual float on the floral after entrance
-      gsap.to('.hero-floral', {
-        y: '+=10', duration: 3.8, ease: 'sine.inOut', repeat: -1, yoyo: true,
-      });
-    }
   });
 
   tl
