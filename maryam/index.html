@@ -63,68 +63,44 @@
       </ul>
     </nav>
 
-    <!-- ══════════════════════════ MAIN GRID ══════════════════════════ -->
+    <!-- ══════════════════════════ MAIN ══════════════════════════ -->
     <main>
-      <div id="main-grid" class="container">
 
-        <!-- Left Column -->
-        <div class="main-left">
-          <div class="main-date-block">
-          <p class="main-date-day">June<br>11–13</p>
-            <p class="main-date-full">Twenty Twenty-Six</p>
-            <p class="main-location">
-              <!-- Pin icon -->
-              <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
-              </svg>
-              San Diego, California
-            </p>
+      <!-- Centered details strip -->
+      <section class="main-details container">
+        <p class="main-quote">Join us as we begin our forever</p>
+        <div class="main-meta">
+          <div class="meta-item">
+            <span class="meta-label">Date</span>
+            <span class="meta-value">June 11–13, 2026</span>
           </div>
-
-          <!-- Divider -->
-          <div class="divider" aria-hidden="true"></div>
-
-          <!-- RSVP Button -->
-          <a href="rsvp/" class="rsvp-btn" aria-label="RSVP to our wedding">
-            RSVP
-            <!-- Arrow icon -->
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </a>
-
-          <!-- Small Photo -->
-          <div class="photo-small-wrap">
-            <img
-              class="photo-card"
-              src="assets/photo-small.jpg"
-              alt="Maryam and Zubair"
-              width="1600"
-              height="1200"
-              loading="lazy"
-            >
+          <div class="meta-sep" aria-hidden="true"></div>
+          <div class="meta-item">
+            <span class="meta-label">Location</span>
+            <span class="meta-value">San Diego, California</span>
           </div>
-        </div><!-- /.main-left -->
+        </div>
+        <a href="rsvp/" class="rsvp-btn" aria-label="RSVP to our wedding">
+          RSVP
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </section>
 
-        <!-- Right Column -->
-        <div class="main-right">
-          <div class="photo-main-wrap">
-            <img
-              class="photo-card"
-              src="assets/photo-main.jpg"
-              alt="Engagement portrait of Maryam and Zubair"
-              width="1200"
-              height="1600"
-              loading="lazy"
-            >
-          </div>
-        </div><!-- /.main-right -->
+      <!-- Staggered photo pair -->
+      <section class="photo-pair container">
+        <div class="pair-portrait">
+          <img src="assets/photo-main.jpg" alt="Engagement portrait of Maryam and Zubair"
+            width="1200" height="1600" loading="lazy">
+        </div>
+        <div class="pair-landscape">
+          <img src="assets/photo-small.jpg" alt="Maryam and Zubair"
+            width="1600" height="1200" loading="lazy">
+        </div>
+      </section>
 
-      </div><!-- /#main-grid -->
     </main>
 
     <!-- ══════════════════════════ FOOTER ══════════════════════════ -->

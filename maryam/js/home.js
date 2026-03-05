@@ -120,7 +120,7 @@ window.addEventListener('load', () => {
     document.body.classList.remove('gsap-ready');
     gsap.set([
       '.hero-floral', '.hero-names', '.hero-tagline',
-      '.hero-countdown', '#main-nav', '.main-left', '.main-right'
+      '.hero-countdown', '#main-nav', '.main-details', '.photo-pair'
     ], { opacity: 1, clearProps: 'all' });
     return;
   }
@@ -130,9 +130,10 @@ window.addEventListener('load', () => {
   gsap.set('.hero-letter',    { opacity: 0, y: 38, rotateY: 80, transformOrigin: '50% 100%' });
   gsap.set('.hero-tagline',   { opacity: 0, y: 16 });
   gsap.set('.hero-countdown', { opacity: 0, y: 12, scale: 0.88 });
-  gsap.set('#main-nav',       { opacity: 0 });
-  gsap.set('.main-left',      { opacity: 0, x: -40 });
-  gsap.set('.main-right',     { opacity: 0, x: 40 });
+  gsap.set('#main-nav',        { opacity: 0 });
+  gsap.set('.main-details',    { opacity: 0, y: 30 });
+  gsap.set('.pair-portrait',   { opacity: 0, y: 40 });
+  gsap.set('.pair-landscape',  { opacity: 0, y: 60 });
 
   document.body.classList.remove('gsap-ready');
 
@@ -160,12 +161,15 @@ window.addEventListener('load', () => {
     .to('#main-nav', {
       opacity: 1, duration: 0.5,
     }, '-=0.25')
-    .to('.main-left', {
-      opacity: 1, x: 0, duration: 0.85, ease: 'power2.out',
+    .to('.main-details', {
+      opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
     }, '-=0.2')
-    .to('.main-right', {
-      opacity: 1, x: 0, duration: 0.85, ease: 'power2.out',
-    }, '<');
+    .to('.pair-portrait', {
+      opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
+    }, '-=0.4')
+    .to('.pair-landscape', {
+      opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
+    }, '<+=0.15');
 
   // ── Scroll-driven parallax on floral illustration
   if (typeof ScrollTrigger !== 'undefined') {
