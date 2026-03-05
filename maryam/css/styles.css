@@ -739,6 +739,48 @@ h1, h2, h3, h4, h5, h6 {
 /* ══════════════════════════════════════════════════════════════════
    RSVP PAGE
    ══════════════════════════════════════════════════════════════════ */
+
+/* Event summary strip (above the form) */
+.rsvp-events-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-block: var(--space-8) var(--space-10);
+  flex-wrap: wrap;
+}
+
+.rsvp-event-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.rsvp-event-day {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+}
+
+.rsvp-event-name {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-accent);
+}
+
+.rsvp-event-sep {
+  width: 1px;
+  height: 32px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
 .rsvp-page {
   padding-block: var(--space-16) var(--space-24);
   max-width: 700px;
@@ -1110,7 +1152,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: auto;
   position: relative;
   overflow: visible;
-  padding-top: clamp(180px, 22vw, 340px);
+  padding-top: clamp(30px, 4vw, 55px);
   padding-bottom: var(--space-8);
   text-align: center;
   border-top: 1px solid var(--color-border);
@@ -1118,8 +1160,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .footer-floral {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
+  transform: translateY(-45%);
   width: 100%;
   pointer-events: none;
   z-index: 0;
