@@ -11,16 +11,16 @@
 /* ── Design Tokens ──────────────────────────────────────────────── */
 :root {
   /* Palette */
-  --color-bg:           #FAF8F4;
-  --color-bg-card:      #FFFFFF;
-  --color-bg-muted:     #F2EDE6;
-  --color-text:         #2C2416;
-  --color-text-mid:     #5C4A30;
-  --color-text-light:   #8A7563;
+  --color-bg:           #EFE6D2;
+  --color-bg-card:      #FAF5E8;
+  --color-bg-muted:     #E4D6BE;
+  --color-text:         #2A2018;
+  --color-text-mid:     #5A4828;
+  --color-text-light:   #87715A;
   --color-accent:       #8B6F4E;
   --color-accent-hover: #6B5238;
   --color-accent-light: #D4B896;
-  --color-border:       #E4D9CE;
+  --color-border:       #D2C0A0;
   --color-white:        #FFFFFF;
   --color-success:      #3A7D44;
   --color-error:        #C0392B;
@@ -98,6 +98,9 @@ body {
   line-height: 1.65;
   color: var(--color-text);
   background-color: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse 80% 45% at 12% 0%,  rgba(215,190,145,0.28) 0%, transparent 65%),
+    radial-gradient(ellipse 65% 40% at 88% 100%, rgba(200,170,120,0.22) 0%, transparent 60%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -144,6 +147,36 @@ h1, h2, h3, h4, h5, h6 {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Petal layer ────────────────────────────────────────────────── */
+#petals-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.petal {
+  position: absolute;
+  top: -20px;
+  left: var(--px, 10%);
+  width: var(--ps, 12px);
+  height: calc(var(--ps, 12px) * 1.65);
+  background: linear-gradient(135deg, #F8F3E5 0%, #EAD9BC 100%);
+  pointer-events: none;
+  animation: petalDrift var(--pd, 14s) var(--pdl, 0s) linear infinite;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* ── Hero letter split ──────────────────────────────────────────── */
+.hero-letter {
+  display: inline-block;
+  will-change: transform, opacity;
 }
 
 .container {
@@ -160,8 +193,10 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
   padding-top: var(--space-12);
   padding-bottom: var(--space-8);
-  background: var(--color-bg);
   position: relative;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 30%, rgba(255,248,228,0.60) 0%, transparent 72%),
+    var(--color-bg);
 }
 
 .hero-floral {
@@ -173,9 +208,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-floral img,
 .hero-floral svg {
-  width: clamp(220px, 45vw, 520px);
+  width: clamp(340px, 90vw, 1060px);
   height: auto;
-  filter: drop-shadow(0 4px 16px rgba(44,36,22,0.08));
+  filter: drop-shadow(0 6px 20px rgba(44,36,22,0.10));
 }
 
 .hero-names {
@@ -614,6 +649,13 @@ h1, h2, h3, h4, h5, h6 {
   100% { background-position: -200% 0; }
 }
 
+@keyframes petalDrift {
+  0%   { transform: translateY(-20px) translateX(0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 0.60; }
+  90%  { opacity: 0.38; }
+  100% { transform: translateY(105vh) translateX(var(--dx, 60px)) rotate(var(--dr, 360deg)); opacity: 0; }
+}
+
 /* Guest cards */
 .guest-list {
   display: flex;
@@ -959,6 +1001,7 @@ h1, h2, h3, h4, h5, h6 {
    ══════════════════════════════════════════════════════════════════ */
 body.gsap-ready .hero-floral,
 body.gsap-ready .hero-names,
+body.gsap-ready .hero-letter,
 body.gsap-ready .hero-tagline,
 body.gsap-ready .hero-countdown,
 body.gsap-ready #main-nav,

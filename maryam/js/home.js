@@ -40,18 +40,68 @@ const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').mat
   setTimeout(() => { update(); setInterval(update, 86400000); }, msToMidnight);
 })();
 
+// ── Split hero names into individual .hero-letter spans ──────────
+function splitHeroNames() {
+  const el = document.querySelector('.hero-names');
+  if (!el || prefersReduced) return;
+  const nodes = Array.from(el.childNodes);
+  el.innerHTML = '';
+  nodes.forEach(node => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      [...node.textContent].forEach(char => {
+        if (char.trim() === '') {
+          el.appendChild(document.createTextNode(char));
+        } else {
+          const s = document.createElement('span');
+          s.className = 'hero-letter';
+          s.textContent = char;
+          el.appendChild(s);
+        }
+      });
+    } else {
+      // .ampersand span — preserve element, wrap its chars too
+      const clone = node.cloneNode(false);
+      [...node.textContent].forEach(char => {
+        const s = document.createElement('span');
+        s.className = 'hero-letter';
+        s.textContent = char;
+        clone.appendChild(s);
+      });
+      el.appendChild(clone);
+    }
+  });
+}
+
+// ── Generate falling petals ───────────────────────────────────────
+function initPetals() {
+  if (prefersReduced) return;
+  const layer = document.getElementById('petals-layer');
+  if (!layer) return;
+  for (let i = 0; i < 14; i++) {
+    const p     = document.createElement('div');
+    p.className = 'petal';
+    const size  = (Math.random() * 9 + 7).toFixed(1);
+    const xPct  = (Math.random() * 96 + 2).toFixed(1);
+    const dur   = (Math.random() * 9 + 11).toFixed(1);
+    const delay = (Math.random() * 18).toFixed(1);
+    const dx    = ((Math.random() - 0.5) * 140).toFixed(0);
+    const dr    = (Math.random() * 360 + 180).toFixed(0);
+    const r     = Math.random() > 0.5 ? '50% 0 50% 0' : '50% 50% 0 50%';
+    p.style.cssText = `--ps:${size}px;--px:${xPct}%;--pd:${dur}s;--pdl:${delay}s;--dx:${dx}px;--dr:${dr}deg;border-radius:${r};`;
+    layer.appendChild(p);
+  }
+}
+
 // ── GSAP Animations ───────────────────────────────────────────────
 window.addEventListener('load', () => {
   if (typeof gsap === 'undefined') return;
 
-  // Mark body so CSS initial-opacity states activate
+  splitHeroNames(); // Must run before gsap.set so .hero-letter spans exist
+  initPetals();
+
   document.body.classList.add('gsap-ready');
 
-  // Temporarily make elements invisible while GSAP loads
-  // (the .gsap-ready class in CSS handles this)
-
   if (prefersReduced) {
-    // Reduced motion: just snap to visible immediately, no transforms
     document.body.classList.remove('gsap-ready');
     gsap.set([
       '.hero-floral', '.hero-names', '.hero-tagline',
@@ -60,42 +110,65 @@ window.addEventListener('load', () => {
     return;
   }
 
-  // ── Set initial hidden states (GSAP overrides CSS opacity)
-  gsap.set('.hero-floral',   { opacity: 0, y: -18, scale: 0.97 });
-  gsap.set('.hero-names',    { opacity: 0, y: 22 });
-  gsap.set('.hero-tagline',  { opacity: 0, y: 14 });
-  gsap.set('.hero-countdown',{ opacity: 0, y: 10 });
-  gsap.set('#main-nav',      { opacity: 0 });
-  gsap.set('.main-left',     { opacity: 0, x: -30 });
-  gsap.set('.main-right',    { opacity: 0, x: 30 });
+  // ── Initial states
+  gsap.set('.hero-floral',    { opacity: 0, y: -24, scale: 0.95 });
+  gsap.set('.hero-letter',    { opacity: 0, y: 38, rotateY: 80, transformOrigin: '50% 100%' });
+  gsap.set('.hero-tagline',   { opacity: 0, y: 16 });
+  gsap.set('.hero-countdown', { opacity: 0, y: 12, scale: 0.88 });
+  gsap.set('#main-nav',       { opacity: 0 });
+  gsap.set('.main-left',      { opacity: 0, x: -40 });
+  gsap.set('.main-right',     { opacity: 0, x: 40 });
 
-  // Remove CSS initial-hide now that GSAP owns opacity
   document.body.classList.remove('gsap-ready');
 
-  // ── Hero stagger entrance
-  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  // ── Entrance timeline
+  const tl = gsap.timeline({
+    defaults: { ease: 'power3.out' },
+    onComplete() {
+      // Gentle perpetual float on the floral after entrance
+      gsap.to('.hero-floral', {
+        y: '+=10', duration: 3.8, ease: 'sine.inOut', repeat: -1, yoyo: true,
+      });
+    }
+  });
 
-  tl.to('.hero-floral', {
-    opacity: 1, y: 0, scale: 1, duration: 0.9,
-  })
-  .to('.hero-names', {
-    opacity: 1, y: 0, duration: 0.85,
-  }, '-=0.45')
-  .to('.hero-tagline', {
-    opacity: 1, y: 0, duration: 0.6,
-  }, '-=0.4')
-  .to('.hero-countdown', {
-    opacity: 1, y: 0, duration: 0.55,
-  }, '-=0.35')
-  .to('#main-nav', {
-    opacity: 1, duration: 0.5,
-  }, '-=0.3')
-  .to('.main-left', {
-    opacity: 1, x: 0, duration: 0.75,
-  }, '-=0.2')
-  .to('.main-right', {
-    opacity: 1, x: 0, duration: 0.75,
-  }, '<');
+  tl
+    .to('.hero-floral', {
+      opacity: 1, y: 0, scale: 1, duration: 1.1,
+    })
+    .to('.hero-letter', {
+      opacity: 1, y: 0, rotateY: 0,
+      duration: 0.72,
+      ease: 'back.out(2)',
+      stagger: { each: 0.038, ease: 'power2.inOut' },
+    }, '-=0.5')
+    .to('.hero-tagline', {
+      opacity: 1, y: 0, duration: 0.65,
+    }, '-=0.3')
+    .to('.hero-countdown', {
+      opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.6)',
+    }, '-=0.4')
+    .to('#main-nav', {
+      opacity: 1, duration: 0.5,
+    }, '-=0.25')
+    .to('.main-left', {
+      opacity: 1, x: 0, duration: 0.85, ease: 'power2.out',
+    }, '-=0.2')
+    .to('.main-right', {
+      opacity: 1, x: 0, duration: 0.85, ease: 'power2.out',
+    }, '<');
+
+  // ── Scroll-driven parallax on floral illustration
+  if (typeof ScrollTrigger !== 'undefined') {
+    ScrollTrigger.create({
+      trigger: '#hero',
+      start: 'top top',
+      end: 'bottom top',
+      onUpdate(self) {
+        gsap.set('.hero-floral', { yPercent: self.progress * -20 });
+      }
+    });
+  }
 });
 
 // ── Photo tilt on mousemove (desktop only) ─────────────────────────
