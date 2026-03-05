@@ -1,0 +1,22 @@
+name = "wedding-rsvp-worker"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# ── D1 Database binding ───────────────────────────────────
+[[d1_databases]]
+binding = "DB"
+database_name = "wedding-rsvp"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# ── Environment variables (non-secret) ───────────────────
+[vars]
+ALLOWED_ORIGINS = "https://YOURUSERNAME.github.io,https://www.yourdomain.com"
+WEDDING_DATE = "2026-09-12"
+
+# ── Secrets (set via: wrangler secret put SECRET_NAME) ───
+# No secrets needed in this config — none stored here.
+
+# ── Local dev ─────────────────────────────────────────────
+# wrangler dev --local
+# Create local D1: wrangler d1 execute wedding-rsvp --local --file=../../schema.sql
