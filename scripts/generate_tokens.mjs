@@ -103,12 +103,18 @@ async function readGuestCsv(filePath) {
     if (!line.trim()) continue;
     if (isFirst) { isFirst = false; continue; } // skip header
 
-    const [household_label, phone_e164, guest_name] = parseCsvLine(line);
+    const [household_label, phone_e164, guest_name, events_raw] = parseCsvLine(line);
     if (!household_label || !phone_e164 || !guest_name) {
       console.warn(`  ⚠️  Skipping malformed row: ${line}`);
       continue;
     }
-    rows.push({ household_label, phone_e164, guest_name });
+    // Normalise events: pipe-sep in CSV → comma-sep internally; default to all three
+    const events = (events_raw ?? '')
+      .split('|')
+      .map(s => s.trim())
+      .filter(s => ['mehndi', 'shaadi', 'walima'].includes(s))
+      .join(',') || 'mehndi,shaadi,walima';
+    rows.push({ household_label, phone_e164, guest_name, events });
   }
   return rows;
 }
@@ -123,10 +129,10 @@ function groupByPhone(rows) {
       map.set(key, {
         household_label: row.household_label,
         phone_e164:      row.phone_e164,
-        guests:          [],
+        guests:          [],  // [{ name, events }]
       });
     }
-    map.get(key).guests.push(row.guest_name);
+    map.get(key).guests.push({ name: row.guest_name, events: row.events });
   }
   return Array.from(map.values());
 }
@@ -157,7 +163,8 @@ async function main() {
       token_hash:      tokenHash,
       household_label: hh.household_label,
       phone_e164:      hh.phone_e164,
-      guests:          hh.guests.join('|'), // pipe-delimited for CSV safety
+      // Encode as "Name:events1,events2|Name2:events3" for import_to_d1.mjs
+      guests:          hh.guests.map(g => `${g.name}:${g.events}`).join('|'),
     });
 
     smsRows.push({

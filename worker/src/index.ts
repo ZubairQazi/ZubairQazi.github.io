@@ -31,11 +31,13 @@ interface GuestRow {
   id: number;
   invite_id: number;
   full_name: string;
+  events: string; // comma-separated e.g. "mehndi,shaadi,walima"
 }
 
 interface RsvpRow {
   id: number;
   guest_id: number;
+  event: string;
   attending: number;
   meal_choice: string | null;
   dietary_notes: string | null;
@@ -44,6 +46,7 @@ interface RsvpRow {
 
 interface RsvpResponse {
   guest_id: number;
+  event: string;
   attending: boolean;
   meal_choice: string | null;
   dietary_notes: string | null;
@@ -179,23 +182,23 @@ async function handleGetInvite(
 
   // Fetch guests
   const guestRows = await env.DB
-    .prepare("SELECT id, full_name FROM guests WHERE invite_id = ? ORDER BY id ASC")
+    .prepare("SELECT id, full_name, events FROM guests WHERE invite_id = ? ORDER BY id ASC")
     .bind(invite.id)
-    .all<Pick<GuestRow, "id" | "full_name">>();
+    .all<Pick<GuestRow, "id" | "full_name" | "events">>();
 
   const guests = guestRows.results ?? [];
   const guestIds = guests.map((g) => g.id);
 
   // Fetch existing RSVPs
-  let rsvps: Pick<RsvpRow, "guest_id" | "attending" | "meal_choice" | "dietary_notes">[] = [];
+  let rsvps: Pick<RsvpRow, "guest_id" | "event" | "attending" | "meal_choice" | "dietary_notes">[] = [];
   if (guestIds.length > 0) {
     const placeholders = guestIds.map(() => "?").join(", ");
     const rsvpRows = await env.DB
       .prepare(
-        `SELECT guest_id, attending, meal_choice, dietary_notes FROM rsvps WHERE guest_id IN (${placeholders})`
+        `SELECT guest_id, event, attending, meal_choice, dietary_notes FROM rsvps WHERE guest_id IN (${placeholders})`
       )
       .bind(...guestIds)
-      .all<Pick<RsvpRow, "guest_id" | "attending" | "meal_choice" | "dietary_notes">>();
+      .all<Pick<RsvpRow, "guest_id" | "event" | "attending" | "meal_choice" | "dietary_notes">>();
     rsvps = (rsvpRows.results ?? []).map((r) => ({
       ...r,
       attending: Boolean(r.attending) as unknown as number,
@@ -205,7 +208,12 @@ async function handleGetInvite(
   return jsonResponse(
     {
       household_label: invite.household_label,
-      guests,
+      // Return events as array per guest
+      guests: guests.map(g => ({
+        id: g.id,
+        full_name: g.full_name,
+        events: g.events.split(',').map(e => e.trim()).filter(Boolean),
+      })),
       rsvps,
     },
     200,
@@ -248,17 +256,28 @@ async function handlePostRsvp(
     return jsonResponse({ error: "No responses provided." }, 400, corsOrigin);
   }
 
-  // Validate all guest_ids belong to this invite
+  // Validate all guest_ids belong to this invite and events are valid for that guest
   const guestRows = await env.DB
-    .prepare("SELECT id FROM guests WHERE invite_id = ?")
+    .prepare("SELECT id, events FROM guests WHERE invite_id = ?")
     .bind(invite.id)
-    .all<Pick<GuestRow, "id">>();
+    .all<Pick<GuestRow, "id" | "events">>();
 
-  const validGuestIds = new Set((guestRows.results ?? []).map((g) => g.id));
+  const validGuests = new Map((guestRows.results ?? []).map((g) => [
+    g.id,
+    new Set(g.events.split(',').map(e => e.trim()).filter(Boolean)),
+  ]));
+
+  const validEvents = new Set(["mehndi", "shaadi", "walima"]);
 
   for (const r of body.responses) {
-    if (typeof r.guest_id !== "number" || !validGuestIds.has(r.guest_id)) {
+    if (typeof r.guest_id !== "number" || !validGuests.has(r.guest_id)) {
       return jsonResponse({ error: "Invalid guest in request." }, 400, corsOrigin);
+    }
+    if (typeof r.event !== "string" || !validEvents.has(r.event)) {
+      return jsonResponse({ error: "Invalid event." }, 400, corsOrigin);
+    }
+    if (!validGuests.get(r.guest_id)!.has(r.event)) {
+      return jsonResponse({ error: "Guest not invited to this event." }, 403, corsOrigin);
     }
     if (typeof r.attending !== "boolean") {
       return jsonResponse({ error: "Invalid attending value." }, 400, corsOrigin);
@@ -274,14 +293,14 @@ async function handlePostRsvp(
     }
   }
 
-  // Upsert RSVPs in a batch
+  // Upsert RSVPs in a batch (one per guest+event)
   const now = new Date().toISOString();
   const stmts = body.responses.map((r) =>
     env.DB
       .prepare(
-        `INSERT INTO rsvps (guest_id, attending, meal_choice, dietary_notes, updated_at)
-         VALUES (?, ?, ?, ?, ?)
-         ON CONFLICT(guest_id) DO UPDATE SET
+        `INSERT INTO rsvps (guest_id, event, attending, meal_choice, dietary_notes, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?)
+         ON CONFLICT(guest_id, event) DO UPDATE SET
            attending = excluded.attending,
            meal_choice = excluded.meal_choice,
            dietary_notes = excluded.dietary_notes,
@@ -289,6 +308,7 @@ async function handlePostRsvp(
       )
       .bind(
         r.guest_id,
+        r.event,
         r.attending ? 1 : 0,
         r.meal_choice ?? null,
         r.dietary_notes ?? null,

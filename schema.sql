@@ -17,17 +17,20 @@ CREATE TABLE IF NOT EXISTS invites (
 CREATE TABLE IF NOT EXISTS guests (
   id         INTEGER PRIMARY KEY AUTOINCREMENT,
   invite_id  INTEGER NOT NULL REFERENCES invites(id) ON DELETE CASCADE,
-  full_name  TEXT    NOT NULL
+  full_name  TEXT    NOT NULL,
+  events     TEXT    NOT NULL DEFAULT 'mehndi,shaadi,walima'  -- comma-separated invited events
 );
 
--- One row per guest per submission (upsert on guest_id)
+-- One row per guest per event (upsert on guest_id + event)
 CREATE TABLE IF NOT EXISTS rsvps (
   id             INTEGER PRIMARY KEY AUTOINCREMENT,
-  guest_id       INTEGER NOT NULL UNIQUE REFERENCES guests(id) ON DELETE CASCADE,
+  guest_id       INTEGER NOT NULL REFERENCES guests(id) ON DELETE CASCADE,
+  event          TEXT    NOT NULL,             -- "mehndi"|"shaadi"|"walima"
   attending      INTEGER NOT NULL DEFAULT 0,  -- 1=yes, 0=no
   meal_choice    TEXT,                         -- "chicken"|"fish"|"vegetarian"|"vegan"|null
   dietary_notes  TEXT,
-  updated_at     TEXT NOT NULL DEFAULT (datetime('now'))
+  updated_at     TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE(guest_id, event)
 );
 
 -- Rate limiting: fixed 10-min window per token_hash
@@ -40,5 +43,5 @@ CREATE TABLE IF NOT EXISTS rate_limits (
 -- ── Indices ────────────────────────────────────────────
 CREATE INDEX IF NOT EXISTS idx_invites_token_hash  ON invites(token_hash);
 CREATE INDEX IF NOT EXISTS idx_guests_invite_id    ON guests(invite_id);
-CREATE INDEX IF NOT EXISTS idx_rsvps_guest_id      ON rsvps(guest_id);
+CREATE INDEX IF NOT EXISTS idx_rsvps_guest_event   ON rsvps(guest_id, event);
 CREATE INDEX IF NOT EXISTS idx_ratelimits_hash     ON rate_limits(token_hash);

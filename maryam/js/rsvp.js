@@ -1,26 +1,42 @@
 /**
- * rsvp.js — RSVP page: load invite data, render guest form, submit
+ * rsvp.js — RSVP page: per-event attendance with green/red toggles
  * ─────────────────────────────────────────────────────────────────
  * Flow:
- *  1. Read ?t=TOKEN from URL
+ *  1. Read ?t=TOKEN (or ?demo=1 for preview) from URL
  *  2. Fetch GET /api/invite?t=TOKEN
- *  3. Render guest cards with pre-filled RSVP data
- *  4. On submit: POST /api/rsvp?t=TOKEN
+ *  3. Render guest cards with per-event attend/decline toggles
+ *  4. On submit: POST /api/rsvp?t=TOKEN  (one response per guest+event)
  *  5. Show success / error state
  *
- * Security: token stays in URL param only; never stored in localStorage.
+ * Demo mode: /rsvp/?demo=1  — loads mock data, no API call needed.
  */
 
 // ── Config ─────────────────────────────────────────────────────────
-// IMPORTANT: Replace with your deployed Cloudflare Worker URL.
 const API_BASE = 'https://wedding-rsvp-worker.zubair-qazi-5b.workers.dev';
 
+const EVENT_META = {
+  mehndi: { label: 'Mehndi',  hasMeal: false },
+  shaadi: { label: 'Shaadi',  hasMeal: true  },
+  walima: { label: 'Walima',  hasMeal: true  },
+};
+
 const MEAL_OPTIONS = [
-  { value: 'chicken',     label: 'Chicken' },
-  { value: 'fish',        label: 'Fish' },
-  { value: 'vegetarian',  label: 'Vegetarian' },
-  { value: 'vegan',       label: 'Vegan' },
+  { value: 'chicken',    label: 'Chicken'    },
+  { value: 'fish',       label: 'Fish'       },
+  { value: 'vegetarian', label: 'Vegetarian' },
+  { value: 'vegan',      label: 'Vegan'      },
 ];
+
+// ── Demo mock data ──────────────────────────────────────────────────
+const DEMO_DATA = {
+  household_label: 'Ahmed Family',
+  guests: [
+    { id: 1, full_name: 'Fatima Ahmed',  events: ['mehndi', 'shaadi', 'walima'] },
+    { id: 2, full_name: 'Omar Ahmed',    events: ['shaadi', 'walima'] },
+    { id: 3, full_name: 'Layla Ahmed',   events: ['mehndi', 'shaadi'] },
+  ],
+  rsvps: [],
+};
 
 // ── Helpers ─────────────────────────────────────────────────────────
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -28,132 +44,221 @@ const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 function getToken() {
   return new URLSearchParams(window.location.search).get('t') ?? null;
 }
+function isDemo() {
+  return new URLSearchParams(window.location.search).get('demo') === '1';
+}
 
 function show(id)  { const el = document.getElementById(id); if (el) { el.style.display = '';   el.classList.add('visible');    } }
 function hide(id)  { const el = document.getElementById(id); if (el) { el.style.display = 'none'; el.classList.remove('visible'); } }
-function showClass(id, cls) { document.getElementById(id)?.classList.add(cls); }
+
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
 
 // ── Guest card builder ───────────────────────────────────────────────
-function buildGuestCard(guest, existingRsvp) {
-  const attending = existingRsvp?.attending;
-  const mealChoice = existingRsvp?.meal_choice ?? '';
-  const dietaryNotes = existingRsvp?.dietary_notes ?? '';
-  const yesChecked = attending === true  ? 'checked' : '';
-  const noChecked  = attending === false ? 'checked' : '';
-  const detailsClass = attending === true ? 'guest-details visible' : 'guest-details';
+// guest.events = ['mehndi', 'shaadi', 'walima'] (subset each guest is invited to)
+// rsvpMap keyed by "guest_id:event"
+function buildGuestCard(guest, rsvpMap) {
+  const eventsHtml = guest.events.map(evt => {
+    const meta     = EVENT_META[evt];
+    if (!meta) return '';
+    const key      = `${guest.id}:${evt}`;
+    const existing = rsvpMap[key];
+    const attending = existing?.attending;  // true | false | undefined
+    const mealChoice   = existing?.meal_choice   ?? '';
+    const dietaryNotes = existing?.dietary_notes ?? '';
 
-  // Build meal options
-  const mealOptionsHtml = MEAL_OPTIONS.map(opt =>
-    `<option value="${opt.value}"${mealChoice === opt.value ? ' selected' : ''}>${opt.label}</option>`
-  ).join('');
+    const yesActive = attending === true  ? 'active yes-active' : '';
+    const noActive  = attending === false ? 'active no-active'  : '';
+    const detailHidden = attending === true ? '' : 'hidden';
+
+    const mealHtml = meta.hasMeal ? `
+      <div class="event-meal-details" id="meal-detail-${guest.id}-${evt}" ${detailHidden}>
+        <div class="field-group">
+          <label for="meal-${guest.id}-${evt}">Meal Choice</label>
+          <select id="meal-${guest.id}-${evt}">
+            <option value="" ${!mealChoice ? 'selected' : ''}>Select…</option>
+            ${MEAL_OPTIONS.map(o => `<option value="${o.value}"${mealChoice === o.value ? ' selected' : ''}>${o.label}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="dietary-${guest.id}-${evt}">Dietary Notes</label>
+          <input type="text" id="dietary-${guest.id}-${evt}"
+            placeholder="Allergies, restrictions…" maxlength="500"
+            value="${escapeHtml(dietaryNotes)}">
+        </div>
+      </div>` : '';
+
+    return `
+      <div class="event-rsvp-row" data-guest-id="${guest.id}" data-event="${evt}">
+        <div class="event-row-top">
+          <span class="event-chip event-chip--${evt}">${escapeHtml(meta.label)}</span>
+          <div class="attend-btns" role="group" aria-label="${escapeHtml(guest.full_name)} — ${escapeHtml(meta.label)}">
+            <button type="button" class="attend-btn attend-btn--yes ${yesActive}"
+              data-val="yes" aria-pressed="${attending === true}">
+              <span class="attend-icon" aria-hidden="true">✓</span> Attending
+            </button>
+            <button type="button" class="attend-btn attend-btn--no ${noActive}"
+              data-val="no" aria-pressed="${attending === false}">
+              <span class="attend-icon" aria-hidden="true">✗</span> Declining
+            </button>
+          </div>
+        </div>
+        ${mealHtml}
+      </div>`.trim();
+  }).join('');
 
   return `
     <div class="guest-card" data-guest-id="${guest.id}">
       <div class="guest-card-header">
         <h3 class="guest-name">${escapeHtml(guest.full_name)}</h3>
-        <div class="attending-toggle" role="group" aria-label="Will ${escapeHtml(guest.full_name)} attend?">
-          <label>
-            <input type="radio" name="attending-${guest.id}" value="yes" ${yesChecked} required>
-            <span>Attending</span>
-          </label>
-          <label>
-            <input type="radio" name="attending-${guest.id}" value="no"  ${noChecked}>
-            <span>Not Attending</span>
-          </label>
-        </div>
       </div>
-      <div class="${detailsClass}" id="details-${guest.id}">
-        <div class="field-group">
-          <label for="meal-${guest.id}">Meal Choice</label>
-          <select id="meal-${guest.id}" name="meal-${guest.id}">
-            <option value="" ${!mealChoice ? 'selected' : ''}>Select…</option>
-            ${mealOptionsHtml}
-          </select>
-        </div>
-        <div class="field-group dietary-group">
-          <label for="dietary-${guest.id}">Dietary Notes</label>
-          <input
-            type="text"
-            id="dietary-${guest.id}"
-            name="dietary-${guest.id}"
-            placeholder="Allergies, restrictions…"
-            maxlength="500"
-            value="${escapeHtml(dietaryNotes)}"
-          >
-        </div>
+      <div class="guest-events">
+        ${eventsHtml}
       </div>
-    </div>
-  `.trim();
+    </div>`.trim();
 }
 
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
+// ── Wire up attend button clicks ─────────────────────────────────────
+function bindEventToggleListeners() {
+  document.querySelectorAll('.event-rsvp-row').forEach(row => {
+    const guestId = row.dataset.guestId;
+    const evt     = row.dataset.event;
+    const meta    = EVENT_META[evt];
 
-// ── Bind attending toggle → show/hide meal details ──────────────────
-function bindToggleListeners() {
-  document.querySelectorAll('.attending-toggle input[type="radio"]').forEach(input => {
-    input.addEventListener('change', () => {
-      const guestId = input.closest('.guest-card').dataset.guestId;
-      const detailsEl = document.getElementById(`details-${guestId}`);
-      if (!detailsEl) return;
+    row.querySelectorAll('.attend-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.dataset.val;
 
-      if (input.value === 'yes') {
-        detailsEl.classList.add('visible');
-      } else {
-        detailsEl.classList.remove('visible');
-        // Clear meal selection when not attending
-        const mealSel = document.getElementById(`meal-${guestId}`);
-        if (mealSel) mealSel.value = '';
-        const dietaryInp = document.getElementById(`dietary-${guestId}`);
-        if (dietaryInp) dietaryInp.value = '';
-      }
+        row.querySelectorAll('.attend-btn').forEach(b => {
+          b.classList.remove('active', 'yes-active', 'no-active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active', val === 'yes' ? 'yes-active' : 'no-active');
+        btn.setAttribute('aria-pressed', 'true');
+
+        if (meta?.hasMeal) {
+          const detail = document.getElementById(`meal-detail-${guestId}-${evt}`);
+          if (detail) {
+            if (val === 'yes') {
+              detail.removeAttribute('hidden');
+            } else {
+              detail.setAttribute('hidden', '');
+              const mealSel = document.getElementById(`meal-${guestId}-${evt}`);
+              if (mealSel) mealSel.value = '';
+              const dtInp = document.getElementById(`dietary-${guestId}-${evt}`);
+              if (dtInp) dtInp.value = '';
+            }
+          }
+        }
+
+        // Clear any validation highlight on parent card
+        row.closest('.guest-card')?.style.removeProperty('outline');
+      });
     });
   });
 }
 
-// ── Animate guest cards in with GSAP (or instant if no GSAP) ────────
+// ── Animate guest cards in ───────────────────────────────────────────
 function animateCardsIn(cards) {
   if (typeof gsap === 'undefined' || prefersReduced) {
     cards.forEach(c => { c.style.opacity = '1'; c.style.transform = 'none'; });
     return;
   }
-  gsap.from(cards, {
-    opacity: 0,
-    y: 20,
-    duration: 0.55,
-    ease: 'power3.out',
-    stagger: 0.1,
+  gsap.from(cards, { opacity: 0, y: 20, duration: 0.55, ease: 'power3.out', stagger: 0.1 });
+}
+
+// ── Render form with loaded data ─────────────────────────────────────
+function renderForm(data) {
+  const householdLabel = document.getElementById('rsvp-household-label');
+  if (householdLabel) householdLabel.textContent = data.household_label;
+
+  const guestList = document.getElementById('guest-list');
+  if (!guestList) return;
+
+  // Build rsvpMap keyed by "guest_id:event"
+  const rsvpMap = {};
+  (data.rsvps ?? []).forEach(r => { rsvpMap[`${r.guest_id}:${r.event}`] = r; });
+
+  guestList.innerHTML = (data.guests ?? []).map(g => buildGuestCard(g, rsvpMap)).join('');
+
+  bindEventToggleListeners();
+  animateCardsIn(Array.from(guestList.querySelectorAll('.guest-card')));
+
+  hide('rsvp-loading');
+  show('rsvp-form-wrap');
+}
+
+// ── Collect per-event responses from the DOM ─────────────────────────
+function collectResponses() {
+  const responses = [];
+  const unanswered = [];
+
+  document.querySelectorAll('.event-rsvp-row').forEach(row => {
+    const guestId = parseInt(row.dataset.guestId, 10);
+    const evt     = row.dataset.event;
+    const meta    = EVENT_META[evt];
+    const active  = row.querySelector('.attend-btn.active');
+
+    if (!active) { unanswered.push(row); return; }
+
+    const attending    = active.dataset.val === 'yes';
+    const mealChoice   = (meta?.hasMeal && attending)
+      ? (document.getElementById(`meal-${guestId}-${evt}`)?.value || null) : null;
+    const dietaryNotes = (meta?.hasMeal && attending)
+      ? (document.getElementById(`dietary-${guestId}-${evt}`)?.value?.trim() || null) : null;
+
+    responses.push({ guest_id: guestId, event: evt, attending, meal_choice: mealChoice, dietary_notes: dietaryNotes });
   });
+
+  return { responses, unanswered };
 }
 
 // ── Main ─────────────────────────────────────────────────────────────
 async function initRsvp() {
-  const token = getToken();
 
-  // No token in URL
+  // ── Demo mode ──
+  if (isDemo()) {
+    renderForm(DEMO_DATA);
+    const form     = document.getElementById('rsvp-form');
+    const statusEl = document.getElementById('rsvp-status');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const { unanswered } = collectResponses();
+        if (unanswered.length > 0) {
+          unanswered.forEach(row => {
+            const card = row.closest('.guest-card');
+            if (card) { card.style.outline = '2px solid var(--color-error)'; card.style.borderRadius = 'var(--radius-lg)'; }
+          });
+          if (statusEl) { statusEl.textContent = 'Please answer every event row.'; statusEl.className = 'rsvp-status visible error'; }
+          unanswered[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        hide('rsvp-form-wrap');
+        show('rsvp-success-screen');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+    return;
+  }
+
+  // ── Real token flow ──
+  const token = getToken();
   if (!token || !/^[A-Za-z0-9_\-]{20,64}$/.test(token)) {
     hide('rsvp-loading');
     show('rsvp-error-screen');
     return;
   }
 
-  // ── Fetch invite data ──
   let data;
   try {
     const res = await fetch(`${API_BASE}/api/invite?t=${encodeURIComponent(token)}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'GET', headers: { 'Content-Type': 'application/json' },
     });
-
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     data = await res.json();
   } catch (err) {
     console.error('Failed to load invite:', err);
@@ -162,44 +267,17 @@ async function initRsvp() {
     return;
   }
 
-  // ── Render form ──
-  const householdLabel = document.getElementById('rsvp-household-label');
-  if (householdLabel) householdLabel.textContent = data.household_label;
+  renderForm(data);
 
-  const guestList = document.getElementById('guest-list');
-  if (!guestList) return;
-
-  // Build a map of existing RSVPs keyed by guest_id
-  const rsvpMap = {};
-  (data.rsvps ?? []).forEach(r => {
-    rsvpMap[r.guest_id] = r;
-  });
-
-  // Render guest cards
-  guestList.innerHTML = (data.guests ?? [])
-    .map(g => buildGuestCard(g, rsvpMap[g.id]))
-    .join('');
-
-  bindToggleListeners();
-
-  // Animate in
-  const cards = guestList.querySelectorAll('.guest-card');
-  animateCardsIn(Array.from(cards));
-
-  hide('rsvp-loading');
-  show('rsvp-form-wrap');
-
-  // ── Form submit ──
-  const form = document.getElementById('rsvp-form');
+  const form      = document.getElementById('rsvp-form');
   const submitBtn = document.getElementById('rsvp-submit');
-  const statusEl = document.getElementById('rsvp-status');
+  const statusEl  = document.getElementById('rsvp-status');
 
   function setStatus(msg, type) {
     if (!statusEl) return;
     statusEl.textContent = msg;
     statusEl.className = `rsvp-status visible ${type}`;
   }
-
   function clearStatus() {
     if (!statusEl) return;
     statusEl.className = 'rsvp-status';
@@ -210,42 +288,18 @@ async function initRsvp() {
     e.preventDefault();
     clearStatus();
 
-    // Collect guest responses
-    const responses = [];
-    let hasError = false;
+    const { responses, unanswered } = collectResponses();
 
-    document.querySelectorAll('.guest-card').forEach(card => {
-      const guestId = parseInt(card.dataset.guestId, 10);
-      const attendingInput = card.querySelector(`input[name="attending-${guestId}"]:checked`);
-
-      if (!attendingInput) {
-        // Mark unanswered
-        card.style.outline = '2px solid var(--color-error)';
-        card.style.borderRadius = 'var(--radius-lg)';
-        hasError = true;
-        return;
-      }
-      card.style.outline = '';
-
-      const attending = attendingInput.value === 'yes';
-      const mealChoice = attending
-        ? (document.getElementById(`meal-${guestId}`)?.value || null)
-        : null;
-      const dietaryNotes = attending
-        ? (document.getElementById(`dietary-${guestId}`)?.value?.trim() || null)
-        : null;
-
-      responses.push({ guest_id: guestId, attending, meal_choice: mealChoice, dietary_notes: dietaryNotes });
-    });
-
-    if (hasError) {
-      setStatus('Please select attending or not attending for every guest.', 'error');
-      const firstUnset = document.querySelector('.guest-card[style*="outline"]');
-      firstUnset?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (unanswered.length > 0) {
+      unanswered.forEach(row => {
+        const card = row.closest('.guest-card');
+        if (card) { card.style.outline = '2px solid var(--color-error)'; card.style.borderRadius = 'var(--radius-lg)'; }
+      });
+      setStatus('Please select attending or declining for every event row.', 'error');
+      unanswered[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
-    // Disable submit while sending
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting…'; }
 
     try {
@@ -254,37 +308,25 @@ async function initRsvp() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ responses }),
       });
-
       const result = await res.json();
+      if (!res.ok || !result.success) throw new Error(result.error ?? 'Unknown error');
 
-      if (!res.ok || !result.success) {
-        throw new Error(result.error ?? 'Unknown error');
-      }
-
-      // Success!
       hide('rsvp-form-wrap');
       show('rsvp-success-screen');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Customize success message
-      const attending = responses.filter(r => r.attending).map(r => {
-        const g = (data.guests ?? []).find(x => x.id === r.guest_id);
-        return g?.full_name ?? '';
-      }).filter(Boolean);
-      const notAttending = responses.filter(r => !r.attending).length;
-
+      const attendingNames = [...new Set(
+        responses.filter(r => r.attending)
+          .map(r => (data.guests ?? []).find(g => g.id === r.guest_id)?.full_name)
+          .filter(Boolean)
+      )];
       const msgEl = document.getElementById('rsvp-success-msg');
       if (msgEl) {
-        if (attending.length > 0 && notAttending === 0) {
-          msgEl.textContent = `We're so excited to celebrate with ${attending.join(' and ')}!`;
-        } else if (attending.length > 0) {
-          msgEl.textContent = `We look forward to celebrating with ${attending.join(' and ')}!`;
-        } else {
-          msgEl.textContent = 'We\'ll miss you, but thank you for letting us know.';
-        }
+        msgEl.textContent = attendingNames.length > 0
+          ? `We're so excited to celebrate with ${attendingNames.join(' and ')}!`
+          : "We'll miss you, but thank you for letting us know.";
       }
 
-      // Animate success screen
       if (typeof gsap !== 'undefined' && !prefersReduced) {
         gsap.from('#rsvp-success-screen', { opacity: 0, y: 20, duration: 0.6, ease: 'power3.out' });
       }
@@ -298,9 +340,9 @@ async function initRsvp() {
 }
 
 // ── Init ─────────────────────────────────────────────────────────────
-// Wait for DOM + deferred scripts
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initRsvp);
 } else {
   initRsvp();
 }
+

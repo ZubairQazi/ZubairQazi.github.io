@@ -1,6 +1,6 @@
-household_label,phone_e164,guest_name
-"Smith Family",+15551234567,Alice Smith
-"Smith Family",+15551234567,Bob Smith
-"Jones Household",+15559876543,Carol Jones
-"Dr. Kumar",+15555550123,Raj Kumar
-"Dr. Kumar",+15555550123,Priya Kumar
+household_label,phone_e164,guest_name,events
+"Smith Family",+15551234567,Alice Smith,mehndi|shaadi|walima
+"Smith Family",+15551234567,Bob Smith,shaadi|walima
+"Jones Household",+15559876543,Carol Jones,shaadi|walima
+"Dr. Kumar",+15555550123,Raj Kumar,mehndi|shaadi|walima
+"Dr. Kumar",+15555550123,Priya Kumar,shaadi

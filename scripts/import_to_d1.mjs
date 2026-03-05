@@ -83,7 +83,12 @@ async function readImportCsv() {
       console.warn(`  ⚠️  Skipping malformed row: ${line}`);
       continue;
     }
-    const guests = (guests_raw ?? '').split('|').map(s => s.trim()).filter(Boolean);
+    // guests_raw format: "Name:events1,events2|Name2:events3"
+    const guests = (guests_raw ?? '').split('|').map(s => s.trim()).filter(Boolean).map(entry => {
+      const colonIdx = entry.lastIndexOf(':');
+      if (colonIdx === -1) return { name: entry, events: 'mehndi,shaadi,walima' };
+      return { name: entry.slice(0, colonIdx).trim(), events: entry.slice(colonIdx + 1).trim() || 'mehndi,shaadi,walima' };
+    });
     rows.push({ token_hash, household_label, phone_e164, guests });
   }
   return rows;
@@ -108,12 +113,13 @@ function generateSql(rows) {
     );
 
     // Insert guests — use a subquery to get invite_id
-    for (const guestName of row.guests) {
+    for (const guest of row.guests) {
       lines.push(
-        `INSERT OR IGNORE INTO guests (invite_id, full_name)` +
+        `INSERT OR IGNORE INTO guests (invite_id, full_name, events)` +
         ` VALUES (` +
         `(SELECT id FROM invites WHERE token_hash = ${sqlStr(row.token_hash)}), ` +
-        `${sqlStr(guestName)}` +
+        `${sqlStr(guest.name)}, ` +
+        `${sqlStr(guest.events)}` +
         `);`
       );
     }
