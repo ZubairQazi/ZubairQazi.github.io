@@ -51,58 +51,51 @@ window.addEventListener('load', () => {
   // (the .gsap-ready class in CSS handles this)
 
   if (prefersReduced) {
-    // Reduced motion: just snap to visible immediately
-    gsap.to([
+    // Reduced motion: just snap to visible immediately, no transforms
+    document.body.classList.remove('gsap-ready');
+    gsap.set([
       '.hero-floral', '.hero-names', '.hero-tagline',
       '.hero-countdown', '#main-nav', '.main-left', '.main-right'
-    ], { opacity: 1, duration: 0.01, overwrite: true });
+    ], { opacity: 1, clearProps: 'all' });
     return;
   }
+
+  // ── Set initial hidden states (GSAP overrides CSS opacity)
+  gsap.set('.hero-floral',   { opacity: 0, y: -18, scale: 0.97 });
+  gsap.set('.hero-names',    { opacity: 0, y: 22 });
+  gsap.set('.hero-tagline',  { opacity: 0, y: 14 });
+  gsap.set('.hero-countdown',{ opacity: 0, y: 10 });
+  gsap.set('#main-nav',      { opacity: 0 });
+  gsap.set('.main-left',     { opacity: 0, x: -30 });
+  gsap.set('.main-right',    { opacity: 0, x: 30 });
+
+  // Remove CSS initial-hide now that GSAP owns opacity
+  document.body.classList.remove('gsap-ready');
 
   // ── Hero stagger entrance
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
   tl.to('.hero-floral', {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    duration: 0.9,
-    from: { opacity: 0, y: -18, scale: 0.97 },
+    opacity: 1, y: 0, scale: 1, duration: 0.9,
   })
-  .from('.hero-names', {
-    opacity: 0,
-    y: 22,
-    duration: 0.85,
+  .to('.hero-names', {
+    opacity: 1, y: 0, duration: 0.85,
   }, '-=0.45')
-  .from('.hero-tagline', {
-    opacity: 0,
-    y: 14,
-    duration: 0.6,
+  .to('.hero-tagline', {
+    opacity: 1, y: 0, duration: 0.6,
   }, '-=0.4')
-  .from('.hero-countdown', {
-    opacity: 0,
-    y: 10,
-    duration: 0.55,
+  .to('.hero-countdown', {
+    opacity: 1, y: 0, duration: 0.55,
   }, '-=0.35')
-  .from('#main-nav', {
-    opacity: 0,
-    duration: 0.5,
+  .to('#main-nav', {
+    opacity: 1, duration: 0.5,
   }, '-=0.3')
-  .from('.main-left', {
-    opacity: 0,
-    x: -30,
-    duration: 0.75,
+  .to('.main-left', {
+    opacity: 1, x: 0, duration: 0.75,
   }, '-=0.2')
-  .from('.main-right', {
-    opacity: 0,
-    x: 30,
-    duration: 0.75,
+  .to('.main-right', {
+    opacity: 1, x: 0, duration: 0.75,
   }, '<');
-
-  // After timeline resolves, set explicit opacity:1 to avoid GSAP conflicts
-  tl.then(() => {
-    document.body.classList.remove('gsap-ready');
-  });
 });
 
 // ── Photo tilt on mousemove (desktop only) ─────────────────────────

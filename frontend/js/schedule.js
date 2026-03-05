@@ -12,14 +12,18 @@ window.addEventListener('load', () => {
 
   // ── Hero compact fade-in (shared) ──────────────────────────────
   if (!prefersReduced) {
-    document.body.classList.add('gsap-ready');
+    // Set initial states via GSAP (overrides any CSS opacity immediately)
+    gsap.set('.hero-floral',  { opacity: 0, y: -14, scale: 0.97 });
+    gsap.set('.hero-names',   { opacity: 0, y: 18 });
+    gsap.set('.hero-tagline', { opacity: 0, y: 12 });
+    gsap.set('#main-nav',     { opacity: 0 });
+    document.body.classList.remove('gsap-ready');
 
     gsap.timeline({ defaults: { ease: 'power3.out' } })
-      .from('.hero-floral',   { opacity: 0, y: -14, scale: 0.97, duration: 0.8 })
-      .from('.hero-names',    { opacity: 0, y: 18,  duration: 0.7 }, '-=0.4')
-      .from('.hero-tagline',  { opacity: 0, y: 12,  duration: 0.55 }, '-=0.3')
-      .from('#main-nav',      { opacity: 0, duration: 0.45 }, '-=0.25')
-      .then(() => document.body.classList.remove('gsap-ready'));
+      .to('.hero-floral',  { opacity: 1, y: 0, scale: 1,  duration: 0.8 })
+      .to('.hero-names',   { opacity: 1, y: 0,            duration: 0.7 }, '-=0.4')
+      .to('.hero-tagline', { opacity: 1, y: 0,            duration: 0.55 }, '-=0.3')
+      .to('#main-nav',     { opacity: 1,                  duration: 0.45 }, '-=0.25');
   }
 
   // ── Schedule blocks ────────────────────────────────────────────
