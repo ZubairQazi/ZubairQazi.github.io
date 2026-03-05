@@ -11,7 +11,7 @@
 
 // ── Config ────────────────────────────────────────────────────────
 // IMPORTANT: Update this to your actual wedding date (YYYY, MM-1, DD)
-const WEDDING_DATE = new Date(2026, 8, 12); // Sep 12, 2026 (month is 0-indexed)
+const WEDDING_DATE = new Date(2026, 5, 11); // Jun 11, 2026 (month is 0-indexed)
 
 // ── Reduced motion check ──────────────────────────────────────────
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

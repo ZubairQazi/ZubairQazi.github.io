@@ -101,6 +101,7 @@ async function readSmsCsv() {
 function buildMessage(row) {
   return (
     `You're invited to Zubair & Maryam's wedding! 🌸\n` +
+    `June 11–13, 2026 · San Diego, CA\n` +
     `Please RSVP here: ${row.rsvp_link}\n` +
     `One link per household — reply STOP to opt out.`
   );
