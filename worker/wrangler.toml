@@ -7,12 +7,12 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "wedding-rsvp"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "398d8fd8-0583-4527-ae89-75f716492b7a"
 
 # ── Environment variables (non-secret) ───────────────────
 [vars]
-ALLOWED_ORIGINS = "https://YOURUSERNAME.github.io,https://www.yourdomain.com"
-WEDDING_DATE = "2026-09-12"
+ALLOWED_ORIGINS = "https://zubairqazi.github.io,https://zubairqazi.com"
+WEDDING_DATE = "2026-06-11"
 
 # ── Secrets (set via: wrangler secret put SECRET_NAME) ───
 # No secrets needed in this config — none stored here.

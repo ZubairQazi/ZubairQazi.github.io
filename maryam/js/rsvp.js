@@ -13,7 +13,7 @@
 
 // ── Config ─────────────────────────────────────────────────────────
 // IMPORTANT: Replace with your deployed Cloudflare Worker URL.
-const API_BASE = 'https://wedding-rsvp-worker.YOURNAME.workers.dev';
+const API_BASE = 'https://wedding-rsvp-worker.zubair-qazi-5b.workers.dev';
 
 const MEAL_OPTIONS = [
   { value: 'chicken',     label: 'Chicken' },
