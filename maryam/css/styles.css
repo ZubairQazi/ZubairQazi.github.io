@@ -406,7 +406,7 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
   aspect-ratio: 3 / 4;
   box-shadow: var(--shadow-lg);
-  margin-top: var(--space-16);  /* pushes portrait down for staggered effect */
+  margin-top: var(--space-16);
 }
 
 .pair-landscape {
@@ -430,6 +430,142 @@ h1, h2, h3, h4, h5, h6 {
 .pair-portrait:hover img,
 .pair-landscape:hover img {
   transform: scale(1.03);
+}
+
+/* ── Before / After Slider ──────────────────────────────────────── */
+.ba-section {
+  padding-bottom: var(--space-20);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.ba-label-hint {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+}
+
+.ba-slider {
+  position: relative;
+  width: 100%;
+  max-width: 780px;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  cursor: col-resize;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* BEFORE fills the full container */
+.ba-before {
+  position: absolute;
+  inset: 0;
+}
+
+.ba-before img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  pointer-events: none;
+}
+
+/* AFTER is clipped by JS — starts at 50% */
+.ba-after {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 50% 0 0);
+  will-change: clip-path;
+}
+
+.ba-after img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  pointer-events: none;
+}
+
+/* Labels */
+.ba-label {
+  position: absolute;
+  bottom: var(--space-5);
+  font-family: var(--font-serif);
+  font-size: var(--text-base);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: rgba(30,20,10,0.38);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: var(--space-1) var(--space-4);
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.ba-label--before {
+  left: var(--space-5);
+}
+
+.ba-label--after {
+  right: var(--space-5);
+}
+
+/* Drag handle */
+.ba-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  will-change: left;
+  z-index: 10;
+}
+
+.ba-line {
+  flex: 1;
+  width: 2px;
+  background: rgba(255,255,255,0.85);
+}
+
+.ba-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.ba-circle svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--color-accent);
+}
+
+@media (max-width: 600px) {
+  .ba-slider {
+    aspect-ratio: 2 / 3;
+  }
 }
 
 /* RSVP Button */
@@ -1013,8 +1149,7 @@ body.gsap-ready .hero-tagline,
 body.gsap-ready .hero-countdown,
 body.gsap-ready #main-nav,
 body.gsap-ready .main-details,
-body.gsap-ready .pair-portrait,
-body.gsap-ready .pair-landscape {
+body.gsap-ready .ba-section {
   opacity: 0;
 }
 

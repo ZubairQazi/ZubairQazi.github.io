@@ -120,7 +120,7 @@ window.addEventListener('load', () => {
     document.body.classList.remove('gsap-ready');
     gsap.set([
       '.hero-floral', '.hero-names', '.hero-tagline',
-      '.hero-countdown', '#main-nav', '.main-details', '.photo-pair'
+      '.hero-countdown', '#main-nav', '.main-details', '.ba-section'
     ], { opacity: 1, clearProps: 'all' });
     return;
   }
@@ -132,8 +132,7 @@ window.addEventListener('load', () => {
   gsap.set('.hero-countdown', { opacity: 0, y: 12, scale: 0.88 });
   gsap.set('#main-nav',        { opacity: 0 });
   gsap.set('.main-details',    { opacity: 0, y: 30 });
-  gsap.set('.pair-portrait',   { opacity: 0, y: 40 });
-  gsap.set('.pair-landscape',  { opacity: 0, y: 60 });
+  gsap.set('.ba-section',      { opacity: 0, y: 40 });
 
   document.body.classList.remove('gsap-ready');
 
@@ -164,12 +163,9 @@ window.addEventListener('load', () => {
     .to('.main-details', {
       opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
     }, '-=0.2')
-    .to('.pair-portrait', {
+    .to('.ba-section', {
       opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
-    }, '-=0.4')
-    .to('.pair-landscape', {
-      opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
-    }, '<+=0.15');
+    }, '-=0.4');
 
   // ── Scroll-driven parallax on floral illustration
   if (typeof ScrollTrigger !== 'undefined') {
@@ -187,11 +183,10 @@ window.addEventListener('load', () => {
 // ── Photo tilt on mousemove (desktop only) ─────────────────────────
 (function initPhotoTilt() {
   if (prefersReduced) return;
-  // Only on devices with fine pointer (mouse)
   if (!window.matchMedia('(pointer: fine)').matches) return;
 
-  const photoWraps = document.querySelectorAll('.photo-main-wrap, .photo-small-wrap');
-  const MAX_TILT = 6; // degrees
+  const photoWraps = document.querySelectorAll('.ba-slider');
+  const MAX_TILT = 4;
 
   photoWraps.forEach(wrap => {
     let rafId = null;
@@ -206,17 +201,69 @@ window.addEventListener('load', () => {
         const dy = (e.clientY - cy) / (rect.height / 2);
         const rotX = (-dy * MAX_TILT).toFixed(2);
         const rotY = (dx * MAX_TILT).toFixed(2);
-        wrap.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02,1.02,1.02)`;
+        wrap.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.015,1.015,1.015)`;
         wrap.style.transition = 'transform 0.1s linear';
       });
     });
 
     wrap.addEventListener('mouseleave', () => {
       if (rafId) cancelAnimationFrame(rafId);
-      wrap.style.transition = 'transform 0.55s cubic-bezier(0.16,1,0.3,1)';
-      wrap.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
+      wrap.style.transition = 'transform 0.6s cubic-bezier(0.16,1,0.3,1)';
+      wrap.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
     });
   });
+})();
+
+// ── Before / After drag slider ────────────────────────────────────
+(function initBeforeAfter() {
+  const slider  = document.getElementById('ba-slider');
+  const after   = document.getElementById('ba-after');
+  const handle  = document.getElementById('ba-handle');
+  if (!slider || !after || !handle) return;
+
+  let dragging = false;
+
+  function setPos(clientX) {
+    const rect = slider.getBoundingClientRect();
+    let pct = (clientX - rect.left) / rect.width;
+    pct = Math.min(Math.max(pct, 0.02), 0.98);
+    const p = (pct * 100).toFixed(2);
+    after.style.clipPath  = `inset(0 ${(100 - pct * 100).toFixed(2)}% 0 0)`;
+    handle.style.left     = p + '%';
+  }
+
+  // Animate in on first interaction
+  let introduced = false;
+  function introAnim() {
+    if (introduced) return;
+    introduced = true;
+  }
+
+  slider.addEventListener('mousedown',  (e) => { dragging = true; introAnim(); setPos(e.clientX); e.preventDefault(); });
+  window.addEventListener('mousemove',  (e) => { if (dragging) setPos(e.clientX); });
+  window.addEventListener('mouseup',    ()  => { dragging = false; });
+
+  slider.addEventListener('touchstart', (e) => { dragging = true; introAnim(); setPos(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener('touchmove',  (e) => { if (dragging) setPos(e.touches[0].clientX); }, { passive: true });
+  window.addEventListener('touchend',   ()  => { dragging = false; });
+
+  // Subtle auto-nudge on load to hint draggability
+  setTimeout(() => {
+    if (typeof gsap === 'undefined') return;
+    const rect = slider.getBoundingClientRect();
+    if (rect.width === 0) return; // not visible yet
+    gsap.to({}, {
+      duration: 1.4,
+      ease: 'power1.inOut',
+      onUpdate() {
+        const p = this.progress();
+        // swing from 50% → 38% → 50%
+        const pct = 0.50 - Math.sin(p * Math.PI) * 0.12;
+        after.style.clipPath = `inset(0 ${((1 - pct) * 100).toFixed(2)}% 0 0)`;
+        handle.style.left    = (pct * 100).toFixed(2) + '%';
+      }
+    });
+  }, 1800);
 })();
 
 // ── Nav active indicator ───────────────────────────────────────────
