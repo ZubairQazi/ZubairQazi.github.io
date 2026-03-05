@@ -15,17 +15,10 @@
 const API_BASE = 'https://wedding-rsvp-worker.zubair-qazi-5b.workers.dev';
 
 const EVENT_META = {
-  mehndi: { label: 'Mehndi',  hasMeal: false },
-  shaadi: { label: 'Shaadi',  hasMeal: true  },
-  walima: { label: 'Walima',  hasMeal: true  },
+  mehndi: { label: 'Mehndi' },
+  shaadi: { label: 'Shaadi' },
+  walima: { label: 'Walima' },
 };
-
-const MEAL_OPTIONS = [
-  { value: 'chicken',    label: 'Chicken'    },
-  { value: 'fish',       label: 'Fish'       },
-  { value: 'vegetarian', label: 'Vegetarian' },
-  { value: 'vegan',      label: 'Vegan'      },
-];
 
 // ── Demo mock data ──────────────────────────────────────────────────
 const DEMO_DATA = {
@@ -67,29 +60,21 @@ function buildGuestCard(guest, rsvpMap) {
     const key      = `${guest.id}:${evt}`;
     const existing = rsvpMap[key];
     const attending = existing?.attending;  // true | false | undefined
-    const mealChoice   = existing?.meal_choice   ?? '';
     const dietaryNotes = existing?.dietary_notes ?? '';
 
     const yesActive = attending === true  ? 'active yes-active' : '';
     const noActive  = attending === false ? 'active no-active'  : '';
     const detailHidden = attending === true ? '' : 'hidden';
 
-    const mealHtml = meta.hasMeal ? `
+    const mealHtml = `
       <div class="event-meal-details" id="meal-detail-${guest.id}-${evt}" ${detailHidden}>
-        <div class="field-group">
-          <label for="meal-${guest.id}-${evt}">Meal Choice</label>
-          <select id="meal-${guest.id}-${evt}">
-            <option value="" ${!mealChoice ? 'selected' : ''}>Select…</option>
-            ${MEAL_OPTIONS.map(o => `<option value="${o.value}"${mealChoice === o.value ? ' selected' : ''}>${o.label}</option>`).join('')}
-          </select>
-        </div>
         <div class="field-group">
           <label for="dietary-${guest.id}-${evt}">Dietary Notes</label>
           <input type="text" id="dietary-${guest.id}-${evt}"
             placeholder="Allergies, restrictions…" maxlength="500"
             value="${escapeHtml(dietaryNotes)}">
         </div>
-      </div>` : '';
+      </div>`;
 
     return `
       <div class="event-rsvp-row" data-guest-id="${guest.id}" data-event="${evt}">
@@ -139,18 +124,14 @@ function bindEventToggleListeners() {
         btn.classList.add('active', val === 'yes' ? 'yes-active' : 'no-active');
         btn.setAttribute('aria-pressed', 'true');
 
-        if (meta?.hasMeal) {
-          const detail = document.getElementById(`meal-detail-${guestId}-${evt}`);
-          if (detail) {
-            if (val === 'yes') {
-              detail.removeAttribute('hidden');
-            } else {
-              detail.setAttribute('hidden', '');
-              const mealSel = document.getElementById(`meal-${guestId}-${evt}`);
-              if (mealSel) mealSel.value = '';
-              const dtInp = document.getElementById(`dietary-${guestId}-${evt}`);
-              if (dtInp) dtInp.value = '';
-            }
+        const detail = document.getElementById(`meal-detail-${guestId}-${evt}`);
+        if (detail) {
+          if (val === 'yes') {
+            detail.removeAttribute('hidden');
+          } else {
+            detail.setAttribute('hidden', '');
+            const dtInp = document.getElementById(`dietary-${guestId}-${evt}`);
+            if (dtInp) dtInp.value = '';
           }
         }
 
@@ -205,12 +186,10 @@ function collectResponses() {
     if (!active) { unanswered.push(row); return; }
 
     const attending    = active.dataset.val === 'yes';
-    const mealChoice   = (meta?.hasMeal && attending)
-      ? (document.getElementById(`meal-${guestId}-${evt}`)?.value || null) : null;
-    const dietaryNotes = (meta?.hasMeal && attending)
+    const dietaryNotes = attending
       ? (document.getElementById(`dietary-${guestId}-${evt}`)?.value?.trim() || null) : null;
 
-    responses.push({ guest_id: guestId, event: evt, attending, meal_choice: mealChoice, dietary_notes: dietaryNotes });
+    responses.push({ guest_id: guestId, event: evt, attending, dietary_notes: dietaryNotes });
   });
 
   return { responses, unanswered };
@@ -245,11 +224,36 @@ async function initRsvp() {
     return;
   }
 
+  // ── Code-entry helper ──
+  function showCodeEntry(errorMsg = '') {
+    hide('rsvp-loading');
+    const errEl = document.getElementById('rsvp-code-error');
+    if (errEl) errEl.textContent = errorMsg;
+    show('rsvp-code-screen');
+    const codeForm = document.getElementById('rsvp-code-form');
+    if (codeForm) {
+      codeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('rsvp-code-input');
+        const code = input?.value?.trim() ?? '';
+        if (!code) {
+          if (errEl) errEl.textContent = 'Please enter your RSVP code.';
+          input?.focus();
+          return;
+        }
+        if (code.toLowerCase() === 'demo') {
+          window.location.href = `${window.location.pathname}?demo=1`;
+          return;
+        }
+        window.location.href = `${window.location.pathname}?t=${encodeURIComponent(code)}`;
+      }, { once: true });
+    }
+  }
+
   // ── Real token flow ──
   const token = getToken();
   if (!token || !/^[A-Za-z0-9_\-]{20,64}$/.test(token)) {
-    hide('rsvp-loading');
-    show('rsvp-error-screen');
+    showCodeEntry();
     return;
   }
 
@@ -262,8 +266,7 @@ async function initRsvp() {
     data = await res.json();
   } catch (err) {
     console.error('Failed to load invite:', err);
-    hide('rsvp-loading');
-    show('rsvp-error-screen');
+    showCodeEntry('Code not found. Please double-check and try again.');
     return;
   }
 

@@ -72,11 +72,18 @@
             </div>
           </div>
 
-          <!-- Error: no/invalid token -->
-          <div id="rsvp-error-screen" class="rsvp-error-screen" aria-live="polite" role="alert">
+          <!-- Code entry (shown when no/invalid token in URL) -->
+          <div id="rsvp-code-screen" class="rsvp-code-screen" aria-live="polite">
             <div class="divider" aria-hidden="true"></div>
-            <h2>Invalid Invitation Link</h2>
-            <p>This link is invalid or has expired. Please check your message and try again, or contact us directly.</p>
+            <h2>Enter Your RSVP Code</h2>
+            <p class="rsvp-code-hint">Your personal code was included in your invitation message.</p>
+            <form id="rsvp-code-form" class="rsvp-code-form" novalidate>
+              <input type="text" id="rsvp-code-input" class="rsvp-code-input"
+                placeholder="Your code" autocomplete="off" spellcheck="false"
+                maxlength="64" autocapitalize="characters" aria-label="RSVP code">
+              <button type="submit" class="rsvp-submit-btn">Find My Invitation</button>
+            </form>
+            <p id="rsvp-code-error" class="rsvp-code-error" role="alert" aria-live="polite"></p>
             <div class="divider" aria-hidden="true"></div>
           </div>
 
