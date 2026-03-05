@@ -1108,9 +1108,33 @@ h1, h2, h3, h4, h5, h6 {
    ══════════════════════════════════════════════════════════════════ */
 .site-footer {
   margin-top: auto;
-  padding-block: var(--space-8);
+  position: relative;
+  overflow: visible;
+  padding-top: clamp(180px, 22vw, 340px);
+  padding-bottom: var(--space-8);
   text-align: center;
   border-top: 1px solid var(--color-border);
+}
+
+.footer-floral {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.footer-floral img {
+  width: 100%;
+  height: auto;
+  display: block;
+  mix-blend-mode: multiply;
+}
+
+.footer-text {
+  position: relative;
+  z-index: 1;
   font-size: var(--text-xs);
   letter-spacing: 0.14em;
   text-transform: uppercase;
