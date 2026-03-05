@@ -394,7 +394,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Staggered photo pair */
 .photo-pair {
   display: grid;
-  grid-template-columns: 5fr 7fr;
+  grid-template-columns: 7fr 5fr;
   grid-template-rows: auto;
   align-items: end;
   gap: var(--space-6);
