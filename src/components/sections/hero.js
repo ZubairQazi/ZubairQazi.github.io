@@ -63,11 +63,12 @@ const Hero = () => {
 
   const one = <h1>Hi, my name is</h1>;
   const two = <h2 className="big-heading">Zubair Qazi.</h2>;
-  const three = <h3 className="big-heading">PhD Student at the University of Michigan.</h3>;
+  const three = <h3 className="big-heading">PhD Student @ University of Michigan.</h3>;
   const four = (
     <>
       <p>
-        I research graph mining, large language models, and agentic AI systems.
+        I research graph mining, large language models, and agentic AI systems in the{' '}
+        <a href="https://gemslab.github.io/" target="_blank" rel="noreferrer">GEMS Lab</a>.
       </p>
     </>
   );
