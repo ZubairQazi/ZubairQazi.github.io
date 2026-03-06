@@ -19,6 +19,104 @@
 
   <div class="site-wrapper">
 
+    <!-- ══ Mughal arch background ══ -->
+    <div class="mughal-arch-bg" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1200"
+           preserveAspectRatio="xMidYMin meet" class="mughal-arch-svg">
+        <defs>
+          <!-- Depth gradient: slightly darkens arch edges, lighter center for recessed look -->
+          <radialGradient id="ag-depth" cx="50%" cy="28%" r="62%" gradientUnits="objectBoundingBox">
+            <stop offset="0%"   stop-color="#EFE6D2" stop-opacity="0"/>
+            <stop offset="75%"  stop-color="#B89B72" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#8B6F4E" stop-opacity="0.09"/>
+          </radialGradient>
+          <!-- Left pillar inner shadow cast into arch -->
+          <linearGradient id="ag-sl" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%"   stop-color="#8B6F4E" stop-opacity="0.10"/>
+            <stop offset="100%" stop-color="#8B6F4E" stop-opacity="0"/>
+          </linearGradient>
+          <!-- Right pillar inner shadow cast into arch -->
+          <linearGradient id="ag-sr" x1="1" x2="0" y1="0" y2="0">
+            <stop offset="0%"   stop-color="#8B6F4E" stop-opacity="0.10"/>
+            <stop offset="100%" stop-color="#8B6F4E" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Arch interior depth fill -->
+        <path d="M70,1200 L70,445 C70,340 38,278 50,198 C64,126 185,58 300,34 C415,58 536,126 550,198 C562,278 530,340 530,445 L530,1200 Z"
+              fill="url(#ag-depth)"/>
+
+        <!-- Pillar shadow cast strips -->
+        <rect x="40" y="0" width="60" height="1200" fill="url(#ag-sl)"/>
+        <rect x="500" y="0" width="60" height="1200" fill="url(#ag-sr)"/>
+
+        <!-- Outer arch border -->
+        <path d="M70,1200 L70,445 C70,340 38,278 50,198 C64,126 185,58 300,34 C415,58 536,126 550,198 C562,278 530,340 530,445 L530,1200"
+              fill="none" stroke="#8B6F4E" stroke-width="1.8" opacity="0.28"/>
+
+        <!-- Inner arch border (double-line effect) -->
+        <path d="M92,1200 L92,450 C92,352 63,292 75,215 C89,144 197,80 300,57 C403,80 511,144 525,215 C537,292 508,352 508,450 L508,1200"
+              fill="none" stroke="#8B6F4E" stroke-width="0.9" opacity="0.18"/>
+
+        <!-- Keystone rosette at apex -->
+        <g transform="translate(300,37)" opacity="0.34" stroke="#8B6F4E" fill="none">
+          <circle r="17" stroke-width="1.0"/>
+          <circle r="10" stroke-width="0.8"/>
+          <!-- 8-petal floral -->
+          <path d="M0,-7 C2,-2 2,-2 7,0 C2,2 2,2 0,7 C-2,2 -2,2 -7,0 C-2,-2 -2,-2 0,-7Z" stroke-width="0.8"/>
+          <circle r="2.8" fill="#8B6F4E" opacity="0.45"/>
+          <!-- Cardinal diamond finials -->
+          <path d="M0,-15 L2.2,-10.5 L0,-6 L-2.2,-10.5 Z" fill="#8B6F4E" opacity="0.35"/>
+          <path d="M15,0 L10.5,2.2 L6,0 L10.5,-2.2 Z" fill="#8B6F4E" opacity="0.35"/>
+          <path d="M0,15 L2.2,10.5 L0,6 L-2.2,10.5 Z" fill="#8B6F4E" opacity="0.35"/>
+          <path d="M-15,0 L-10.5,2.2 L-6,0 L-10.5,-2.2 Z" fill="#8B6F4E" opacity="0.35"/>
+        </g>
+
+        <!-- Left spandrel ornament -->
+        <g transform="translate(34,110)" opacity="0.19" stroke="#8B6F4E" fill="none" stroke-width="1">
+          <circle r="19"/>
+          <circle r="11"/>
+          <circle r="4" fill="#8B6F4E"/>
+          <line x1="-19" y1="0" x2="19" y2="0"/>
+          <line x1="0" y1="-19" x2="0" y2="19"/>
+          <line x1="-13.5" y1="-13.5" x2="13.5" y2="13.5"/>
+          <line x1="13.5" y1="-13.5" x2="-13.5" y2="13.5"/>
+        </g>
+
+        <!-- Right spandrel ornament -->
+        <g transform="translate(566,110)" opacity="0.19" stroke="#8B6F4E" fill="none" stroke-width="1">
+          <circle r="19"/>
+          <circle r="11"/>
+          <circle r="4" fill="#8B6F4E"/>
+          <line x1="-19" y1="0" x2="19" y2="0"/>
+          <line x1="0" y1="-19" x2="0" y2="19"/>
+          <line x1="-13.5" y1="-13.5" x2="13.5" y2="13.5"/>
+          <line x1="13.5" y1="-13.5" x2="-13.5" y2="13.5"/>
+        </g>
+
+        <!-- Left column capital (horizontal bands where arch meets pillar) -->
+        <g opacity="0.24" stroke="#8B6F4E" stroke-width="1" fill="none">
+          <line x1="44" y1="445" x2="100" y2="445"/>
+          <line x1="44" y1="439" x2="100" y2="439"/>
+          <path d="M58,436 L72,431 L86,436 L72,441 Z" fill="#8B6F4E" opacity="0.45"/>
+        </g>
+
+        <!-- Right column capital -->
+        <g opacity="0.24" stroke="#8B6F4E" stroke-width="1" fill="none">
+          <line x1="500" y1="445" x2="556" y2="445"/>
+          <line x1="500" y1="439" x2="556" y2="439"/>
+          <path d="M514,436 L528,431 L542,436 L528,441 Z" fill="#8B6F4E" opacity="0.45"/>
+        </g>
+
+        <!-- Diamond ornaments at mid-arch intervals -->
+        <path d="M46,278 L51,285 L46,292 L41,285 Z" fill="#8B6F4E" opacity="0.17"/>
+        <path d="M554,278 L559,285 L554,292 L549,285 Z" fill="#8B6F4E" opacity="0.17"/>
+        <path d="M82,158 L87,165 L82,172 L77,165 Z" fill="#8B6F4E" opacity="0.17"/>
+        <path d="M518,158 L523,165 L518,172 L513,165 Z" fill="#8B6F4E" opacity="0.17"/>
+      </svg>
+    </div>
+    <!-- ══ end arch ══ -->
+
     <!-- ══════════════════════════ HERO (compact) ══════════════════════════ -->
     <header id="hero" class="container" style="padding-bottom: 0;">
       <div class="hero-floral">
@@ -102,7 +200,7 @@
             </article>
 
             <article class="schedule-block">
-              <time class="schedule-time" datetime="2026-06-12T19:00">7:00 PM</time>
+              <time class="schedule-time" datetime="2026-06-12T18:00">6:00 PM</time>
               <div class="schedule-dot" aria-hidden="true"></div>
               <div class="schedule-content">
                 <h3>Reception &amp; Dinner</h3>

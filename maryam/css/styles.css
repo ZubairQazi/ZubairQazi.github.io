@@ -635,8 +635,35 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   SCHEDULE PAGE
+   MUGHAL ARCH BACKGROUND
    ══════════════════════════════════════════════════════════════════ */
+.mughal-arch-bg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(96%, 820px);
+  /* tall enough to cover page – SVG's own aspect ratio handles the rest */
+  min-height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.mughal-arch-svg {
+  display: block;
+  width: 100%;
+  /* height scales by aspect ratio; overflow:visible lets it exceed if page is taller */
+  overflow: visible;
+}
+
+/* Ensure all immediate children of site-wrapper stack above the arch */
+.site-wrapper > *:not(.mughal-arch-bg) {
+  position: relative;
+  z-index: 1;
+}
+
+
 .schedule-header {
   text-align: center;
   padding-block: var(--space-16) var(--space-12);
