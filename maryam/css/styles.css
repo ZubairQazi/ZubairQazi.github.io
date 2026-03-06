@@ -1125,9 +1125,10 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-5);
-  max-width: 860px;
+  gap: var(--space-6);
+  max-width: 1000px;
   margin: var(--space-8) auto 0;
+  padding-inline: var(--space-4);
 }
 
 .success-event-block {
@@ -1147,8 +1148,9 @@ h1, h2, h3, h4, h5, h6 {
 .success-event-block.has-invite-img {
   padding: 0;
   overflow: hidden;
-  max-width: 260px;
-  min-width: 200px;
+  max-width: 380px;
+  min-width: 280px;
+  flex: 1 1 280px;
 }
 
 .success-event-img {
