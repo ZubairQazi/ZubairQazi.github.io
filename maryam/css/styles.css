@@ -1121,14 +1121,12 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Success event blocks (shown after RSVP submit) */
 .rsvp-success-events {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--space-6);
-  max-width: 1000px;
+  width: 100%;
+  max-width: 700px;
   margin: var(--space-8) auto 0;
-  padding-inline: var(--space-4);
 }
 
 .success-event-block {
@@ -1140,17 +1138,14 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-bg-card);
-  flex: 1 1 180px;
-  max-width: 220px;
-  min-width: 160px;
 }
 
 .success-event-block.has-invite-img {
   padding: 0;
   overflow: hidden;
-  max-width: 380px;
-  min-width: 280px;
-  flex: 1 1 280px;
+  max-width: none;
+  min-width: 0;
+  flex: unset;
 }
 
 .success-event-img {
