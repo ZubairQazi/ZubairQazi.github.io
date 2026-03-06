@@ -31,7 +31,6 @@
     <nav id="main-nav" aria-label="Site navigation">
       <ul class="nav-list container">
         <li><a href="../" class="nav-link" data-page="home">Home</a></li>
-        <li><a href="../schedule/" class="nav-link" data-page="schedule">Schedule</a></li>
         <li><a href="../rsvp/" class="nav-link active" data-page="rsvp">RSVP</a></li>
       </ul>
     </nav>
@@ -40,23 +39,6 @@
     <main>
       <div class="container">
 
-        <!-- Event summary strip -->
-        <div class="rsvp-events-strip">
-          <div class="rsvp-event-pill">
-            <span class="rsvp-event-day">Thu Jun 11</span>
-            <span class="rsvp-event-name">Mehndi</span>
-          </div>
-          <div class="rsvp-event-sep" aria-hidden="true"></div>
-          <div class="rsvp-event-pill">
-            <span class="rsvp-event-day">Fri Jun 12</span>
-            <span class="rsvp-event-name">Shaadi</span>
-          </div>
-          <div class="rsvp-event-sep" aria-hidden="true"></div>
-          <div class="rsvp-event-pill">
-            <span class="rsvp-event-day">Sat Jun 13</span>
-            <span class="rsvp-event-name">Walima</span>
-          </div>
-        </div>
         <section class="rsvp-page" id="rsvp-section">
 
           <!-- Loading state -->
@@ -96,7 +78,7 @@
               <p class="rsvp-household" id="rsvp-household-label"></p>
               <div class="divider" aria-hidden="true"></div>
               <p style="font-family: var(--font-serif); font-size: var(--text-base); font-style: italic; color: var(--color-text-mid); margin-top: var(--space-2);">
-                Please let us know by <strong>May 15, 2026</strong>
+                Please let us know by <strong>May 30, 2026</strong>
               </p>
             </div>
 
@@ -129,6 +111,8 @@
             <p id="rsvp-success-msg">
               Your RSVP has been received. We look forward to celebrating with you!
             </p>
+            <!-- Event blocks injected here after submit -->
+            <div id="rsvp-success-events" class="rsvp-success-events"></div>
             <p style="margin-top: var(--space-8); font-size: var(--text-sm); color: var(--color-text-light);">
               Need to update your response? Use the same link to resubmit.
             </p>

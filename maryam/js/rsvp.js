@@ -15,10 +15,11 @@
 const API_BASE = 'https://wedding-rsvp-worker.zubair-qazi-5b.workers.dev';
 
 const EVENT_META = {
-  mehndi: { label: 'Mehndi' },
-  shaadi: { label: 'Shaadi' },
-  walima: { label: 'Walima' },
+  mehndi: { label: 'Mehndi',  day: 'Thursday, June 11', time: '6:00 PM' },
+  shaadi: { label: 'Shaadi',  day: 'Friday, June 12',   time: '5:00 PM' },
+  walima: { label: 'Walima',  day: 'Saturday, June 13', time: '6:00 PM' },
 };
+const EVENT_ORDER = ['mehndi', 'shaadi', 'walima'];
 
 // ── Demo mock data ──────────────────────────────────────────────────
 const DEMO_DATA = {
@@ -30,6 +31,22 @@ const DEMO_DATA = {
   ],
   rsvps: [],
 };
+
+// ── Render event blocks on the success screen ───────────────────────
+// eventsSet: Set or Array of event keys the household is invited to
+function renderSuccessEvents(eventsSet) {
+  const container = document.getElementById('rsvp-success-events');
+  if (!container) return;
+  const invited = EVENT_ORDER.filter(e => eventsSet.has ? eventsSet.has(e) : eventsSet.includes(e));
+  if (!invited.length) return;
+  container.innerHTML = invited.map(evt => {
+    const m = EVENT_META[evt];
+    return `<div class="success-event-block success-event-block--${evt}">
+  <span class="success-event-name">${m.label}</span>
+  <span class="success-event-detail">${m.day} &middot; ${m.time}</span>
+</div>`;
+  }).join('');
+}
 
 // ── Helpers ─────────────────────────────────────────────────────────
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -219,6 +236,9 @@ async function initRsvp() {
         hide('rsvp-form-wrap');
         show('rsvp-success-screen');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Collect max union of events this household is invited to
+        const householdEvents = new Set((DEMO_DATA.guests ?? []).flatMap(g => g.events));
+        renderSuccessEvents(householdEvents);
       });
     }
     return;
@@ -317,6 +337,10 @@ async function initRsvp() {
       hide('rsvp-form-wrap');
       show('rsvp-success-screen');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Show events the household is invited to (union across all guests)
+      const householdEvents = new Set((data.guests ?? []).flatMap(g => g.events));
+      renderSuccessEvents(householdEvents);
 
       const attendingNames = [...new Set(
         responses.filter(r => r.attending)
