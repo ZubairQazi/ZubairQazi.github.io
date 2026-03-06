@@ -530,32 +530,16 @@ h1, h2, h3, h4, h5, h6 {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 44px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 2px;
   pointer-events: none;
   will-change: left;
   z-index: 10;
 }
 
 .ba-line {
-  flex: 1;
   width: 2px;
-  background: rgba(255,255,255,0.85);
-}
-
-.ba-circle {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: var(--shadow-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  flex-shrink: 0;
+  height: 100%;
+  background: rgba(255,255,255,0.7);
 }
 
 .ba-circle svg {
