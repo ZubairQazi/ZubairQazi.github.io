@@ -237,6 +237,11 @@ h1, h2, h3, h4, h5, h6 {
   padding-inline: 0.25em;
 }
 
+/* Compact variant used on sub-pages (schedule etc.) */
+.hero-names--sm {
+  font-size: var(--text-3xl);
+}
+
 .hero-tagline {
   font-family: var(--font-serif);
   font-size: var(--text-lg);
@@ -491,7 +496,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 35%;
+  object-position: center 20%;
   display: block;
   pointer-events: none;
 }
@@ -1319,7 +1324,12 @@ body.gsap-ready .ba-section {
 
 /* ── Responsive typography fixes ───────────────────────────────── */
 @media (max-width: 480px) {
+  /* Scale hero name down so it never overflows or hyphenates */
   .hero-names {
+    font-size: min(8.5vw, 2.60rem) !important;
+    white-space: normal;
+    hyphens: none;
+    overflow-wrap: normal;
     letter-spacing: 0.06em;
   }
 
@@ -1340,5 +1350,24 @@ body.gsap-ready .ba-section {
 
   .guest-card {
     padding: var(--space-5) var(--space-5);
+  }
+
+  /* Schedule timeline: tighten columns on narrow screens */
+  .schedule-timeline::before {
+    left: 4.2rem;
+  }
+
+  .schedule-block {
+    grid-template-columns: 4.2rem 1.5rem 1fr;
+    gap: 0 var(--space-3);
+  }
+
+  .schedule-time {
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+  }
+
+  .schedule-content h3 {
+    font-size: var(--text-lg);
   }
 }
