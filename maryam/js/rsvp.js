@@ -15,9 +15,9 @@
 const API_BASE = 'https://wedding-rsvp-worker.zubair-qazi-5b.workers.dev';
 
 const EVENT_META = {
-  mehndi: { label: 'Mehndi',  day: 'Thursday, June 11', time: '6:00 PM', address: '1234 Jasmine Lane, San Diego, CA 92101' },
-  shaadi: { label: 'Shaadi',  day: 'Friday, June 12',   time: '5:00 PM', address: '5678 Rose Garden Blvd, San Diego, CA 92103' },
-  walima: { label: 'Walima',  day: 'Saturday, June 13', time: '6:00 PM', address: '9012 Marigold Ave, San Diego, CA 92105' },
+  mehndi: { label: 'Mehndi',  day: 'Thursday, June 11', time: '6:00 PM', address: '1234 Jasmine Lane, San Diego, CA 92101', image: null },
+  shaadi: { label: 'Shaadi',  day: 'Friday, June 12',   time: '5:00 PM', address: '5678 Rose Garden Blvd, San Diego, CA 92103', image: '/maryam/assets/invite-shaadi.jpg' },
+  walima: { label: 'Walima',  day: 'Saturday, June 13', time: '6:00 PM', address: '9012 Marigold Ave, San Diego, CA 92105', image: '/maryam/assets/invite-walima.jpg' },
 };
 const EVENT_ORDER = ['mehndi', 'shaadi', 'walima'];
 
@@ -41,7 +41,11 @@ function renderSuccessEvents(eventsSet) {
   if (!invited.length) return;
   container.innerHTML = invited.map(evt => {
     const m = EVENT_META[evt];
-    return `<div class="success-event-block success-event-block--${evt}">
+    const imgHtml = m.image
+      ? `<img class="success-event-img" src="${m.image}" alt="${m.label} Invitation" loading="lazy">`
+      : '';
+    return `<div class="success-event-block success-event-block--${evt}${m.image ? ' has-invite-img' : ''}">
+  ${imgHtml}
   <span class="success-event-name">${m.label}</span>
   <span class="success-event-detail">${m.day} &middot; ${m.time}</span>
   <span class="success-event-address">${m.address}</span>
