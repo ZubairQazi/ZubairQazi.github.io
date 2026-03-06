@@ -77,21 +77,9 @@ function buildGuestCard(guest, rsvpMap) {
     const key      = `${guest.id}:${evt}`;
     const existing = rsvpMap[key];
     const attending = existing?.attending;  // true | false | undefined
-    const dietaryNotes = existing?.dietary_notes ?? '';
 
     const yesActive = attending === true  ? 'active yes-active' : '';
     const noActive  = attending === false ? 'active no-active'  : '';
-    const detailHidden = attending === true ? '' : 'hidden';
-
-    const mealHtml = `
-      <div class="event-meal-details" id="meal-detail-${guest.id}-${evt}" ${detailHidden}>
-        <div class="field-group">
-          <label for="dietary-${guest.id}-${evt}">Dietary Notes</label>
-          <input type="text" id="dietary-${guest.id}-${evt}"
-            placeholder="Allergies, restrictions…" maxlength="500"
-            value="${escapeHtml(dietaryNotes)}">
-        </div>
-      </div>`;
 
     return `
       <div class="event-rsvp-row" data-guest-id="${guest.id}" data-event="${evt}">
@@ -108,7 +96,6 @@ function buildGuestCard(guest, rsvpMap) {
             </button>
           </div>
         </div>
-        ${mealHtml}
       </div>`.trim();
   }).join('');
 
@@ -126,37 +113,40 @@ function buildGuestCard(guest, rsvpMap) {
 // ── Wire up attend button clicks ─────────────────────────────────────
 function bindEventToggleListeners() {
   document.querySelectorAll('.event-rsvp-row').forEach(row => {
-    const guestId = row.dataset.guestId;
-    const evt     = row.dataset.event;
-    const meta    = EVENT_META[evt];
-
     row.querySelectorAll('.attend-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const val = btn.dataset.val;
-
         row.querySelectorAll('.attend-btn').forEach(b => {
           b.classList.remove('active', 'yes-active', 'no-active');
           b.setAttribute('aria-pressed', 'false');
         });
         btn.classList.add('active', val === 'yes' ? 'yes-active' : 'no-active');
         btn.setAttribute('aria-pressed', 'true');
-
-        const detail = document.getElementById(`meal-detail-${guestId}-${evt}`);
-        if (detail) {
-          if (val === 'yes') {
-            detail.removeAttribute('hidden');
-          } else {
-            detail.setAttribute('hidden', '');
-            const dtInp = document.getElementById(`dietary-${guestId}-${evt}`);
-            if (dtInp) dtInp.value = '';
-          }
-        }
-
-        // Clear any validation highlight on parent card
         row.closest('.guest-card')?.style.removeProperty('outline');
       });
     });
   });
+}
+
+// ── Inject household-level extras block (email + note) ───────────────
+function renderHouseholdExtras(savedEmail, savedNote) {
+  const container = document.getElementById('household-extras');
+  if (!container) return;
+  container.innerHTML = `
+    <div class="household-extras-block">
+      <div class="field-group">
+        <label for="household-email">Email Address</label>
+        <input type="email" id="household-email" name="household-email"
+          placeholder="your@email.com" maxlength="254" autocomplete="email"
+          value="${escapeHtml(savedEmail ?? '')}">
+      </div>
+      <div class="field-group">
+        <label for="household-note">Note to the Couple <span class="field-optional">(optional)</span></label>
+        <textarea id="household-note" name="household-note"
+          placeholder="Anything you'd like us to know…" maxlength="1000"
+          rows="3">${escapeHtml(savedNote ?? '')}</textarea>
+      </div>
+    </div>`;
 }
 
 // ── Animate guest cards in ───────────────────────────────────────────
@@ -182,6 +172,11 @@ function renderForm(data) {
 
   guestList.innerHTML = (data.guests ?? []).map(g => buildGuestCard(g, rsvpMap)).join('');
 
+  // Restore saved email/note if available (from previous partial rsvp)
+  const savedEmail = data.email ?? '';
+  const savedNote  = data.note  ?? '';
+  renderHouseholdExtras(savedEmail, savedNote);
+
   bindEventToggleListeners();
   animateCardsIn(Array.from(guestList.querySelectorAll('.guest-card')));
 
@@ -197,19 +192,18 @@ function collectResponses() {
   document.querySelectorAll('.event-rsvp-row').forEach(row => {
     const guestId = parseInt(row.dataset.guestId, 10);
     const evt     = row.dataset.event;
-    const meta    = EVENT_META[evt];
     const active  = row.querySelector('.attend-btn.active');
 
     if (!active) { unanswered.push(row); return; }
 
-    const attending    = active.dataset.val === 'yes';
-    const dietaryNotes = attending
-      ? (document.getElementById(`dietary-${guestId}-${evt}`)?.value?.trim() || null) : null;
-
-    responses.push({ guest_id: guestId, event: evt, attending, dietary_notes: dietaryNotes });
+    const attending = active.dataset.val === 'yes';
+    responses.push({ guest_id: guestId, event: evt, attending });
   });
 
-  return { responses, unanswered };
+  const email = document.getElementById('household-email')?.value?.trim() || null;
+  const note  = document.getElementById('household-note')?.value?.trim()  || null;
+
+  return { responses, unanswered, email, note };
 }
 
 // ── Main ─────────────────────────────────────────────────────────────
@@ -236,7 +230,6 @@ async function initRsvp() {
         hide('rsvp-form-wrap');
         show('rsvp-success-screen');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        // Collect max union of events this household is invited to
         const householdEvents = new Set((DEMO_DATA.guests ?? []).flatMap(g => g.events));
         renderSuccessEvents(householdEvents);
       });
@@ -311,7 +304,7 @@ async function initRsvp() {
     e.preventDefault();
     clearStatus();
 
-    const { responses, unanswered } = collectResponses();
+    const { responses, unanswered, email, note } = collectResponses();
 
     if (unanswered.length > 0) {
       unanswered.forEach(row => {
@@ -329,7 +322,7 @@ async function initRsvp() {
       const res = await fetch(`${API_BASE}/api/rsvp?t=${encodeURIComponent(token)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ responses }),
+        body: JSON.stringify({ responses, email, note }),
       });
       const result = await res.json();
       if (!res.ok || !result.success) throw new Error(result.error ?? 'Unknown error');
