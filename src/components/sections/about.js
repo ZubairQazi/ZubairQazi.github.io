@@ -125,7 +125,7 @@ const About = () => {
     sr.reveal(revealContainer.current, srConfig());
   }, []);
 
-  const skills = ['PyTorch', 'Jupyter', 'Huggingface', 'GCP/AWS', 'Docker', 'JavaScript (ES6+)', 'React', 'Node.js'];
+  const skills = ['PyTorch', 'PyG (PyTorch Geometric)', 'Huggingface', 'LangChain', 'NetworkX', 'Python', 'Docker', 'GCP/AWS'];
 
   return (
     <StyledAboutSection id="about" ref={revealContainer}>
@@ -135,11 +135,10 @@ const About = () => {
         <StyledText>
           <div>
             <p>
-              Hello there! I'm Zubair (Zoo-Bear) and I am a builder, specifically software applications and ML systems
-              but occasionally also LEGO. I've had an interest in software development since I was in middle school, picked 
-              up an interest in Machine Learning during my undergrad years through research work and by following the growth of ML to
-              where it's come to today. That's not to say there isn't a lot of room left for improvement. Applying ML to products is
-              a relatively recent endeavour of mine, but I pride myself on staying up to date in that world. 
+              Hello there! I'm Zubair (Zoo-Bear) — a PhD student at the{' '}
+              <a href="https://umich.edu">University of Michigan</a>{' '}
+              working at the intersection of graph mining, large language models (LLMs), and agentic AI systems.
+              I'm broadly interested in how structured data representations can make AI more capable and trustworthy.
             </p>
 
             {/* <p>
@@ -154,11 +153,8 @@ const About = () => {
             </p> */}
 
             <p>
-              I've recently been working on projects which harness {' '}
-              <a href="https://www.huggingface.co">
-                Huggingface models
-              </a>{' '}
-              , fine-tuning them to cater to specific tasks, and then seamlessly integrate them into product pipelines.
+              My research spans graph neural networks, knowledge graphs, and multi-agent LLM systems.
+              I'm passionate about building research that bridges the gap between academic insight and real-world impact.
             </p>
 
             <p>Here are a few technologies I’ve been working with recently:</p>

@@ -4,7 +4,7 @@ module.exports = {
   siteMetadata: {
     title: 'Zubair Qazi',
     description:
-      'Zubair Qazi is a software engineer who specializes in bringing machine learning to products.',
+      'Zubair Qazi is a PhD student at the University of Michigan researching graph mining, large language models, and agentic AI systems.',
     siteUrl: 'https://zubairqazi.com', // No trailing slash allowed!
     image: '/og.png', // Path to your image you placed in the 'static' folder
     twitterUsername: '',
