@@ -69,7 +69,7 @@ const Hero = () => {
       <p>
         I research graph mining, large language models, and agentic AI systems in the{' '}
         <a href="https://gemslab.github.io/" target="_blank" rel="noreferrer">GEMS Lab</a>.
-        {' '}Currently looking for Summer 2026 internships.
+        {' '}Currently looking for internships.
       </p>
     </>
   );
