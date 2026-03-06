@@ -15,9 +15,9 @@
 const API_BASE = 'https://wedding-rsvp-worker.zubair-qazi-5b.workers.dev';
 
 const EVENT_META = {
-  mehndi: { label: 'Mehndi',  day: 'Thursday, June 11', time: '6:00 PM' },
-  shaadi: { label: 'Shaadi',  day: 'Friday, June 12',   time: '5:00 PM' },
-  walima: { label: 'Walima',  day: 'Saturday, June 13', time: '6:00 PM' },
+  mehndi: { label: 'Mehndi',  day: 'Thursday, June 11', time: '6:00 PM', address: '1234 Jasmine Lane, San Diego, CA 92101' },
+  shaadi: { label: 'Shaadi',  day: 'Friday, June 12',   time: '5:00 PM', address: '5678 Rose Garden Blvd, San Diego, CA 92103' },
+  walima: { label: 'Walima',  day: 'Saturday, June 13', time: '6:00 PM', address: '9012 Marigold Ave, San Diego, CA 92105' },
 };
 const EVENT_ORDER = ['mehndi', 'shaadi', 'walima'];
 
@@ -44,6 +44,7 @@ function renderSuccessEvents(eventsSet) {
     return `<div class="success-event-block success-event-block--${evt}">
   <span class="success-event-name">${m.label}</span>
   <span class="success-event-detail">${m.day} &middot; ${m.time}</span>
+  <span class="success-event-address">${m.address}</span>
 </div>`;
   }).join('');
 }
