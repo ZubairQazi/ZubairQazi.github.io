@@ -448,8 +448,8 @@ h1, h2, h3, h4, h5, h6 {
 .photo-collage {
   position: relative;
   width: 100%;
-  max-width: 560px;
-  height: clamp(380px, 52vw, 480px);
+  max-width: 580px;
+  height: clamp(460px, 62vw, 580px);
   /* overflow visible so photos can rotate slightly outside bounds */
 }
 
@@ -484,8 +484,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Photo 1: couple portrait — large, top-left ── */
 .collage-top {
-  width: 55%;
-  height: 76%;
+  width: 56%;
+  height: 58%;
   top: 0;
   left: 0;
   transform: rotate(-3.5deg);
@@ -495,25 +495,25 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Photo 2: childhood/landscape — upper-right ── */
 .collage-right {
-  width: 52%;
-  height: 42%;
-  top: 6%;
+  width: 50%;
+  height: 38%;
+  top: 4%;
   right: 0;
   transform: rotate(2.5deg);
   z-index: 2;
 }
 .collage-right img { object-position: center 40%; }
 
-/* ── Photo 3: proposal portrait — bottom, overlapping ── */
+/* ── Photo 3: proposal portrait — bottom center, clearly visible ── */
 .collage-bottom {
-  width: 48%;
-  height: 64%;
+  width: 50%;
+  height: 52%;
   bottom: 0;
-  left: 13%;
-  transform: rotate(-1.5deg);
+  left: 18%;
+  transform: rotate(-1deg);
   z-index: 1;
 }
-.collage-bottom img { object-position: center 30%; }
+.collage-bottom img { object-position: center 25%; }
 
 /* ── Hover: lift, flatten, come forward ── */
 .collage-item:hover {
