@@ -551,14 +551,14 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Mobile: scaled-down collage (keep absolute layout, shorter container) ── */
 @media (max-width: 540px) {
   .photo-collage {
-    height: clamp(240px, 72vw, 310px);
+    height: clamp(320px, 90vw, 420px);
     max-width: 100%;
     overflow: hidden;
   }
-  /* pull right photo back in so it doesn't clip off screen */
-  .collage-right {
-    right: 0%;
-  }
+  /* taller items so less cropping */
+  .collage-top    { width: 62%; height: 65%; }
+  .collage-right  { width: 54%; height: 46%; right: 0%; }
+  .collage-bottom { width: 58%; height: 58%; }
 }
 
 /* RSVP Button */
