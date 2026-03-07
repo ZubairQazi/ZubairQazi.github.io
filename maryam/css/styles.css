@@ -438,7 +438,7 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.03);
 }
 
-/* ── Photo Collage ──────────────────────────────────────────────── */
+/* ── Photo Collage (scattered prints) ──────────────────────────── */
 .collage-section {
   padding-bottom: var(--space-20);
   display: flex;
@@ -446,26 +446,38 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .photo-collage {
-  display: grid;
-  grid-template-columns: 3fr 2fr;
-  grid-template-rows: 3fr 2fr;
-  gap: 8px;
+  position: relative;
   width: 100%;
-  max-width: 820px;
-  height: clamp(360px, 55vw, 520px);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
+  max-width: 580px;
+  height: clamp(460px, 62vw, 580px);
+  /* overflow visible so photos can rotate slightly outside bounds */
 }
 
 .collage-item {
-  overflow: hidden;
-  position: relative;
+  position: absolute;
+  /* overflow NOT hidden here — border strip must stay visible for caption */
+  background: #fff;
+  /* photo-print look */
+  border: 10px solid #fff;
+  border-bottom-width: 28px;
+  border-radius: 2px;
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.18),
+    0 12px 32px rgba(0,0,0,0.14);
+  cursor: pointer;
+  /* smooth hover lift */
+  transition:
+    transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.38s ease;
 }
 
-.collage-top    { grid-column: 1; grid-row: 1; }
-.collage-right  { grid-column: 2; grid-row: 1 / 3; }
-.collage-bottom { grid-column: 1; grid-row: 2; }
+/* inner wrapper clips the photo only, not the caption strip */
+.collage-print {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 0px);
+  overflow: hidden;
+}
 
 .collage-item img {
   width: 100%;
@@ -473,40 +485,81 @@ h1, h2, h3, h4, h5, h6 {
   object-fit: cover;
   object-position: center;
   display: block;
-  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
-}
-
-.collage-top img    { object-position: center 18%; }
-.collage-bottom img { object-position: center 35%; }
-
-.collage-item:hover img {
-  transform: scale(1.07);
-}
-
-.collage-item::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,0);
-  transition: background 0.45s ease;
+  user-select: none;
+  -webkit-user-select: none;
   pointer-events: none;
 }
 
-.collage-item:hover::after {
-  background: rgba(255,255,255,0.06);
+/* ── Photo 1: couple portrait — large, top-left ── */
+.collage-top {
+  width: 56%;
+  height: 58%;
+  top: 0;
+  left: 0;
+  transform: rotate(-3.5deg);
+  z-index: 3;
+}
+.collage-top img { object-position: center 15%; }
+
+/* ── Photo 2: childhood/landscape — upper-right ── */
+.collage-right {
+  width: 50%;
+  height: 38%;
+  top: 12%;
+  right: -4%;
+  transform: rotate(2.5deg);
+  z-index: 2;
+}
+.collage-right img { object-position: center 40%; }
+
+/* ── Photo 3: proposal portrait — bottom center, clearly visible ── */
+.collage-bottom {
+  width: 50%;
+  height: 52%;
+  bottom: 0;
+  left: 18%;
+  transform: rotate(-1deg);
+  z-index: 1;
+}
+.collage-bottom img { object-position: center 25%; }
+
+/* ── Year caption — sits centered in the bottom white border strip ── */
+.photo-year {
+  position: absolute;
+  bottom: -14px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  transform: translateY(50%);
+  font-family: 'Permanent Marker', cursive;
+  font-size: 0.8rem;
+  line-height: 1;
+  color: #444;
+  pointer-events: none;
+  user-select: none;
 }
 
+/* ── Hover: lift, flatten, come forward ── */
+.collage-item:hover {
+  transform: rotate(0deg) scale(1.04) translateY(-8px);
+  box-shadow:
+    0 16px 40px rgba(0,0,0,0.26),
+    0 4px 12px rgba(0,0,0,0.16);
+  z-index: 10;
+}
+
+/* ── Mobile: scaled-down collage (keep absolute layout, shorter container) ── */
 @media (max-width: 540px) {
   .photo-collage {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    height: auto;
-    border-radius: var(--radius-lg);
+    height: clamp(320px, 90vw, 420px);
+    max-width: 100%;
+    overflow: visible;
+    margin-bottom: 5rem;
   }
-  .collage-top    { grid-column: 1; grid-row: 1; aspect-ratio: 4/3; }
-  .collage-right  { grid-column: 1; grid-row: 2; aspect-ratio: 4/3; }
-  .collage-bottom { grid-column: 1; grid-row: 3; aspect-ratio: 4/3; }
+  /* shrink top image so right image has room; anchor right image from left */
+  .collage-top    { width: 52%; height: 65%; }
+  .collage-right  { width: 46%; height: 46%; right: auto; left: 50%; }
+  .collage-bottom { width: 58%; height: 58%; bottom: -10%; }
 }
 
 /* RSVP Button */
@@ -1286,7 +1339,7 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   top: 0;
   left: 0;
-  transform: translateY(-45%);
+  transform: translateY(-22%);
   width: 100%;
   pointer-events: none;
   z-index: 0;
@@ -1378,6 +1431,12 @@ body.gsap-ready .collage-section {
 
 /* ── Responsive typography fixes ───────────────────────────────── */
 @media (max-width: 480px) {
+  /* Clip the floral tail before it overlaps the hero names on mobile */
+  .hero-floral {
+    max-height: 44vw;
+    overflow: hidden;
+  }
+
   /* Scale hero name down so it never overflows or hyphenates */
   .hero-names {
     font-size: min(8.5vw, 2.60rem) !important;
