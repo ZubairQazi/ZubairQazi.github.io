@@ -196,8 +196,10 @@ h1, h2, h3, h4, h5, h6 {
 .hero-floral {
   position: absolute;
   top: clamp(40px, 7vw, 110px);
-  left: 0;
-  width: 100%;
+  /* Break out of container padding so the left drape isn't clipped */
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100vw, calc(var(--content-max) + 6rem));
   pointer-events: none;
   will-change: transform, opacity;
   z-index: 2;
@@ -550,6 +552,28 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Mobile: scaled-down collage (keep absolute layout, shorter container) ── */
 @media (max-width: 540px) {
+  /* ── Hero: names sit just below the arch opening ── */
+  #hero {
+    padding-top: clamp(140px, 38vw, 200px);
+  }
+
+  .hero-names {
+    font-size: clamp(1.9rem, 8vw, 2.4rem);
+    white-space: nowrap;
+    letter-spacing: 0.08em;
+  }
+
+  .hero-tagline {
+    /* smaller to avoid wrapping pushing content below the arch */
+    font-size: clamp(0.72rem, 2.8vw, 0.9rem);
+    letter-spacing: 0.16em;
+    margin-top: var(--space-2);
+  }
+
+  .hero-countdown {
+    margin-top: var(--space-3);
+  }
+
   /* clip any rotation-caused pixel bleed at the section level */
   .collage-section { overflow: hidden; }
 
