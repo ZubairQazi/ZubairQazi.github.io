@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSVP Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: #f5f0e8;
+      color: #2a2a2a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #5a3e2b;
+      margin-bottom: 2rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── PIN screen ── */
+    #pin-screen {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+    #pin-screen label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      color: #555;
+    }
+    #pin-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1.1rem;
+      border: 1.5px solid #d4c4b0;
+      border-radius: 8px;
+      text-align: center;
+      letter-spacing: 0.2em;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+    #pin-input:focus { border-color: #8b6f4e; }
+    #pin-error { color: #c0392b; font-size: 0.85rem; min-height: 1.2rem; margin-bottom: 0.75rem; }
+    #pin-btn {
+      width: 100%;
+      padding: 0.75rem;
+      background: #8b6f4e;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #pin-btn:hover { background: #7a5f40; }
+    #pin-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── Dashboard ── */
+    #dashboard { display: none; width: 100%; max-width: 1100px; }
+
+    .stats {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      flex: 1;
+      min-width: 130px;
+      text-align: center;
+    }
+    .stat-card .num { font-size: 2rem; font-weight: 700; color: #8b6f4e; }
+    .stat-card .lbl { font-size: 0.78rem; color: #777; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
+
+    .controls {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .controls input, .controls select {
+      padding: 0.5rem 0.75rem;
+      border: 1.5px solid #d4c4b0;
+      border-radius: 7px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .controls input:focus, .controls select:focus { border-color: #8b6f4e; }
+    .controls label { font-size: 0.85rem; color: #555; }
+    #export-btn {
+      margin-left: auto;
+      padding: 0.5rem 1.2rem;
+      background: #8b6f4e;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #export-btn:hover { background: #7a5f40; }
+
+    .table-wrap {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.08);
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    thead th {
+      background: #f0e8db;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #5a3e2b;
+      white-space: nowrap;
+      border-bottom: 2px solid #ddd0bf;
+      cursor: pointer;
+      user-select: none;
+    }
+    thead th:hover { background: #e8ddd0; }
+    thead th.sorted-asc::after { content: ' ↑'; }
+    thead th.sorted-desc::after { content: ' ↓'; }
+    tbody tr { border-bottom: 1px solid #f0ebe3; }
+    tbody tr:hover { background: #faf6f0; }
+    td { padding: 0.65rem 1rem; vertical-align: middle; }
+    td.attending-yes { color: #27ae60; font-weight: 600; }
+    td.attending-no  { color: #c0392b; font-weight: 600; }
+    td.attending-pending { color: #aaa; font-style: italic; }
+    .household-cell { font-weight: 500; }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin: 1px;
+    }
+    .tag-mehndi  { background: #fde8f5; color: #8b2fa8; }
+    .tag-shaadi  { background: #fde8e8; color: #c0392b; }
+    .tag-walima  { background: #e8f5fd; color: #2369a4; }
+    .updated { font-size: 0.78rem; color: #999; }
+    #loading { color: #888; margin: 2rem 0; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<h1>RSVP Dashboard</h1>
+
+<!-- PIN Gate -->
+<div id="pin-screen">
+  <label for="pin-input">Enter PIN to continue</label>
+  <input type="password" id="pin-input" placeholder="••••••" autocomplete="current-password">
+  <div id="pin-error"></div>
+  <button id="pin-btn">Unlock</button>
+</div>
+
+<!-- Dashboard (hidden until authenticated) -->
+<div id="dashboard">
+  <p id="loading">Loading RSVPs…</p>
+
+  <div class="stats" id="stats" style="display:none"></div>
+
+  <div class="controls" id="controls" style="display:none">
+    <input type="search" id="search" placeholder="Search guest or household…" style="min-width:220px">
+    <select id="filter-event">
+      <option value="">All Events</option>
+      <option value="mehndi">Mehndi</option>
+      <option value="shaadi">Shaadi</option>
+      <option value="walima">Walima</option>
+    </select>
+    <select id="filter-attending">
+      <option value="">All Responses</option>
+      <option value="YES">Attending</option>
+      <option value="NO">Declined</option>
+      <option value="pending">Pending</option>
+    </select>
+    <button id="export-btn">Export CSV</button>
+  </div>
+
+  <div class="table-wrap" id="table-wrap" style="display:none">
+    <table id="rsvp-table">
+      <thead>
+        <tr>
+          <th data-col="household_label">Household</th>
+          <th data-col="full_name">Guest</th>
+          <th data-col="invited_events">Invited To</th>
+          <th data-col="event">Event</th>
+          <th data-col="attending">Response</th>
+          <th data-col="updated_at">Updated</th>
+        </tr>
+      </thead>
+      <tbody id="rsvp-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const API_BASE = 'https://wedding-rsvp-worker.zubair-qazi-5b.workers.dev';
+let allRows = [];
+let sortCol = 'household_label';
+let sortDir = 1;
+
+// ── PIN flow ─────────────────────────────────────────────────────────
+document.getElementById('pin-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') unlock();
+});
+document.getElementById('pin-btn').addEventListener('click', unlock);
+
+async function unlock() {
+  const pin = document.getElementById('pin-input').value.trim();
+  const errEl = document.getElementById('pin-error');
+  const btn = document.getElementById('pin-btn');
+  if (!pin) { errEl.textContent = 'Please enter the PIN.'; return; }
+
+  errEl.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/rsvps`, {
+      headers: { 'Authorization': `Bearer ${pin}` }
+    });
+    if (res.status === 401) {
+      errEl.textContent = 'Incorrect PIN. Try again.';
+      btn.disabled = false;
+      btn.textContent = 'Unlock';
+      return;
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    allRows = data.rsvps ?? [];
+    document.getElementById('pin-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('loading').style.display = 'none';
+    renderStats();
+    renderTable();
+    document.getElementById('stats').style.display = 'flex';
+    document.getElementById('controls').style.display = 'flex';
+    document.getElementById('table-wrap').style.display = 'block';
+  } catch (err) {
+    errEl.textContent = 'Failed to connect. Try again.';
+    btn.disabled = false;
+    btn.textContent = 'Unlock';
+  }
+}
+
+// ── Stats ────────────────────────────────────────────────────────────
+function renderStats() {
+  const households = new Set(allRows.map(r => r.household_label)).size;
+  const guests     = new Set(allRows.map(r => r.guest_id)).size;
+  const attending  = allRows.filter(r => r.attending === 'YES').length;
+  const declined   = allRows.filter(r => r.attending === 'NO').length;
+  const pending    = allRows.filter(r => !r.attending).length;
+
+  document.getElementById('stats').innerHTML = [
+    { num: households, lbl: 'Households' },
+    { num: guests,     lbl: 'Guests' },
+    { num: attending,  lbl: 'Attending' },
+    { num: declined,   lbl: 'Declined' },
+    { num: pending,    lbl: 'Pending' },
+  ].map(s => `<div class="stat-card"><div class="num">${s.num}</div><div class="lbl">${s.lbl}</div></div>`).join('');
+}
+
+// ── Sorting ──────────────────────────────────────────────────────────
+document.querySelectorAll('thead th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) { sortDir *= -1; } else { sortCol = col; sortDir = 1; }
+    document.querySelectorAll('thead th').forEach(t => t.classList.remove('sorted-asc','sorted-desc'));
+    th.classList.add(sortDir === 1 ? 'sorted-asc' : 'sorted-desc');
+    renderTable();
+  });
+});
+
+// ── Filtering ─────────────────────────────────────────────────────────
+document.getElementById('search').addEventListener('input', renderTable);
+document.getElementById('filter-event').addEventListener('change', renderTable);
+document.getElementById('filter-attending').addEventListener('change', renderTable);
+
+function filteredRows() {
+  const q     = document.getElementById('search').value.toLowerCase();
+  const evtF  = document.getElementById('filter-event').value;
+  const attF  = document.getElementById('filter-attending').value;
+
+  return allRows.filter(r => {
+    if (q && !r.household_label?.toLowerCase().includes(q) && !r.full_name?.toLowerCase().includes(q)) return false;
+    if (evtF && r.event !== evtF) return false;
+    if (attF === 'pending' && r.attending) return false;
+    if (attF === 'YES' && r.attending !== 'YES') return false;
+    if (attF === 'NO'  && r.attending !== 'NO')  return false;
+    return true;
+  }).sort((a, b) => {
+    const av = (a[sortCol] ?? '').toString().toLowerCase();
+    const bv = (b[sortCol] ?? '').toString().toLowerCase();
+    return av < bv ? -sortDir : av > bv ? sortDir : 0;
+  });
+}
+
+function renderTable() {
+  const rows = filteredRows();
+  const tbody = document.getElementById('rsvp-tbody');
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:2rem">No results</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = rows.map(r => {
+    const att = r.attending === 'YES' ? 'attending-yes'
+              : r.attending === 'NO'  ? 'attending-no'
+              :                          'attending-pending';
+    const attLabel = r.attending ?? '—';
+
+    const tags = (r.invited_events ?? '').split(',').filter(Boolean)
+      .map(e => `<span class="tag tag-${e.trim()}">${e.trim()}</span>`).join('');
+
+    const eventTag = r.event
+      ? `<span class="tag tag-${r.event}">${r.event}</span>`
+      : '<span style="color:#aaa">—</span>';
+
+    const updated = r.updated_at
+      ? `<span class="updated">${new Date(r.updated_at).toLocaleDateString()}</span>`
+      : '<span class="updated">—</span>';
+
+    return `<tr>
+      <td class="household-cell">${esc(r.household_label)}</td>
+      <td>${esc(r.full_name)}</td>
+      <td>${tags}</td>
+      <td>${eventTag}</td>
+      <td class="${att}">${attLabel}</td>
+      <td>${updated}</td>
+    </tr>`;
+  }).join('');
+}
+
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── CSV Export ───────────────────────────────────────────────────────
+document.getElementById('export-btn').addEventListener('click', () => {
+  const rows = filteredRows();
+  const headers = ['Household','Guest','Invited Events','Event','Response','Updated'];
+  const csv = [headers, ...rows.map(r => [
+    r.household_label, r.full_name, r.invited_events, r.event ?? '', r.attending ?? 'Pending',
+    r.updated_at ? new Date(r.updated_at).toLocaleDateString() : ''
+  ])].map(row => row.map(v => `"${String(v ?? '').replace(/"/g,'""')}"`).join(',')).join('\n');
+
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = `rsvps-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+});
+</script>
+</body>
+</html>

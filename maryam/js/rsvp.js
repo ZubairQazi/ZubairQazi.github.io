@@ -321,6 +321,18 @@ async function initRsvp() {
       return;
     }
 
+    if (!email) {
+      const emailInput = document.getElementById('household-email');
+      if (emailInput) {
+        emailInput.style.outline = '2px solid var(--color-error)';
+        emailInput.style.borderRadius = '6px';
+        emailInput.focus();
+        emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      setStatus('Please enter your email address.', 'error');
+      return;
+    }
+
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting…'; }
 
     try {

@@ -15,6 +15,7 @@ export interface Env {
   DB: D1Database;
   ALLOWED_ORIGINS: string; // comma-separated list
   WEDDING_DATE: string;    // YYYY-MM-DD
+  DASHBOARD_PIN: string;   // secret — set via wrangler secret put DASHBOARD_PIN
 }
 
 // ── Types ──────────────────────────────────────────────────────────
@@ -327,6 +328,39 @@ async function handlePostRsvp(
   return jsonResponse({ success: true }, 200, corsOrigin);
 }
 
+/** GET /api/admin/rsvps — protected by DASHBOARD_PIN secret */
+async function handleGetAdminRsvps(
+  request: Request,
+  env: Env,
+  corsOrigin: string
+): Promise<Response> {
+  const auth = request.headers.get("Authorization") ?? "";
+  const pin = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  if (!pin || pin !== env.DASHBOARD_PIN) {
+    return jsonResponse({ error: "Unauthorized" }, 401, corsOrigin);
+  }
+
+  const rows = await env.DB
+    .prepare(`
+      SELECT
+        i.household_label,
+        i.phone_e164,
+        g.id as guest_id,
+        g.full_name,
+        g.events as invited_events,
+        r.event,
+        CASE WHEN r.attending = 1 THEN 'YES' WHEN r.attending = 0 THEN 'NO' ELSE NULL END as attending,
+        r.updated_at
+      FROM guests g
+      JOIN invites i ON i.id = g.invite_id
+      LEFT JOIN rsvps r ON r.guest_id = g.id
+      ORDER BY i.household_label, g.full_name, r.event
+    `)
+    .all();
+
+  return jsonResponse({ rsvps: rows.results ?? [] }, 200, corsOrigin);
+}
+
 // ── Main Handler ───────────────────────────────────────────────────
 
 export default {
@@ -376,6 +410,11 @@ export default {
       }
       const tokenHash = await sha256Hex(tokenParam);
       return handlePostRsvp(request, env, tokenHash, corsOrigin);
+    }
+
+    // ── Route: GET /api/admin/rsvps
+    if (path === "/api/admin/rsvps" && request.method === "GET") {
+      return handleGetAdminRsvps(request, env, corsOrigin);
     }
 
     // ── 404 for everything else
