@@ -579,8 +579,8 @@ h1, h2, h3, h4, h5, h6 {
     gap: 0 0.3em;
   }
 
-  .name-first { grid-area: first; }
-  .name-last  { grid-area: last; }
+  .name-first { grid-area: first; text-align: right; }
+  .name-last  { grid-area: last;  text-align: right; }
 
   .hero-names .ampersand {
     grid-area: amp;
