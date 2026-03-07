@@ -550,16 +550,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Mobile: scaled-down collage (keep absolute layout, shorter container) ── */
 @media (max-width: 540px) {
+  /* clip any rotation-caused pixel bleed at the section level */
+  .collage-section { overflow: hidden; }
+
   .photo-collage {
-    height: clamp(320px, 90vw, 420px);
+    height: clamp(340px, 95vw, 460px);
     max-width: 100%;
     overflow: visible;
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
   }
-  /* shrink top image so right image has room; anchor right image from left */
-  .collage-top    { width: 52%; height: 65%; }
-  .collage-right  { width: 46%; height: 46%; right: auto; left: 50%; }
-  .collage-bottom { width: 58%; height: 58%; bottom: -10%; }
+  /* top photo: slightly smaller so right photo has breathing room */
+  .collage-top    { width: 54%; height: 62%; top: 0; left: 0; }
+  /* right photo: anchor to right edge — safe at all widths regardless of rotation */
+  .collage-right  { width: 48%; height: 44%; top: 10%; right: 0; left: auto; }
+  /* bottom photo: stay within container bounds so it doesn't look like a separate row */
+  .collage-bottom { width: 58%; height: 52%; bottom: 0; left: 20%; }
 }
 
 /* RSVP Button */
