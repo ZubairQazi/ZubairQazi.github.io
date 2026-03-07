@@ -196,8 +196,10 @@ h1, h2, h3, h4, h5, h6 {
 .hero-floral {
   position: absolute;
   top: clamp(40px, 7vw, 110px);
-  left: 0;
-  width: 100%;
+  /* Break out of container padding so the left drape isn't clipped */
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100vw, calc(var(--content-max) + 6rem));
   pointer-events: none;
   will-change: transform, opacity;
   z-index: 2;
@@ -226,6 +228,11 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.05;
   white-space: nowrap;
   will-change: transform, opacity;
+}
+
+/* Each name on its own line — used on mobile, hidden on desktop */
+.hero-name-line {
+  display: inline;
 }
 
 .hero-names .ampersand {
@@ -550,18 +557,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Mobile: scaled-down collage (keep absolute layout, shorter container) ── */
 @media (max-width: 540px) {
-  /* ── Hero: pull text up into the arch opening ── */
+  /* ── Hero: names sit just below the arch opening ── */
   #hero {
-    /* arch image is ~200px tall on mobile; bring names up to sit inside it */
-    padding-top: clamp(110px, 30vw, 170px);
+    padding-top: clamp(140px, 38vw, 200px);
   }
 
   .hero-names {
-    /* smaller so it fits within the arch width; allow wrap so both names stay inside */
-    font-size: clamp(1.75rem, 7.5vw, 2.2rem);
+    font-size: clamp(1.9rem, 8vw, 2.4rem);
     white-space: normal;
     letter-spacing: 0.08em;
     line-height: 1.15;
+  }
+
+  /* Stack the two name spans as block lines on mobile */
+  .hero-name-line {
+    display: block;
   }
 
   .hero-tagline {
