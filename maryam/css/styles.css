@@ -230,11 +230,6 @@ h1, h2, h3, h4, h5, h6 {
   will-change: transform, opacity;
 }
 
-/* Each name on its own line — used on mobile, hidden on desktop */
-.hero-name-line {
-  display: inline;
-}
-
 .hero-names .ampersand {
   font-style: italic;
   font-weight: 300;
@@ -564,33 +559,8 @@ h1, h2, h3, h4, h5, h6 {
 
   .hero-names {
     font-size: clamp(1.9rem, 8vw, 2.4rem);
-    white-space: normal;
+    white-space: nowrap;
     letter-spacing: 0.08em;
-    line-height: 1.15;
-    /* Grid: names stacked left, & vertically centered right */
-    display: inline-grid;
-    grid-template-areas:
-      "first amp"
-      "last  amp";
-    grid-template-columns: auto auto;
-    align-items: center;
-    gap: 0 0.3em;
-  }
-
-  .name-first { grid-area: first; }
-  .name-last  { grid-area: last; }
-
-  .hero-names .ampersand {
-    grid-area: amp;
-    font-size: clamp(2.8rem, 12vw, 3.6rem);
-    padding-inline-start: 0.1em;
-    align-self: center;
-    letter-spacing: 0;
-  }
-
-  /* Remove the old hero-name-line block display — no longer needed */
-  .hero-name-line {
-    display: inline;
   }
 
   .hero-tagline {
