@@ -550,6 +550,31 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Mobile: scaled-down collage (keep absolute layout, shorter container) ── */
 @media (max-width: 540px) {
+  /* ── Hero: pull text up into the arch opening ── */
+  #hero {
+    /* arch image is ~200px tall on mobile; bring names up to sit inside it */
+    padding-top: clamp(110px, 30vw, 170px);
+  }
+
+  .hero-names {
+    /* smaller so it fits within the arch width; allow wrap so both names stay inside */
+    font-size: clamp(1.75rem, 7.5vw, 2.2rem);
+    white-space: normal;
+    letter-spacing: 0.08em;
+    line-height: 1.15;
+  }
+
+  .hero-tagline {
+    /* smaller to avoid wrapping pushing content below the arch */
+    font-size: clamp(0.72rem, 2.8vw, 0.9rem);
+    letter-spacing: 0.16em;
+    margin-top: var(--space-2);
+  }
+
+  .hero-countdown {
+    margin-top: var(--space-3);
+  }
+
   /* clip any rotation-caused pixel bleed at the section level */
   .collage-section { overflow: hidden; }
 
