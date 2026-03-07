@@ -455,10 +455,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .collage-item {
   position: absolute;
-  overflow: hidden;
+  /* overflow NOT hidden here — border strip must stay visible for caption */
+  background: #fff;
   /* photo-print look */
   border: 10px solid #fff;
-  border-bottom-width: 28px;          /* extra bottom for caption-strip feel */
+  border-bottom-width: 28px;
   border-radius: 2px;
   box-shadow:
     0 4px 14px rgba(0,0,0,0.18),
@@ -470,13 +471,20 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow 0.38s ease;
 }
 
+/* inner wrapper clips the photo only, not the caption strip */
+.collage-print {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 0px);
+  overflow: hidden;
+}
+
 .collage-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
   display: block;
-  /* prevent drag */
   user-select: none;
   -webkit-user-select: none;
   pointer-events: none;
@@ -498,7 +506,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 50%;
   height: 38%;
   top: 12%;
-  right: -9%;
+  right: -4%;
   transform: rotate(2.5deg);
   z-index: 2;
 }
@@ -515,15 +523,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 .collage-bottom img { object-position: center 25%; }
 
-/* ── Year caption — sits in the bottom white border strip ── */
+/* ── Year caption — sits centered in the bottom white border strip ── */
 .photo-year {
   position: absolute;
-  bottom: -23px;
-  right: 10px;
+  bottom: -14px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  transform: translateY(50%);
   font-family: 'Permanent Marker', cursive;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   line-height: 1;
-  color: #555;
+  color: #444;
   pointer-events: none;
   user-select: none;
 }
