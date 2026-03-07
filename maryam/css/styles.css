@@ -1122,12 +1122,18 @@ h1, h2, h3, h4, h5, h6 {
 /* Success event blocks (shown after RSVP submit) */
 .rsvp-success-events {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
+  justify-content: center;
   align-items: start;
   gap: var(--space-6);
-  width: 100%;
-  max-width: 700px;
-  margin: var(--space-8) auto 0;
+  /* break out of the narrow .rsvp-page container */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-inline: var(--space-8);
+  box-sizing: border-box;
+  margin: var(--space-8) 0 0;
 }
 
 .success-event-block {
