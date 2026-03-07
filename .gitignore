@@ -19,6 +19,9 @@ package-lock.json
 # Ignore folders related to IDEs
 .vscode/
 
+# AI assistant working memory — never commit
+CLAUDE.md
+
 # ── Wedding RSVP admin outputs (contain raw tokens / PII) ──
 scripts/sms.csv
 scripts/*.sms.csv
