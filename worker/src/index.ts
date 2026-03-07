@@ -71,10 +71,10 @@ async function sha256Hex(input: string): Promise<string> {
     .join("");
 }
 
-/** Validate token param: must be 20–64 printable ASCII chars (base64url). */
+/** Validate token param: 5 uppercase alphanumeric chars (no 0/O/1/I). */
 function isValidTokenShape(t: string | null): t is string {
   if (!t) return false;
-  return /^[A-Za-z0-9_\-]{20,64}$/.test(t);
+  return /^[A-Z2-9]{5}$/.test(t);
 }
 
 /** Build a CORS-aware JSON response. */

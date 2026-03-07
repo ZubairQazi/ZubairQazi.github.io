@@ -54,13 +54,12 @@ if (!existsSync(inputPath)) {
 
 // ── Token helpers ────────────────────────────────────────────────────
 
-/** Generate a 20-byte cryptographically random token encoded as base64url. */
+/** Generate a 5-character uppercase alphanumeric token. */
 function generateToken() {
-  return randomBytes(20)
-    .toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O or 1/I to avoid confusion
+  return Array.from(randomBytes(5))
+    .map(b => chars[b % chars.length])
+    .join('');
 }
 
 /** SHA-256 hex of a string. */
