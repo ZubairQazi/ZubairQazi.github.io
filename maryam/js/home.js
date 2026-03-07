@@ -84,7 +84,7 @@ window.addEventListener('load', () => {
     document.body.classList.remove('gsap-ready');
     gsap.set([
       '.hero-floral', '.hero-names', '.hero-tagline',
-      '.hero-countdown', '#main-nav', '.main-details', '.ba-section'
+      '.hero-countdown', '#main-nav', '.main-details', '.collage-section'
     ], { opacity: 1, clearProps: 'all' });
     return;
   }
@@ -96,7 +96,7 @@ window.addEventListener('load', () => {
   gsap.set('.hero-countdown', { opacity: 0, y: 12, scale: 0.88 });
   gsap.set('#main-nav',        { opacity: 0 });
   gsap.set('.main-details',    { opacity: 0, y: 30 });
-  gsap.set('.ba-section',      { opacity: 0, y: 40 });
+  gsap.set('.collage-section', { opacity: 0, y: 40 });
 
   document.body.classList.remove('gsap-ready');
 
@@ -127,7 +127,7 @@ window.addEventListener('load', () => {
     .to('.main-details', {
       opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
     }, '-=0.2')
-    .to('.ba-section', {
+    .to('.collage-section', {
       opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
     }, '-=0.4');
 
@@ -149,8 +149,8 @@ window.addEventListener('load', () => {
   if (prefersReduced) return;
   if (!window.matchMedia('(pointer: fine)').matches) return;
 
-  const photoWraps = document.querySelectorAll('.ba-slider');
-  const MAX_TILT = 4;
+  const photoWraps = document.querySelectorAll('.photo-collage');
+  const MAX_TILT = 3;
 
   photoWraps.forEach(wrap => {
     let rafId = null;
@@ -178,41 +178,7 @@ window.addEventListener('load', () => {
   });
 })();
 
-// ── Before / After auto-oscillating reveal ──────────────────────
-(function initBeforeAfter() {
-  const slider = document.getElementById('ba-slider');
-  const after  = document.getElementById('ba-after');
-  const handle = document.getElementById('ba-handle');
-  if (!slider || !after || !handle) return;
 
-  function setPos(pct) {
-    pct = Math.min(Math.max(pct, 0.02), 0.98);
-    after.style.clipPath = `inset(0 ${((1 - pct) * 100).toFixed(2)}% 0 0)`;
-    handle.style.left    = (pct * 100).toFixed(2) + '%';
-  }
-
-  // Start at far left and oscillate all the way to far right, forever
-  const obj = { v: 0.02 };
-  setPos(0.02);
-
-  let autoTween = null;
-
-  function startAuto(delay) {
-    if (typeof gsap === 'undefined') return;
-    autoTween = gsap.to(obj, {
-      v: 0.98,
-      duration: 7.0,
-      ease: 'sine.inOut',
-      yoyo: true,
-      repeat: -1,
-      delay: delay || 0,
-      onUpdate() { setPos(obj.v); }
-    });
-  }
-
-  // Wait for page entrance animation then begin
-  setTimeout(() => startAuto(0), prefersReduced ? 0 : 2200);
-})();
 
 // ── Nav active indicator ───────────────────────────────────────────
 (function initNav() {
