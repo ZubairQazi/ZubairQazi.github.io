@@ -568,19 +568,17 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.08em;
     line-height: 1.15;
     /* Grid: names stacked left, & vertically centered right */
-    display: grid;
+    display: inline-grid;
     grid-template-areas:
       "first amp"
       "last  amp";
     grid-template-columns: auto auto;
     align-items: center;
-    width: fit-content;
-    margin-inline: auto;
     gap: 0 0.3em;
   }
 
-  .name-first { grid-area: first; text-align: right; }
-  .name-last  { grid-area: last;  text-align: right; }
+  .name-first { grid-area: first; }
+  .name-last  { grid-area: last; }
 
   .hero-names .ampersand {
     grid-area: amp;
