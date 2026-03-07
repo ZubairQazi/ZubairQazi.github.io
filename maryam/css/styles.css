@@ -1122,7 +1122,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Success event blocks (shown after RSVP submit) */
 .rsvp-success-events {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
+  grid-template-columns: repeat(auto-fit, minmax(288px, 384px));
   justify-content: center;
   align-items: start;
   gap: var(--space-6);
