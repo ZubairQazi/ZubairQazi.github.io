@@ -103,7 +103,7 @@ async function readGuestCsv(filePath) {
     if (!line.trim()) continue;
     if (isFirst) { isFirst = false; continue; } // skip header
 
-    const [household_label, phone_e164, guest_name, events_raw] = parseCsvLine(line);
+    const [household_label, phone_e164, guest_name, events_raw, source_list] = parseCsvLine(line);
     if (!household_label || !phone_e164 || !guest_name) {
       console.warn(`  ⚠️  Skipping malformed row: ${line}`);
       continue;
@@ -114,7 +114,7 @@ async function readGuestCsv(filePath) {
       .map(s => s.trim())
       .filter(s => ['mehndi', 'shaadi', 'walima'].includes(s))
       .join(',') || 'mehndi,shaadi,walima';
-    rows.push({ household_label, phone_e164, guest_name, events });
+    rows.push({ household_label, phone_e164, guest_name, events, source_list: (source_list ?? '').trim() });
   }
   return rows;
 }
@@ -129,6 +129,7 @@ function groupByPhone(rows) {
       map.set(key, {
         household_label: row.household_label,
         phone_e164:      row.phone_e164,
+        source_list:     row.source_list,
         guests:          [],  // [{ name, events }]
       });
     }
@@ -163,6 +164,7 @@ async function main() {
       token_hash:      tokenHash,
       household_label: hh.household_label,
       phone_e164:      hh.phone_e164,
+      source_list:     hh.source_list,
       // Encode as "Name:events1,events2|Name2:events3" for import_to_d1.mjs
       guests:          hh.guests.map(g => `${g.name}:${g.events}`).join('|'),
     });
@@ -179,9 +181,9 @@ async function main() {
 
   // ── Write import.csv (safe — no raw tokens)
   const importPath = path.join(__dirname, 'import.csv');
-  const importHeader = 'token_hash,household_label,phone_e164,guests';
+  const importHeader = 'token_hash,household_label,phone_e164,source_list,guests';
   const importLines  = importRows.map(r =>
-    [r.token_hash, csvField(r.household_label), r.phone_e164, csvField(r.guests)].join(',')
+    [r.token_hash, csvField(r.household_label), r.phone_e164, csvField(r.source_list), csvField(r.guests)].join(',')
   );
   writeFileSync(importPath, [importHeader, ...importLines].join('\n') + '\n', 'utf8');
   console.log(`\n💾  import.csv written → ${importPath}`);

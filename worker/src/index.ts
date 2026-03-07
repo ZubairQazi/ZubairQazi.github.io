@@ -25,6 +25,7 @@ interface InviteRow {
   token_hash: string;
   household_label: string;
   phone_e164: string;
+  source_list: string;
   created_at: string;
 }
 
@@ -345,6 +346,7 @@ async function handleGetAdminRsvps(
       SELECT
         i.household_label,
         i.phone_e164,
+        i.source_list,
         g.id as guest_id,
         g.full_name,
         g.events as invited_events,

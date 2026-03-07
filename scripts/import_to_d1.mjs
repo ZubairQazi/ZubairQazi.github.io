@@ -78,7 +78,7 @@ async function readImportCsv() {
   for await (const line of rl) {
     if (!line.trim()) continue;
     if (isFirst) { isFirst = false; continue; }
-    const [token_hash, household_label, phone_e164, guests_raw] = parseCsvLine(line);
+    const [token_hash, household_label, phone_e164, source_list, guests_raw] = parseCsvLine(line);
     if (!token_hash || !household_label || !phone_e164) {
       console.warn(`  ⚠️  Skipping malformed row: ${line}`);
       continue;
@@ -89,7 +89,7 @@ async function readImportCsv() {
       if (colonIdx === -1) return { name: entry, events: 'mehndi,shaadi,walima' };
       return { name: entry.slice(0, colonIdx).trim(), events: entry.slice(colonIdx + 1).trim() || 'mehndi,shaadi,walima' };
     });
-    rows.push({ token_hash, household_label, phone_e164, guests });
+    rows.push({ token_hash, household_label, phone_e164, source_list: source_list ?? '', guests });
   }
   return rows;
 }
@@ -108,8 +108,8 @@ function generateSql(rows) {
   for (const row of rows) {
     // Insert invite (by token_hash — idempotent via INSERT OR IGNORE)
     lines.push(
-      `INSERT OR IGNORE INTO invites (token_hash, household_label, phone_e164)` +
-      ` VALUES (${sqlStr(row.token_hash)}, ${sqlStr(row.household_label)}, ${sqlStr(row.phone_e164)});`
+      `INSERT OR IGNORE INTO invites (token_hash, household_label, phone_e164, source_list)` +
+      ` VALUES (${sqlStr(row.token_hash)}, ${sqlStr(row.household_label)}, ${sqlStr(row.phone_e164)}, ${sqlStr(row.source_list)});`
     );
 
     // Insert guests — use a subquery to get invite_id

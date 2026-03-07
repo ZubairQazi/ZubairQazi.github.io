@@ -162,6 +162,8 @@
     .tag-mehndi  { background: #fde8f5; color: #8b2fa8; }
     .tag-shaadi  { background: #fde8e8; color: #c0392b; }
     .tag-walima  { background: #e8f5fd; color: #2369a4; }
+    .source-qazi  { background: #e8f5e9; color: #2e7d32; }
+    .source-usman { background: #fff3e0; color: #e65100; }
     .updated { font-size: 0.78rem; color: #999; }
     #loading { color: #888; margin: 2rem 0; }
 
@@ -222,6 +224,9 @@
       <option value="NO">Declined</option>
       <option value="pending">Pending</option>
     </select>
+    <select id="filter-source">
+      <option value="">All Sources</option>
+    </select>
     <button id="export-btn">Export CSV</button>
   </div>
 
@@ -279,6 +284,11 @@ async function unlock() {
     const data = await res.json();
     allRows = data.rsvps ?? [];
     currentPin = pin;
+    // Populate source filter dynamically from data
+    const sources = [...new Set(allRows.map(r => r.source_list).filter(Boolean))].sort();
+    const srcSelect = document.getElementById('filter-source');
+    srcSelect.innerHTML = '<option value="">All Sources</option>' +
+      sources.map(s => `<option value="${s}">${s}</option>`).join('');
     document.getElementById('pin-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     document.getElementById('loading').style.display = 'none';
@@ -326,11 +336,13 @@ document.querySelectorAll('thead th[data-col]').forEach(th => {
 document.getElementById('search').addEventListener('input', renderTable);
 document.getElementById('filter-event').addEventListener('change', renderTable);
 document.getElementById('filter-attending').addEventListener('change', renderTable);
+document.getElementById('filter-source').addEventListener('change', renderTable);
 
 function filteredRows() {
   const q     = document.getElementById('search').value.toLowerCase();
   const evtF  = document.getElementById('filter-event').value;
   const attF  = document.getElementById('filter-attending').value;
+  const srcF  = document.getElementById('filter-source').value;
 
   return allRows.filter(r => {
     if (q && !r.household_label?.toLowerCase().includes(q) && !r.full_name?.toLowerCase().includes(q)) return false;
@@ -338,6 +350,7 @@ function filteredRows() {
     if (attF === 'pending' && r.attending) return false;
     if (attF === 'YES' && r.attending !== 'YES') return false;
     if (attF === 'NO'  && r.attending !== 'NO')  return false;
+    if (srcF  && r.source_list !== srcF) return false;
     return true;
   }).sort((a, b) => {
     const av = (a[sortCol] ?? '').toString().toLowerCase();
@@ -359,6 +372,10 @@ function renderTable() {
     const tags = (r.invited_events ?? '').split(',').filter(Boolean)
       .map(e => `<span class="tag tag-${e.trim()}">${e.trim()}</span>`).join('');
 
+    const srcBadge = r.source_list
+      ? ` <span class="tag source-${r.source_list.toLowerCase()}">${esc(r.source_list)}</span>`
+      : '';
+
     const eventTag = r.event
       ? `<span class="tag tag-${r.event}">${r.event}</span>`
       : '<span style="color:#aaa">—</span>';
@@ -372,7 +389,7 @@ function renderTable() {
     const pendActive = !r.attending            ? 'active' : '';
 
     return `<tr>
-      <td class="household-cell">${esc(r.household_label)}</td>
+      <td class="household-cell">${esc(r.household_label)}${srcBadge}</td>
       <td>${esc(r.full_name)}</td>
       <td>${tags}</td>
       <td>${eventTag}</td>
@@ -438,9 +455,9 @@ document.getElementById('rsvp-tbody').addEventListener('click', async e => {
 // ── CSV Export ───────────────────────────────────────────────────────
 document.getElementById('export-btn').addEventListener('click', () => {
   const rows = filteredRows();
-  const headers = ['Household','Guest','Invited Events','Event','Response','Updated'];
+  const headers = ['Household','Source','Guest','Invited Events','Event','Response','Updated'];
   const csv = [headers, ...rows.map(r => [
-    r.household_label, r.full_name, r.invited_events, r.event ?? '', r.attending ?? 'Pending',
+    r.household_label, r.source_list ?? '', r.full_name, r.invited_events, r.event ?? '', r.attending ?? 'Pending',
     r.updated_at ? new Date(r.updated_at).toLocaleDateString() : ''
   ])].map(row => row.map(v => `"${String(v ?? '').replace(/"/g,'""')}"`).join(',')).join('\n');
 
