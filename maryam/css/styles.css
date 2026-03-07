@@ -567,11 +567,32 @@ h1, h2, h3, h4, h5, h6 {
     white-space: normal;
     letter-spacing: 0.08em;
     line-height: 1.15;
+    /* Grid: names stacked left, & vertically centered right */
+    display: grid;
+    grid-template-areas:
+      "first amp"
+      "last  amp";
+    grid-template-columns: auto auto;
+    align-items: center;
+    width: fit-content;
+    margin-inline: auto;
+    gap: 0 0.3em;
   }
 
-  /* Stack the two name spans as block lines on mobile */
+  .name-first { grid-area: first; }
+  .name-last  { grid-area: last; }
+
+  .hero-names .ampersand {
+    grid-area: amp;
+    font-size: clamp(2.8rem, 12vw, 3.6rem);
+    padding-inline-start: 0.1em;
+    align-self: center;
+    letter-spacing: 0;
+  }
+
+  /* Remove the old hero-name-line block display — no longer needed */
   .hero-name-line {
-    display: block;
+    display: inline;
   }
 
   .hero-tagline {
