@@ -498,7 +498,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 50%;
   height: 38%;
   top: 12%;
-  right: -3%;
+  right: -9%;
   transform: rotate(2.5deg);
   z-index: 2;
 }
@@ -514,6 +514,19 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 1;
 }
 .collage-bottom img { object-position: center 25%; }
+
+/* ── Year caption — sits in the bottom white border strip ── */
+.photo-year {
+  position: absolute;
+  bottom: -23px;
+  right: 10px;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 0.85rem;
+  line-height: 1;
+  color: #555;
+  pointer-events: none;
+  user-select: none;
+}
 
 /* ── Hover: lift, flatten, come forward ── */
 .collage-item:hover {
@@ -1329,7 +1342,7 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   top: 0;
   left: 0;
-  transform: translateY(-45%);
+  transform: translateY(-22%);
   width: 100%;
   pointer-events: none;
   z-index: 0;
