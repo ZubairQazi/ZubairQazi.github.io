@@ -237,6 +237,11 @@ h1, h2, h3, h4, h5, h6 {
   padding-inline: 0.25em;
 }
 
+/* Compact variant used on sub-pages (schedule etc.) */
+.hero-names--sm {
+  font-size: var(--text-3xl);
+}
+
 .hero-tagline {
   font-family: var(--font-serif);
   font-size: var(--text-lg);
@@ -491,7 +496,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 15%;
+  object-position: center 20%;
   display: block;
   pointer-events: none;
 }
@@ -1011,6 +1016,27 @@ h1, h2, h3, h4, h5, h6 {
   grid-column: 1 / -1;
 }
 
+/* Household extras block (email + note to couple) */
+.household-extras-block {
+  margin-top: var(--space-8);
+  padding: var(--space-6) var(--space-8);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.field-optional {
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--color-text-light);
+  letter-spacing: 0;
+  text-transform: none;
+  font-family: var(--font-sans);
+}
+
 /* Submit row */
 .rsvp-submit-row {
   display: flex;
@@ -1091,6 +1117,89 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(192,57,43,0.08);
   color: var(--color-error);
   border: 1px solid rgba(192,57,43,0.20);
+}
+
+/* Success event blocks (shown after RSVP submit) */
+.rsvp-success-events {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(346px, 461px));
+  justify-content: center;
+  align-items: start;
+  gap: var(--space-6);
+  /* break out of the narrow .rsvp-page container */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-inline: var(--space-8);
+  box-sizing: border-box;
+  margin: var(--space-8) 0 0;
+}
+
+.success-event-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-card);
+}
+
+.success-event-block.has-invite-img {
+  padding: 0;
+  overflow: hidden;
+  max-width: none;
+  min-width: 0;
+  flex: unset;
+}
+
+.success-event-img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.success-event-block.has-invite-img .success-event-name,
+.success-event-block.has-invite-img .success-event-detail,
+.success-event-block.has-invite-img .success-event-address {
+  padding-inline: var(--space-4);
+}
+
+.success-event-block.has-invite-img .success-event-address {
+  padding-bottom: var(--space-4);
+}
+
+.success-event-name {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--color-accent);
+  letter-spacing: 0.04em;
+}
+
+.success-event-detail {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  text-align: center;
+}
+
+.success-event-address {
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: var(--color-text-light);
+  text-align: center;
+  line-height: 1.4;
+  margin-top: var(--space-1);
 }
 
 /* Success screen */
@@ -1216,6 +1325,7 @@ h1, h2, h3, h4, h5, h6 {
 .site-footer {
   margin-top: auto;
   position: relative;
+  z-index: 0;          /* creates stacking context below page z-index:1 main */
   overflow: visible;
   padding-top: clamp(30px, 4vw, 55px);
   padding-bottom: var(--space-8);
@@ -1319,7 +1429,12 @@ body.gsap-ready .ba-section {
 
 /* ── Responsive typography fixes ───────────────────────────────── */
 @media (max-width: 480px) {
+  /* Scale hero name down so it never overflows or hyphenates */
   .hero-names {
+    font-size: min(8.5vw, 2.60rem) !important;
+    white-space: normal;
+    hyphens: none;
+    overflow-wrap: normal;
     letter-spacing: 0.06em;
   }
 
@@ -1340,5 +1455,24 @@ body.gsap-ready .ba-section {
 
   .guest-card {
     padding: var(--space-5) var(--space-5);
+  }
+
+  /* Schedule timeline: tighten columns on narrow screens */
+  .schedule-timeline::before {
+    left: 4.2rem;
+  }
+
+  .schedule-block {
+    grid-template-columns: 4.2rem 1.5rem 1fr;
+    gap: 0 var(--space-3);
+  }
+
+  .schedule-time {
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+  }
+
+  .schedule-content h3 {
+    font-size: var(--text-lg);
   }
 }
