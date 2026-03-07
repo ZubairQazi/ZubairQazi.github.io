@@ -1445,6 +1445,12 @@ body.gsap-ready .collage-section {
 
 /* ── Responsive typography fixes ───────────────────────────────── */
 @media (max-width: 480px) {
+  /* Clip the floral tail before it overlaps the hero names on mobile */
+  .hero-floral {
+    max-height: 44vw;
+    overflow: hidden;
+  }
+
   /* Scale hero name down so it never overflows or hyphenates */
   .hero-names {
     font-size: min(8.5vw, 2.60rem) !important;
