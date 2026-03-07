@@ -548,41 +548,16 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 10;
 }
 
-/* ── Mobile: stacked print cards ── */
+/* ── Mobile: scaled-down collage (keep absolute layout, shorter container) ── */
 @media (max-width: 540px) {
   .photo-collage {
-    position: static;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2.4rem;   /* extra vertical gap so bottom border+caption has room */
-    height: auto;
+    height: clamp(240px, 72vw, 310px);
+    max-width: 100%;
+    overflow: hidden;
   }
-  .collage-item {
-    position: relative;  /* keep as positioning context for .photo-year */
-    width: 75%;
-    height: auto;
-    /* reset all desktop offsets so items stack normally */
-    top: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    left: auto !important;
-    transform: none !important;
-    z-index: auto !important;
-  }
-  /* drive height via aspect-ratio on the inner image wrapper */
-  .collage-print {
-    aspect-ratio: 4 / 3;
-  }
-  .collage-top .collage-print,
-  .collage-bottom .collage-print {
-    aspect-ratio: 3 / 4;
-  }
-  .collage-item img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  /* pull right photo back in so it doesn't clip off screen */
+  .collage-right {
+    right: 0%;
   }
 }
 
