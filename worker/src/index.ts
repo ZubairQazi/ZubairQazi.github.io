@@ -89,7 +89,7 @@ function jsonResponse(
   if (corsOrigin) {
     headers["Access-Control-Allow-Origin"] = corsOrigin;
     headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS";
-    headers["Access-Control-Allow-Headers"] = "Content-Type";
+    headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization";
     headers["Access-Control-Max-Age"] = "86400";
   }
   return new Response(JSON.stringify(body), { status, headers });
@@ -379,7 +379,7 @@ export default {
           headers: {
             "Access-Control-Allow-Origin": corsOrigin,
             "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
             "Access-Control-Max-Age": "86400",
           },
         });
