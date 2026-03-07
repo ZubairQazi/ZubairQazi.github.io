@@ -497,8 +497,8 @@ h1, h2, h3, h4, h5, h6 {
 .collage-right {
   width: 50%;
   height: 38%;
-  top: 4%;
-  right: 0;
+  top: 12%;
+  right: -3%;
   transform: rotate(2.5deg);
   z-index: 2;
 }
