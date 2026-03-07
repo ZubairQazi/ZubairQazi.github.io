@@ -146,11 +146,14 @@
     thead th.sorted-desc::after { content: ' ↓'; }
     tbody tr { border-bottom: 1px solid #f0ebe3; }
     tbody tr:hover { background: #faf6f0; }
+    tbody tr.group-start td { border-top: 2px solid #ddd0bf; }
+    tbody tr:first-child td { border-top: none; }
     td { padding: 0.65rem 1rem; vertical-align: middle; }
     td.attending-yes { color: #27ae60; font-weight: 600; }
     td.attending-no  { color: #c0392b; font-weight: 600; }
     td.attending-pending { color: #aaa; font-style: italic; }
     .household-cell { font-weight: 500; }
+    .household-cell.continued { font-weight: 400; color: #bbb; padding-left: 1.5rem; font-size: 0.78rem; }
     .tag {
       display: inline-block;
       padding: 2px 8px;
@@ -353,6 +356,12 @@ function filteredRows() {
     if (srcF  && r.source_list !== srcF) return false;
     return true;
   }).sort((a, b) => {
+    // Always primary-sort by household (label + phone distinguishes duplicate family names)
+    const hkA = (a.household_label ?? '').toLowerCase() + '\0' + (a.phone_e164 ?? '');
+    const hkB = (b.household_label ?? '').toLowerCase() + '\0' + (b.phone_e164 ?? '');
+    if (hkA < hkB) return -1;
+    if (hkA > hkB) return  1;
+    // Secondary: user-selected column within each household
     const av = (a[sortCol] ?? '').toString().toLowerCase();
     const bv = (b[sortCol] ?? '').toString().toLowerCase();
     return av < bv ? -sortDir : av > bv ? sortDir : 0;
@@ -368,13 +377,22 @@ function renderTable() {
     return;
   }
 
+  let prevHouseKey = null;
   tbody.innerHTML = rows.map(r => {
+    const houseKey = (r.household_label ?? '') + '\0' + (r.phone_e164 ?? '');
+    const isGroupStart = houseKey !== prevHouseKey;
+    prevHouseKey = houseKey;
+
     const tags = (r.invited_events ?? '').split(',').filter(Boolean)
       .map(e => { const ev = e.trim(); const label = ev.charAt(0).toUpperCase() + ev.slice(1); return `<span class="tag tag-${ev}">${label}</span>`; }).join('');
 
     const srcBadge = r.source_list
       ? ` <span class="tag source-${r.source_list.toLowerCase()}">${esc(r.source_list)}</span>`
       : '';
+
+    const householdCell = isGroupStart
+      ? `<td class="household-cell">${esc(r.household_label)}${srcBadge}</td>`
+      : `<td class="household-cell continued">↳</td>`;
 
     const eventTag = r.event
       ? `<span class="tag tag-${r.event}">${r.event.charAt(0).toUpperCase() + r.event.slice(1)}</span>`
@@ -388,8 +406,8 @@ function renderTable() {
     const noActive   = r.attending === 'NO'   ? 'active' : '';
     const pendActive = !r.attending            ? 'active' : '';
 
-    return `<tr>
-      <td class="household-cell">${esc(r.household_label)}${srcBadge}</td>
+    return `<tr${isGroupStart ? ' class="group-start"' : ''}>
+      ${householdCell}
       <td>${esc(r.full_name)}</td>
       <td>${tags}</td>
       <td>${eventTag}</td>
