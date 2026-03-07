@@ -88,8 +88,8 @@ function jsonResponse(
   };
   if (corsOrigin) {
     headers["Access-Control-Allow-Origin"] = corsOrigin;
-    headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS";
-    headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization";
+    headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, OPTIONS";
+    headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     headers["Access-Control-Max-Age"] = "86400";
   }
   return new Response(JSON.stringify(body), { status, headers });
@@ -360,7 +360,48 @@ async function handleGetAdminRsvps(
 
   return jsonResponse({ rsvps: rows.results ?? [] }, 200, corsOrigin);
 }
+/** PATCH /api/admin/rsvp — manually set or clear a guest+event response */
+async function handlePatchAdminRsvp(
+  request: Request,
+  env: Env,
+  corsOrigin: string
+): Promise<Response> {
+  const auth = request.headers.get("Authorization") ?? "";
+  const pin = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  if (!pin || pin !== env.DASHBOARD_PIN) {
+    return jsonResponse({ error: "Unauthorized" }, 401, corsOrigin);
+  }
 
+  let body: { guest_id?: number; event?: string; attending?: boolean | null };
+  try { body = await request.json(); } catch {
+    return jsonResponse({ error: "Invalid request body." }, 400, corsOrigin);
+  }
+
+  const { guest_id, event, attending } = body;
+  if (typeof guest_id !== "number" || typeof event !== "string") {
+    return jsonResponse({ error: "guest_id and event are required." }, 400, corsOrigin);
+  }
+  const validEvents = new Set(["mehndi", "shaadi", "walima"]);
+  if (!validEvents.has(event)) {
+    return jsonResponse({ error: "Invalid event." }, 400, corsOrigin);
+  }
+
+  // attending === null means delete (reset to pending)
+  if (attending === null || attending === undefined) {
+    await env.DB.prepare("DELETE FROM rsvps WHERE guest_id = ? AND event = ?")
+      .bind(guest_id, event).run();
+  } else {
+    await env.DB.prepare(
+      `INSERT INTO rsvps (guest_id, event, attending, updated_at)
+       VALUES (?, ?, ?, ?)
+       ON CONFLICT(guest_id, event) DO UPDATE SET
+         attending = excluded.attending,
+         updated_at = excluded.updated_at`
+    ).bind(guest_id, event, attending ? 1 : 0, new Date().toISOString()).run();
+  }
+
+  return jsonResponse({ success: true }, 200, corsOrigin);
+}
 // ── Main Handler ───────────────────────────────────────────────────
 
 export default {
@@ -378,7 +419,7 @@ export default {
           status: 204,
           headers: {
             "Access-Control-Allow-Origin": corsOrigin,
-            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Methods": "GET, POST, PATCH, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type, Authorization",
             "Access-Control-Max-Age": "86400",
           },
@@ -415,6 +456,11 @@ export default {
     // ── Route: GET /api/admin/rsvps
     if (path === "/api/admin/rsvps" && request.method === "GET") {
       return handleGetAdminRsvps(request, env, corsOrigin);
+    }
+
+    // ── Route: PATCH /api/admin/rsvp
+    if (path === "/api/admin/rsvp" && request.method === "PATCH") {
+      return handlePatchAdminRsvp(request, env, corsOrigin);
     }
 
     // ── 404 for everything else
