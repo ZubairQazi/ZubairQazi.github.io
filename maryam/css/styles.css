@@ -553,11 +553,12 @@ h1, h2, h3, h4, h5, h6 {
   .photo-collage {
     height: clamp(320px, 90vw, 420px);
     max-width: 100%;
-    overflow: hidden;
+    overflow: visible; /* allow captions + edges to breathe */
+    margin-bottom: 2rem; /* space for bottom caption */
   }
-  /* taller items so less cropping */
+  /* taller items so less cropping, right image tucked in */
   .collage-top    { width: 62%; height: 65%; }
-  .collage-right  { width: 54%; height: 46%; right: 0%; }
+  .collage-right  { width: 50%; height: 46%; right: 2%; }
   .collage-bottom { width: 58%; height: 58%; }
 }
 
