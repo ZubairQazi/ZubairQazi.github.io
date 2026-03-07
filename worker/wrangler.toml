@@ -11,7 +11,7 @@ database_id = "398d8fd8-0583-4527-ae89-75f716492b7a"
 
 # ── Environment variables (non-secret) ───────────────────
 [vars]
-ALLOWED_ORIGINS = "https://zubairqazi.github.io,https://zubairqazi.com"
+ALLOWED_ORIGINS = "https://zubairqazi.github.io,https://zubairqazi.com,http://localhost:5050"
 WEDDING_DATE = "2026-06-11"
 
 # ── Secrets (set via: wrangler secret put SECRET_NAME) ───
