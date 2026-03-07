@@ -1123,6 +1123,7 @@ h1, h2, h3, h4, h5, h6 {
 .rsvp-success-events {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  align-items: start;
   gap: var(--space-6);
   width: 100%;
   max-width: 700px;
