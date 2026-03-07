@@ -560,9 +560,15 @@ h1, h2, h3, h4, h5, h6 {
   }
   .collage-item {
     position: relative;  /* keep as positioning context for .photo-year */
-    width: 86%;
+    width: 75%;
     height: auto;
+    /* reset all desktop offsets so items stack normally */
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
     transform: none !important;
+    z-index: auto !important;
   }
   /* drive height via aspect-ratio on the inner image wrapper */
   .collage-print {
