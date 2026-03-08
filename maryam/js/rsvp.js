@@ -57,7 +57,9 @@ function renderSuccessEvents(eventsSet) {
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function getToken() {
-  return new URLSearchParams(window.location.search).get('t') ?? null;
+  return new URLSearchParams(window.location.search).get('t')
+    ?? sessionStorage.getItem('rsvp_token')
+    ?? null;
 }
 function isDemo() {
   return new URLSearchParams(window.location.search).get('demo') === '1';

@@ -157,7 +157,7 @@ async function main() {
   for (const hh of households) {
     const rawToken  = generateToken();
     const tokenHash = sha256Hex(rawToken);
-    const rsvpLink  = `${baseUrl.replace(/\/$/, '')}/rsvp/?t=${rawToken}`;
+    const rsvpLink  = `${baseUrl.replace(/\/$/, '')}/?t=${rawToken}`;
 
     importRows.push({
       token_hash:      tokenHash,

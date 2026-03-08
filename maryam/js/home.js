@@ -9,6 +9,13 @@
  *  - prefers-reduced-motion → simple instant fade only
  */
 
+// ── Persist RSVP token from URL so guests don't need to type it ──────
+// Link format: /maryam/?t=XXXXX  →  auto-populates on the RSVP page
+(function persistToken() {
+  const t = new URLSearchParams(window.location.search).get('t');
+  if (t) sessionStorage.setItem('rsvp_token', t);
+})();
+
 // ── Config ────────────────────────────────────────────────────────
 // IMPORTANT: Update this to your actual wedding date (YYYY, MM-1, DD)
 const WEDDING_DATE = new Date(2026, 5, 11); // Jun 11, 2026 (month is 0-indexed)
