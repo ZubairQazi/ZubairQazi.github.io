@@ -93,6 +93,7 @@
     }
     .stat-card .num { font-size: 2rem; font-weight: 700; color: #8b6f4e; }
     .stat-card .num.green { color: #27ae60; }
+    .stat-card .num.amber { color: #e67e22; }
     .stat-card .lbl { font-size: 0.78rem; color: #777; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
     .stat-card .sub { font-size: 0.72rem; color: #aaa; margin-top: 0.15rem; }
 
@@ -253,9 +254,9 @@
     </div>
     <select id="filter-attending">
       <option value="">All Responses</option>
-      <option value="any-yes">Any Attending</option>
-      <option value="any-no">Any Declined</option>
-      <option value="all-pending">All Pending</option>
+      <option value="yes">Attending</option>
+      <option value="no">Not Attending</option>
+      <option value="pending">Pending</option>
     </select>
     <select id="filter-source">
       <option value="">All Sources</option>
@@ -369,29 +370,40 @@ function buildGuestRows() {
 
 // ── Stats ────────────────────────────────────────────────────────────
 function renderStats() {
-  const households = new Set(allRows.map(r => r.household_label + '\0' + (r.phone_e164 ?? ''))).size;
-  const guests     = new Set(allRows.map(r => r.guest_id)).size;
+  const allGuestIds = [...new Set(allRows.map(r => r.guest_id))];
+  const households  = new Set(allRows.map(r => r.household_label + '\0' + (r.phone_e164 ?? ''))).size;
+  const guests      = allGuestIds.length;
 
-  const evtStats = EVENT_ORDER.map(evt => {
-    const invited   = new Set(allRows.filter(r => r.event === evt).map(r => r.guest_id)).size;
-    const attending = allRows.filter(r => r.event === evt && r.attending === 'YES').length;
-    return { evt, attending, invited };
-  });
+  // Responded households = at least one non-null attending in that household
+  const respondedHHKeys = new Set(
+    allRows.filter(r => r.attending != null)
+           .map(r => r.household_label + '\0' + (r.phone_e164 ?? ''))
+  );
+
+  // Pending guests = guest has NO non-null responses at all
+  const respondedGuestIds = new Set(allRows.filter(r => r.attending != null).map(r => r.guest_id));
+  const pendingGuests = allGuestIds.filter(id => !respondedGuestIds.has(id)).length;
+
+  const evtStats = EVENT_ORDER.map(evt => ({
+    evt,
+    attending: allRows.filter(r => r.event === evt && r.attending === 'YES').length,
+  }));
 
   const cards = [
-    { num: households, lbl: 'Households', sub: '' },
-    { num: guests,     lbl: 'Guests',     sub: '' },
+    { num: households,   lbl: 'Households', sub: `${respondedHHKeys.size} responded` },
+    { num: guests,       lbl: 'Guests',     sub: '' },
+    { num: pendingGuests, lbl: 'Pending',   sub: 'no response yet', amber: true },
     ...evtStats.map(s => ({
       num: s.attending,
-      lbl: s.evt.charAt(0).toUpperCase() + s.evt.slice(1),
-      sub: `of ${s.invited} invited`,
+      lbl: s.evt.charAt(0).toUpperCase() + s.evt.slice(1) + ' Attending',
+      sub: '',
       green: true,
     })),
   ];
 
   document.getElementById('stats').innerHTML = cards.map(s =>
     `<div class="stat-card">
-      <div class="num${s.green ? ' green' : ''}">${s.num}</div>
+      <div class="num${s.green ? ' green' : s.amber ? ' amber' : ''}">${s.num}</div>
       <div class="lbl">${s.lbl}</div>
       ${s.sub ? `<div class="sub">${s.sub}</div>` : ''}
     </div>`
@@ -437,17 +449,18 @@ function filteredGuestRows() {
   return guestRows.filter(g => {
     if (q && !g.household_label?.toLowerCase().includes(q) && !g.full_name?.toLowerCase().includes(q)) return false;
 
-    // Multi-select "Invited To" — guest must be invited to ALL selected events
+    // Multi-select "Invited To" — exact set match
     if (selectedEvents.size > 0) {
-      const inv = (g.invited_events ?? '').split(',').map(e => e.trim());
-      if (![...selectedEvents].every(e => inv.includes(e))) return false;
+      const inv = new Set((g.invited_events ?? '').split(',').map(e => e.trim()).filter(Boolean));
+      if (inv.size !== selectedEvents.size) return false;
+      if (![...selectedEvents].every(e => inv.has(e))) return false;
     }
 
     // Response filter (operates across all invited events for this guest)
     const evtVals = Object.values(g.events);
-    if (attF === 'any-yes'    && !evtVals.includes('YES'))  return false;
-    if (attF === 'any-no'     && !evtVals.includes('NO'))   return false;
-    if (attF === 'all-pending' && evtVals.some(v => v))     return false;
+    if (attF === 'yes'     && !evtVals.includes('YES'))  return false;
+    if (attF === 'no'      && !evtVals.includes('NO'))   return false;
+    if (attF === 'pending' && evtVals.some(v => v))      return false;
 
     if (srcF && g.source_list !== srcF) return false;
     return true;
