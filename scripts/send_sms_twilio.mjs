@@ -116,7 +116,7 @@ function buildMessage(row) {
     `Maryam Usman and Zubair Qazi\n\n` +
     `In San Diego, California\n\n` +
     `Please RSVP by March 30th. (RSVP Code: ${token})\n` +
-    `To RSVP, please visit zubairqazi.com/maryam/ and enter your RSVP code.\n\n` +
+    `To RSVP, please visit: ${row.rsvp_link}\n\n` +
     `We look forward to celebrating these special moments with you. ♡`
   );
 }

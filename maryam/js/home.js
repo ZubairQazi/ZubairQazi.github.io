@@ -13,6 +13,17 @@
 // IMPORTANT: Update this to your actual wedding date (YYYY, MM-1, DD)
 const WEDDING_DATE = new Date(2026, 5, 11); // Jun 11, 2026 (month is 0-indexed)
 
+// ── Persist RSVP token across navigation ─────────────────────────
+(function captureToken() {
+  const t = new URLSearchParams(window.location.search).get('t');
+  if (!t) return;
+  sessionStorage.setItem('rsvp_token', t);
+  // Append ?t= to all RSVP links on this page so the token stays in the URL
+  document.querySelectorAll('a[href^="rsvp/"]').forEach(a => {
+    a.href = 'rsvp/?t=' + t;
+  });
+})();
+
 // ── Reduced motion check ──────────────────────────────────────────
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
