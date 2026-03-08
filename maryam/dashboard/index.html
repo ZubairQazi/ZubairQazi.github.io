@@ -92,7 +92,10 @@
       text-align: center;
     }
     .stat-card .num { font-size: 2rem; font-weight: 700; color: #8b6f4e; }
+    .stat-card .num.green { color: #27ae60; }
+    .stat-card .num.amber { color: #e67e22; }
     .stat-card .lbl { font-size: 0.78rem; color: #777; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
+    .stat-card .sub { font-size: 0.72rem; color: #aaa; margin-top: 0.15rem; }
 
     .controls {
       display: flex;
@@ -191,6 +194,34 @@
     .toggle-btn.pend.active { background: #f0ebe3; border-color: #aaa;    color: #666; }
     .toggle-btn.saving { animation: pulse 0.8s infinite alternate; }
     @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
+
+    /* ── Per-event response rows ── */
+    .event-response-row { display: flex; align-items: center; gap: 0.5rem; margin: 2px 0; }
+    .event-response-row .event-label {
+      display: inline-block; width: 56px; font-size: 0.75rem; font-weight: 600;
+    }
+    .event-label.mehndi { color: #8b2fa8; }
+    .event-label.shaadi { color: #c0392b; }
+    .event-label.walima { color: #2369a4; }
+
+    /* ── Chip-based event filter ── */
+    .chip-filter { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+    .chip-filter-label { font-size: 0.82rem; color: #777; white-space: nowrap; }
+    .event-chip-btn {
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1.5px solid #d4c4b0;
+      background: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .event-chip-btn:hover { border-color: #8b6f4e; }
+    .event-chip-btn.active-mehndi { background: #fde8f5; border-color: #8b2fa8; color: #8b2fa8; }
+    .event-chip-btn.active-shaadi { background: #fde8e8; border-color: #c0392b; color: #c0392b; }
+    .event-chip-btn.active-walima { background: #e8f5fd; border-color: #2369a4; color: #2369a4; }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -215,16 +246,16 @@
 
   <div class="controls" id="controls" style="display:none">
     <input type="search" id="search" placeholder="Search guest or household…" style="min-width:220px">
-    <select id="filter-event">
-      <option value="">All Events</option>
-      <option value="mehndi">Mehndi</option>
-      <option value="shaadi">Shaadi</option>
-      <option value="walima">Walima</option>
-    </select>
+    <div class="chip-filter">
+      <span class="chip-filter-label">Invited To:</span>
+      <button class="event-chip-btn" data-event="mehndi">Mehndi</button>
+      <button class="event-chip-btn" data-event="shaadi">Shaadi</button>
+      <button class="event-chip-btn" data-event="walima">Walima</button>
+    </div>
     <select id="filter-attending">
       <option value="">All Responses</option>
-      <option value="YES">Attending</option>
-      <option value="NO">Declined</option>
+      <option value="yes">Attending</option>
+      <option value="no">Not Attending</option>
       <option value="pending">Pending</option>
     </select>
     <select id="filter-source">
@@ -240,8 +271,7 @@
           <th data-col="household_label">Household</th>
           <th data-col="full_name">Guest</th>
           <th data-col="invited_events">Invited To</th>
-          <th data-col="event">Event</th>
-          <th data-col="attending">Response</th>
+          <th>Response</th>
           <th data-col="updated_at">Updated</th>
         </tr>
       </thead>
@@ -252,10 +282,13 @@
 
 <script>
 const API_BASE = 'https://wedding-rsvp-worker.zubair-qazi-5b.workers.dev';
-let allRows = [];
+const EVENT_ORDER = ['mehndi', 'shaadi', 'walima'];
+let allRows = [];       // raw rows from API (one per guest+event)
+let guestRows = [];     // one entry per guest (built from allRows)
 let sortCol = 'household_label';
 let sortDir = 1;
 let currentPin = '';
+let selectedEvents = new Set(); // for multi-select chip filter
 
 // ── PIN flow ─────────────────────────────────────────────────────────
 document.getElementById('pin-input').addEventListener('keydown', e => {
@@ -287,11 +320,14 @@ async function unlock() {
     const data = await res.json();
     allRows = data.rsvps ?? [];
     currentPin = pin;
-    // Populate source filter dynamically from data
+
+    // Populate source filter dynamically
     const sources = [...new Set(allRows.map(r => r.source_list).filter(Boolean))].sort();
     const srcSelect = document.getElementById('filter-source');
     srcSelect.innerHTML = '<option value="">All Sources</option>' +
       sources.map(s => `<option value="${s}">${s}</option>`).join('');
+
+    buildGuestRows();
     document.getElementById('pin-screen').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
     document.getElementById('loading').style.display = 'none';
@@ -307,22 +343,87 @@ async function unlock() {
   }
 }
 
+// ── Build guest-grouped rows from flat API rows ──────────────────────
+function buildGuestRows() {
+  const byGuest = new Map();
+  for (const r of allRows) {
+    if (!byGuest.has(r.guest_id)) {
+      byGuest.set(r.guest_id, {
+        guest_id:        r.guest_id,
+        full_name:       r.full_name,
+        household_label: r.household_label,
+        phone_e164:      r.phone_e164,
+        source_list:     r.source_list,
+        invited_events:  r.invited_events,
+        events: {},       // event -> 'YES' | 'NO' | null
+        latest_updated:  null,
+      });
+    }
+    const g = byGuest.get(r.guest_id);
+    g.events[r.event] = r.attending ?? null;
+    if (r.updated_at && (!g.latest_updated || r.updated_at > g.latest_updated)) {
+      g.latest_updated = r.updated_at;
+    }
+  }
+  guestRows = [...byGuest.values()];
+}
+
 // ── Stats ────────────────────────────────────────────────────────────
 function renderStats() {
-  const households = new Set(allRows.map(r => r.household_label)).size;
-  const guests     = new Set(allRows.map(r => r.guest_id)).size;
-  const attending  = allRows.filter(r => r.attending === 'YES').length;
-  const declined   = allRows.filter(r => r.attending === 'NO').length;
-  const pending    = allRows.filter(r => !r.attending).length;
+  const allGuestIds = [...new Set(allRows.map(r => r.guest_id))];
+  const households  = new Set(allRows.map(r => r.household_label + '\0' + (r.phone_e164 ?? ''))).size;
+  const guests      = allGuestIds.length;
 
-  document.getElementById('stats').innerHTML = [
-    { num: households, lbl: 'Households' },
-    { num: guests,     lbl: 'Guests' },
-    { num: attending,  lbl: 'Attending' },
-    { num: declined,   lbl: 'Declined' },
-    { num: pending,    lbl: 'Pending' },
-  ].map(s => `<div class="stat-card"><div class="num">${s.num}</div><div class="lbl">${s.lbl}</div></div>`).join('');
+  // Responded households = at least one non-null attending in that household
+  const respondedHHKeys = new Set(
+    allRows.filter(r => r.attending != null)
+           .map(r => r.household_label + '\0' + (r.phone_e164 ?? ''))
+  );
+
+  // Pending guests = guest has NO non-null responses at all
+  const respondedGuestIds = new Set(allRows.filter(r => r.attending != null).map(r => r.guest_id));
+  const pendingGuests = allGuestIds.filter(id => !respondedGuestIds.has(id)).length;
+
+  const evtStats = EVENT_ORDER.map(evt => ({
+    evt,
+    attending: allRows.filter(r => r.event === evt && r.attending === 'YES').length,
+  }));
+
+  const cards = [
+    { num: households,   lbl: 'Households', sub: `${respondedHHKeys.size} responded` },
+    { num: guests,       lbl: 'Guests',     sub: '' },
+    { num: pendingGuests, lbl: 'Pending',   sub: 'no response yet', amber: true },
+    ...evtStats.map(s => ({
+      num: s.attending,
+      lbl: s.evt.charAt(0).toUpperCase() + s.evt.slice(1) + ' Attending',
+      sub: '',
+      green: true,
+    })),
+  ];
+
+  document.getElementById('stats').innerHTML = cards.map(s =>
+    `<div class="stat-card">
+      <div class="num${s.green ? ' green' : s.amber ? ' amber' : ''}">${s.num}</div>
+      <div class="lbl">${s.lbl}</div>
+      ${s.sub ? `<div class="sub">${s.sub}</div>` : ''}
+    </div>`
+  ).join('');
 }
+
+// ── Chip filter ──────────────────────────────────────────────────────
+document.querySelectorAll('.event-chip-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const evt = btn.dataset.event;
+    if (selectedEvents.has(evt)) {
+      selectedEvents.delete(evt);
+      btn.classList.remove(`active-${evt}`);
+    } else {
+      selectedEvents.add(evt);
+      btn.classList.add(`active-${evt}`);
+    }
+    renderTable();
+  });
+});
 
 // ── Sorting ──────────────────────────────────────────────────────────
 document.querySelectorAll('thead th[data-col]').forEach(th => {
@@ -337,87 +438,102 @@ document.querySelectorAll('thead th[data-col]').forEach(th => {
 
 // ── Filtering ─────────────────────────────────────────────────────────
 document.getElementById('search').addEventListener('input', renderTable);
-document.getElementById('filter-event').addEventListener('change', renderTable);
 document.getElementById('filter-attending').addEventListener('change', renderTable);
 document.getElementById('filter-source').addEventListener('change', renderTable);
 
-function filteredRows() {
-  const q     = document.getElementById('search').value.toLowerCase();
-  const evtF  = document.getElementById('filter-event').value;
-  const attF  = document.getElementById('filter-attending').value;
-  const srcF  = document.getElementById('filter-source').value;
+function filteredGuestRows() {
+  const q    = document.getElementById('search').value.toLowerCase();
+  const attF = document.getElementById('filter-attending').value;
+  const srcF = document.getElementById('filter-source').value;
 
-  return allRows.filter(r => {
-    if (q && !r.household_label?.toLowerCase().includes(q) && !r.full_name?.toLowerCase().includes(q)) return false;
-    if (evtF && !(r.invited_events ?? '').split(',').some(e => e.trim() === evtF)) return false;
-    if (attF === 'pending' && r.attending) return false;
-    if (attF === 'YES' && r.attending !== 'YES') return false;
-    if (attF === 'NO'  && r.attending !== 'NO')  return false;
-    if (srcF  && r.source_list !== srcF) return false;
+  return guestRows.filter(g => {
+    if (q && !g.household_label?.toLowerCase().includes(q) && !g.full_name?.toLowerCase().includes(q)) return false;
+
+    // Multi-select "Invited To" — exact set match
+    if (selectedEvents.size > 0) {
+      const inv = new Set((g.invited_events ?? '').split(',').map(e => e.trim()).filter(Boolean));
+      if (inv.size !== selectedEvents.size) return false;
+      if (![...selectedEvents].every(e => inv.has(e))) return false;
+    }
+
+    // Response filter (operates across all invited events for this guest)
+    const evtVals = Object.values(g.events);
+    if (attF === 'yes'     && !evtVals.includes('YES'))  return false;
+    if (attF === 'no'      && !evtVals.includes('NO'))   return false;
+    if (attF === 'pending' && evtVals.some(v => v))      return false;
+
+    if (srcF && g.source_list !== srcF) return false;
     return true;
   }).sort((a, b) => {
-    // Always primary-sort by household (label + phone distinguishes duplicate family names)
     const hkA = (a.household_label ?? '').toLowerCase() + '\0' + (a.phone_e164 ?? '');
     const hkB = (b.household_label ?? '').toLowerCase() + '\0' + (b.phone_e164 ?? '');
     if (hkA < hkB) return -1;
     if (hkA > hkB) return  1;
-    // Secondary: user-selected column within each household
-    const av = (a[sortCol] ?? '').toString().toLowerCase();
-    const bv = (b[sortCol] ?? '').toString().toLowerCase();
+    // Secondary sort within household
+    let av, bv;
+    if (sortCol === 'updated_at') {
+      av = a.latest_updated ?? '';
+      bv = b.latest_updated ?? '';
+    } else {
+      av = (a[sortCol] ?? '').toString().toLowerCase();
+      bv = (b[sortCol] ?? '').toString().toLowerCase();
+    }
     return av < bv ? -sortDir : av > bv ? sortDir : 0;
   });
 }
 
 function renderTable() {
-  const rows = filteredRows();
+  const rows = filteredGuestRows();
   const tbody = document.getElementById('rsvp-tbody');
 
   if (rows.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:2rem">No results</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#aaa;padding:2rem">No results</td></tr>';
     return;
   }
 
   let prevHouseKey = null;
-  tbody.innerHTML = rows.map(r => {
-    const houseKey = (r.household_label ?? '') + '\0' + (r.phone_e164 ?? '');
+  tbody.innerHTML = rows.map(g => {
+    const houseKey = (g.household_label ?? '') + '\0' + (g.phone_e164 ?? '');
     const isGroupStart = houseKey !== prevHouseKey;
     prevHouseKey = houseKey;
 
-    const tags = (r.invited_events ?? '').split(',').filter(Boolean)
-      .map(e => { const ev = e.trim(); const label = ev.charAt(0).toUpperCase() + ev.slice(1); return `<span class="tag tag-${ev}">${label}</span>`; }).join('');
+    const invitedTags = (g.invited_events ?? '').split(',').filter(Boolean)
+      .map(e => { const ev = e.trim(); return `<span class="tag tag-${ev}">${ev.charAt(0).toUpperCase() + ev.slice(1)}</span>`; }).join('');
 
-    const srcBadge = r.source_list
-      ? ` <span class="tag source-${r.source_list.toLowerCase()}">${esc(r.source_list)}</span>`
+    const srcBadge = g.source_list
+      ? ` <span class="tag source-${g.source_list.toLowerCase()}">${esc(g.source_list)}</span>`
       : '';
 
     const householdCell = isGroupStart
-      ? `<td class="household-cell">${esc(r.household_label)}${srcBadge}</td>`
+      ? `<td class="household-cell">${esc(g.household_label)}${srcBadge}</td>`
       : `<td class="household-cell continued">↳</td>`;
 
-    const eventTag = r.event
-      ? `<span class="tag tag-${r.event}">${r.event.charAt(0).toUpperCase() + r.event.slice(1)}</span>`
-      : '<span style="color:#aaa">—</span>';
+    // Per-event response rows (only for events they're invited to)
+    const invitedEvts = (g.invited_events ?? '').split(',').map(e => e.trim()).filter(Boolean);
+    const responseRows = invitedEvts.map(evt => {
+      const att = g.events[evt] ?? null;
+      const yesActive  = att === 'YES' ? 'active' : '';
+      const noActive   = att === 'NO'  ? 'active' : '';
+      const pendActive = !att           ? 'active' : '';
+      return `<div class="event-response-row">
+        <span class="event-label ${evt}">${evt.charAt(0).toUpperCase() + evt.slice(1)}</span>
+        <div class="toggle-group">
+          <button class="toggle-btn yes ${yesActive}"  data-gid="${g.guest_id}" data-evt="${evt}" data-val="YES">✓ Yes</button>
+          <button class="toggle-btn no  ${noActive}"   data-gid="${g.guest_id}" data-evt="${evt}" data-val="NO">✗ No</button>
+          <button class="toggle-btn pend ${pendActive}" data-gid="${g.guest_id}" data-evt="${evt}" data-val="PENDING">—</button>
+        </div>
+      </div>`;
+    }).join('');
 
-    const updated = r.updated_at
-      ? `<span class="updated">${new Date(r.updated_at).toLocaleDateString()}</span>`
+    const updated = g.latest_updated
+      ? `<span class="updated">${new Date(g.latest_updated).toLocaleDateString()}</span>`
       : '<span class="updated">—</span>';
-
-    const yesActive  = r.attending === 'YES'  ? 'active' : '';
-    const noActive   = r.attending === 'NO'   ? 'active' : '';
-    const pendActive = !r.attending            ? 'active' : '';
 
     return `<tr${isGroupStart ? ' class="group-start"' : ''}>
       ${householdCell}
-      <td>${esc(r.full_name)}</td>
-      <td>${tags}</td>
-      <td>${eventTag}</td>
-      <td>
-        <div class="toggle-group">
-          <button class="toggle-btn yes ${yesActive}"  data-gid="${r.guest_id}" data-evt="${esc(r.event)}" data-val="YES" title="Mark attending">✓ Yes</button>
-          <button class="toggle-btn no  ${noActive}"   data-gid="${r.guest_id}" data-evt="${esc(r.event)}" data-val="NO"  title="Mark declined">✗ No</button>
-          <button class="toggle-btn pend ${pendActive}" data-gid="${r.guest_id}" data-evt="${esc(r.event)}" data-val="PENDING" title="Reset to pending">— Pending</button>
-        </div>
-      </td>
+      <td>${esc(g.full_name)}</td>
+      <td>${invitedTags}</td>
+      <td>${responseRows}</td>
       <td>${updated}</td>
     </tr>`;
   }).join('');
@@ -435,11 +551,9 @@ document.getElementById('rsvp-tbody').addEventListener('click', async e => {
   const guestId = Number(btn.dataset.gid);
   const event   = btn.dataset.evt;
   const val     = btn.dataset.val;  // 'YES' | 'NO' | 'PENDING'
-
-  // Determine what value to send
   const attending = val === 'YES' ? true : val === 'NO' ? false : null;
 
-  // Optimistic UI: mark btn as saving
+  // Optimistic UI
   const group = btn.closest('.toggle-group');
   group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active', 'saving');
@@ -452,18 +566,22 @@ document.getElementById('rsvp-tbody').addEventListener('click', async e => {
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    // Update in-memory row
+    // Update in-memory allRows
     const row = allRows.find(r => r.guest_id === guestId && r.event === event);
     if (row) {
-      row.attending = val === 'YES' ? 'YES' : val === 'NO' ? 'NO' : null;
+      row.attending  = val === 'YES' ? 'YES' : val === 'NO' ? 'NO' : null;
       row.updated_at = new Date().toISOString();
+    }
+    // Update guestRows
+    const guest = guestRows.find(g => g.guest_id === guestId);
+    if (guest) {
+      guest.events[event]    = val === 'YES' ? 'YES' : val === 'NO' ? 'NO' : null;
+      guest.latest_updated   = new Date().toISOString();
     }
     btn.classList.remove('saving');
     renderStats();
-    // Re-render keeps the active state via allRows update above
     renderTable();
   } catch (err) {
-    // Revert: re-render from allRows (unchanged on failure)
     btn.classList.remove('saving');
     renderTable();
     alert('Failed to save change. Please try again.');
@@ -472,11 +590,17 @@ document.getElementById('rsvp-tbody').addEventListener('click', async e => {
 
 // ── CSV Export ───────────────────────────────────────────────────────
 document.getElementById('export-btn').addEventListener('click', () => {
-  const rows = filteredRows();
-  const headers = ['Household','Source','Guest','Invited Events','Event','Response','Updated'];
-  const csv = [headers, ...rows.map(r => [
-    r.household_label, r.source_list ?? '', r.full_name, r.invited_events, r.event ?? '', r.attending ?? 'Pending',
-    r.updated_at ? new Date(r.updated_at).toLocaleDateString() : ''
+  const rows = filteredGuestRows();
+  const headers = ['Household','Source','Guest','Invited Events','Mehndi','Shaadi','Walima','Last Updated'];
+  const csv = [headers, ...rows.map(g => [
+    g.household_label,
+    g.source_list ?? '',
+    g.full_name,
+    g.invited_events,
+    g.events['mehndi'] ?? 'Pending',
+    g.events['shaadi'] ?? 'Pending',
+    g.events['walima'] ?? 'Pending',
+    g.latest_updated ? new Date(g.latest_updated).toLocaleDateString() : '',
   ])].map(row => row.map(v => `"${String(v ?? '').replace(/"/g,'""')}"`).join(',')).join('\n');
 
   const a = document.createElement('a');
