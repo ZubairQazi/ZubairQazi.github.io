@@ -57,7 +57,9 @@ function renderSuccessEvents(eventsSet) {
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function getToken() {
-  return new URLSearchParams(window.location.search).get('t') ?? null;
+  return new URLSearchParams(window.location.search).get('t')
+    ?? sessionStorage.getItem('rsvp_token')
+    ?? null;
 }
 function isDemo() {
   return new URLSearchParams(window.location.search).get('demo') === '1';
@@ -242,69 +244,85 @@ async function initRsvp() {
     return;
   }
 
-  // ── Code-entry helper ──
-  function showCodeEntry(errorMsg = '') {
+  // ── Code-entry screen ──
+  async function showCodeEntry(errorMsg = '') {
     hide('rsvp-loading');
-    const errEl = document.getElementById('rsvp-code-error');
+    const errEl   = document.getElementById('rsvp-code-error');
+    const codeInput = document.getElementById('rsvp-code-input');
     if (errEl) errEl.textContent = errorMsg;
     show('rsvp-code-screen');
+
+    // Pre-fill from URL ?t= first, then sessionStorage fallback
+    const urlToken = new URLSearchParams(window.location.search).get('t');
+    const stored   = sessionStorage.getItem('rsvp_token');
+    if (codeInput && !codeInput.value) codeInput.value = urlToken ?? stored ?? '';
+
     const codeForm = document.getElementById('rsvp-code-form');
-    if (codeForm) {
-      codeForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const input = document.getElementById('rsvp-code-input');
-        const code = input?.value?.trim() ?? '';
-        if (!code) {
-          if (errEl) errEl.textContent = 'Please enter your RSVP code.';
-          input?.focus();
+    if (!codeForm) return;
+
+    codeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const code = codeInput?.value?.trim() ?? '';
+      if (!code) {
+        if (errEl) errEl.textContent = 'Please enter your RSVP code.';
+        codeInput?.focus();
+        return;
+      }
+      if (code.toLowerCase() === 'demo') {
+        window.location.href = `${window.location.pathname}?demo=1`;
+        return;
+      }
+
+      // Look up the code
+      if (errEl) errEl.textContent = '';
+      const btn = codeForm.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
+
+      let data;
+      try {
+        const res = await fetch(`${API_BASE}/api/invite?t=${encodeURIComponent(code)}`, {
+          method: 'GET', headers: { 'Content-Type': 'application/json' },
+        });
+        if (res.status === 404 || res.status === 400) {
+          if (errEl) errEl.textContent = 'Code not found. Please double-check and try again.';
+          if (btn) btn.disabled = false;
+          sessionStorage.removeItem('rsvp_token');
           return;
         }
-        if (code.toLowerCase() === 'demo') {
-          window.location.href = `${window.location.pathname}?demo=1`;
-          return;
-        }
-        window.location.href = `${window.location.pathname}?t=${encodeURIComponent(code)}`;
-      }, { once: true });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        data = await res.json();
+      } catch (err) {
+        console.error('Failed to load invite:', err);
+        if (errEl) errEl.textContent = 'Something went wrong. Please check your connection and try again.';
+        if (btn) btn.disabled = false;
+        return;
+      }
+
+      // Save valid token to sessionStorage for future navigation
+      sessionStorage.setItem('rsvp_token', code);
+      hide('rsvp-code-screen');
+      show('rsvp-loading');
+      renderForm(data);
+      wireSubmitHandler(code, data);
+    }, { once: true });
+  }
+
+  // ── Wire the RSVP submit handler (called after form is rendered) ──
+  function wireSubmitHandler(token, data) {
+    const form      = document.getElementById('rsvp-form');
+    const submitBtn = document.getElementById('rsvp-submit');
+    const statusEl  = document.getElementById('rsvp-status');
+
+    function setStatus(msg, type) {
+      if (!statusEl) return;
+      statusEl.textContent = msg;
+      statusEl.className = `rsvp-status visible ${type}`;
     }
-  }
-
-  // ── Real token flow ──
-  const token = getToken();
-  if (!token || !/^[A-Za-z0-9_\-]{20,64}$/.test(token)) {
-    showCodeEntry();
-    return;
-  }
-
-  let data;
-  try {
-    const res = await fetch(`${API_BASE}/api/invite?t=${encodeURIComponent(token)}`, {
-      method: 'GET', headers: { 'Content-Type': 'application/json' },
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    data = await res.json();
-  } catch (err) {
-    console.error('Failed to load invite:', err);
-    showCodeEntry('Code not found. Please double-check and try again.');
-    return;
-  }
-
-  renderForm(data);
-
-  const form      = document.getElementById('rsvp-form');
-  const submitBtn = document.getElementById('rsvp-submit');
-  const statusEl  = document.getElementById('rsvp-status');
-
-  function setStatus(msg, type) {
-    if (!statusEl) return;
-    statusEl.textContent = msg;
-    statusEl.className = `rsvp-status visible ${type}`;
-  }
-  function clearStatus() {
-    if (!statusEl) return;
-    statusEl.className = 'rsvp-status';
-    statusEl.textContent = '';
-  }
-
+    function clearStatus() {
+      if (!statusEl) return;
+      statusEl.className = 'rsvp-status';
+      statusEl.textContent = '';
+    }
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearStatus();
@@ -374,6 +392,10 @@ async function initRsvp() {
       if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit RSVP'; }
     }
   });
+  } // end wireSubmitHandler
+
+  // ── Entry point: always show code screen (pre-filled if token available) ──
+  showCodeEntry();
 }
 
 // ── Init ─────────────────────────────────────────────────────────────
