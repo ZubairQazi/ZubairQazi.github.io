@@ -207,10 +207,14 @@ function collectResponses() {
     responses.push({ guest_id: guestId, event: evt, attending });
   });
 
-  const email = document.getElementById('household-email')?.value?.trim() || null;
+  const emailRaw = document.getElementById('household-email')?.value?.trim() ?? '';
+  const email = emailRaw || null;
   const note  = document.getElementById('household-note')?.value?.trim()  || null;
 
-  return { responses, unanswered, email, note };
+  // Basic email format validation
+  const emailValid = email ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) : false;
+
+  return { responses, unanswered, email, emailValid, note };
 }
 
 // ── Main ─────────────────────────────────────────────────────────────
@@ -224,7 +228,7 @@ async function initRsvp() {
     if (form) {
       form.addEventListener('submit', (e) => {
         e.preventDefault();
-        const { unanswered } = collectResponses();
+        const { unanswered, email, emailValid } = collectResponses();
         if (unanswered.length > 0) {
           unanswered.forEach(row => {
             const card = row.closest('.guest-card');
@@ -232,6 +236,12 @@ async function initRsvp() {
           });
           if (statusEl) { statusEl.textContent = 'Please answer every event row.'; statusEl.className = 'rsvp-status visible error'; }
           unanswered[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+        if (!emailValid) {
+          const emailInput = document.getElementById('household-email');
+          if (emailInput) { emailInput.style.outline = '2px solid var(--color-error)'; emailInput.style.borderRadius = '6px'; emailInput.focus(); emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+          if (statusEl) { statusEl.textContent = email ? 'Please enter a valid email address.' : 'Please enter your email address.'; statusEl.className = 'rsvp-status visible error'; }
           return;
         }
         hide('rsvp-form-wrap');
@@ -327,7 +337,7 @@ async function initRsvp() {
     e.preventDefault();
     clearStatus();
 
-    const { responses, unanswered, email, note } = collectResponses();
+    const { responses, unanswered, email, emailValid, note } = collectResponses();
 
     if (unanswered.length > 0) {
       unanswered.forEach(row => {
@@ -339,7 +349,7 @@ async function initRsvp() {
       return;
     }
 
-    if (!email) {
+    if (!emailValid) {
       const emailInput = document.getElementById('household-email');
       if (emailInput) {
         emailInput.style.outline = '2px solid var(--color-error)';
@@ -347,7 +357,7 @@ async function initRsvp() {
         emailInput.focus();
         emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
-      setStatus('Please enter your email address.', 'error');
+      setStatus(email ? 'Please enter a valid email address.' : 'Please enter your email address.', 'error');
       return;
     }
 
