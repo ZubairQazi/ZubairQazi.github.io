@@ -91,6 +91,9 @@
       min-width: 130px;
       text-align: center;
     }
+    .stat-card { cursor: default; }
+    .stat-card.clickable { cursor: pointer; transition: box-shadow 0.15s, transform 0.15s; }
+    .stat-card.clickable:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.13); transform: translateY(-1px); }
     .stat-card .num { font-size: 2rem; font-weight: 700; color: #8b6f4e; }
     .stat-card .num.green { color: #27ae60; }
     .stat-card .num.amber { color: #e67e22; }
@@ -289,6 +292,7 @@ let sortCol = 'household_label';
 let sortDir = 1;
 let currentPin = '';
 let selectedEvents = new Set(); // for multi-select chip filter
+let chipFilterMode = 'exact';   // 'exact' = manual chip clicks, 'subset' = stat card clicks
 
 // ── PIN flow ─────────────────────────────────────────────────────────
 document.getElementById('pin-input').addEventListener('keydown', e => {
@@ -390,19 +394,21 @@ function renderStats() {
   }));
 
   const cards = [
-    { num: households,   lbl: 'Households', sub: `${respondedHHKeys.size} responded` },
-    { num: guests,       lbl: 'Guests',     sub: '' },
-    { num: pendingGuests, lbl: 'Pending',   sub: 'no response yet', amber: true },
+    { num: households,    lbl: 'Households', sub: `${respondedHHKeys.size} responded`, action: 'all' },
+    { num: guests,        lbl: 'Guests',     sub: '',                                   action: 'all' },
+    { num: pendingGuests, lbl: 'Pending',    sub: 'no response yet', amber: true,       action: 'pending' },
     ...evtStats.map(s => ({
       num: s.attending,
       lbl: s.evt.charAt(0).toUpperCase() + s.evt.slice(1) + ' Attending',
       sub: '',
       green: true,
+      action: 'evt',
+      filterEvt: s.evt,
     })),
   ];
 
   document.getElementById('stats').innerHTML = cards.map(s =>
-    `<div class="stat-card">
+    `<div class="stat-card clickable" data-filter-action="${s.action}"${s.filterEvt ? ` data-filter-evt="${s.filterEvt}"` : ''}>
       <div class="num${s.green ? ' green' : s.amber ? ' amber' : ''}">${s.num}</div>
       <div class="lbl">${s.lbl}</div>
       ${s.sub ? `<div class="sub">${s.sub}</div>` : ''}
@@ -410,10 +416,49 @@ function renderStats() {
   ).join('');
 }
 
+// ── Stat card click → set filters ───────────────────────────────────
+document.getElementById('stats').addEventListener('click', e => {
+  const card = e.target.closest('.stat-card.clickable');
+  if (!card) return;
+  const action = card.dataset.filterAction;
+  const evt    = card.dataset.filterEvt;
+
+  // Always reset chip filter and search
+  selectedEvents.clear();
+  chipFilterMode = 'exact';
+  document.querySelectorAll('.event-chip-btn').forEach(btn =>
+    btn.classList.remove('active-mehndi', 'active-shaadi', 'active-walima')
+  );
+  document.getElementById('search').value = '';
+  document.getElementById('filter-source').value = '';
+
+  if (action === 'all') {
+    // Households / Guests — clear everything
+    document.getElementById('filter-attending').value = '';
+
+  } else if (action === 'pending') {
+    // Pending — show guests with no response
+    document.getElementById('filter-attending').value = 'pending';
+
+  } else if (action === 'evt' && evt) {
+    // Event attending — subset mode: invited to this event AND said yes
+    selectedEvents.add(evt);
+    chipFilterMode = 'subset';
+    document.querySelectorAll('.event-chip-btn').forEach(btn => {
+      if (btn.dataset.event === evt) btn.classList.add(`active-${evt}`);
+    });
+    document.getElementById('filter-attending').value = 'yes';
+  }
+
+  renderTable();
+  document.getElementById('table-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
 // ── Chip filter ──────────────────────────────────────────────────────
 document.querySelectorAll('.event-chip-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const evt = btn.dataset.event;
+    chipFilterMode = 'exact'; // manual chip click always uses exact matching
     if (selectedEvents.has(evt)) {
       selectedEvents.delete(evt);
       btn.classList.remove(`active-${evt}`);
@@ -449,18 +494,35 @@ function filteredGuestRows() {
   return guestRows.filter(g => {
     if (q && !g.household_label?.toLowerCase().includes(q) && !g.full_name?.toLowerCase().includes(q)) return false;
 
-    // Multi-select "Invited To" — exact set match
+    // Multi-select "Invited To" filter
     if (selectedEvents.size > 0) {
       const inv = new Set((g.invited_events ?? '').split(',').map(e => e.trim()).filter(Boolean));
-      if (inv.size !== selectedEvents.size) return false;
-      if (![...selectedEvents].every(e => inv.has(e))) return false;
+      if (chipFilterMode === 'exact') {
+        // Manual chip: guest must be invited to exactly these events
+        if (inv.size !== selectedEvents.size) return false;
+        if (![...selectedEvents].every(e => inv.has(e))) return false;
+      } else {
+        // Stat card: guest just needs to be invited to all selected events (subset ok)
+        if (![...selectedEvents].every(e => inv.has(e))) return false;
+      }
     }
 
-    // Response filter (operates across all invited events for this guest)
-    const evtVals = Object.values(g.events);
-    if (attF === 'yes'     && !evtVals.includes('YES'))  return false;
-    if (attF === 'no'      && !evtVals.includes('NO'))   return false;
-    if (attF === 'pending' && evtVals.some(v => v))      return false;
+    // Response filter
+    // In subset mode (stat card click): check response for the specific selected event(s)
+    // In exact/no chip mode: check across all events
+    if (attF) {
+      if (chipFilterMode === 'subset' && selectedEvents.size > 0) {
+        const eventsToCheck = [...selectedEvents];
+        if (attF === 'yes'     && !eventsToCheck.every(e => g.events[e] === 'YES')) return false;
+        if (attF === 'no'      && !eventsToCheck.every(e => g.events[e] === 'NO'))  return false;
+        if (attF === 'pending' && !eventsToCheck.every(e => !g.events[e]))          return false;
+      } else {
+        const evtVals = Object.values(g.events);
+        if (attF === 'yes'     && !evtVals.includes('YES')) return false;
+        if (attF === 'no'      && !evtVals.includes('NO'))  return false;
+        if (attF === 'pending' && evtVals.some(v => v))     return false;
+      }
+    }
 
     if (srcF && g.source_list !== srcF) return false;
     return true;
