@@ -15,9 +15,9 @@
 const API_BASE = 'https://wedding-rsvp-worker.zubair-qazi-5b.workers.dev';
 
 const EVENT_META = {
-  mehndi: { label: 'Mehndi',  day: 'Thursday, June 11', time: '6:00 PM', address: '340 N Escondido Blvd, Escondido, CA 92025', image: '/maryam/assets/invite-mehndi.png' },
-  shaadi: { label: 'Shaadi',  day: 'Friday, June 12',   time: '5:00 PM', address: '4240 La Jolla Village Dr, La Jolla, CA 92037', image: '/maryam/assets/invite-shaadi.png' },
-  walima: { label: 'Walima',  day: 'Saturday, June 13', time: '6:00 PM', address: '15575 Jimmy Durante Blvd, Del Mar, CA 92014', image: '/maryam/assets/invite-walima.png' },
+  mehndi: { label: 'Mehndi',  day: 'Thursday, June 11', time: '6:30 PM', address: '340 N Escondido Blvd, Escondido, CA 92025', image: '/maryam/assets/invite-mehndi.png' },
+  shaadi: { label: 'Shaadi',  day: 'Friday, June 12',   time: '6:00 PM', address: '4240 La Jolla Village Dr, La Jolla, CA 92037', image: '/maryam/assets/invite-shaadi.png' },
+  walima: { label: 'Walima',  day: 'Saturday, June 13', time: '5:30 PM', address: '15575 Jimmy Durante Blvd, Del Mar, CA 92014', image: '/maryam/assets/invite-walima.png' },
 };
 const EVENT_ORDER = ['mehndi', 'shaadi', 'walima'];
 
