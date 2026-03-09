@@ -919,6 +919,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Event chip / label */
+.event-chip-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.event-chip-date {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-text-light);
+  letter-spacing: 0.02em;
+}
 .event-chip {
   font-family: var(--font-serif);
   font-style: italic;
