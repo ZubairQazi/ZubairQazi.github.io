@@ -374,33 +374,37 @@ function buildGuestRows() {
 
 // ── Stats ────────────────────────────────────────────────────────────
 function renderStats() {
-  const allGuestIds = [...new Set(allRows.map(r => r.guest_id))];
-  const households  = new Set(allRows.map(r => r.household_label + '\0' + (r.phone_e164 ?? ''))).size;
+  const srcF = document.getElementById('filter-source')?.value ?? '';
+  const rows = srcF ? allRows.filter(r => r.source_list === srcF) : allRows;
+
+  const allGuestIds = [...new Set(rows.map(r => r.guest_id))];
+  const households  = new Set(rows.map(r => r.household_label + '\0' + (r.phone_e164 ?? ''))).size;
   const guests      = allGuestIds.length;
 
   // Responded households = at least one non-null attending in that household
   const respondedHHKeys = new Set(
-    allRows.filter(r => r.attending != null)
+    rows.filter(r => r.attending != null)
            .map(r => r.household_label + '\0' + (r.phone_e164 ?? ''))
   );
 
   // Pending guests = guest has NO non-null responses at all
-  const respondedGuestIds = new Set(allRows.filter(r => r.attending != null).map(r => r.guest_id));
+  const respondedGuestIds = new Set(rows.filter(r => r.attending != null).map(r => r.guest_id));
   const pendingGuests = allGuestIds.filter(id => !respondedGuestIds.has(id)).length;
 
   const evtStats = EVENT_ORDER.map(evt => ({
     evt,
-    attending: allRows.filter(r => r.event === evt && r.attending === 'YES').length,
+    attending: rows.filter(r => r.event === evt && r.attending === 'YES').length,
   }));
 
+  const srcLabel = srcF || '';
   const cards = [
-    { num: households,    lbl: 'Households', sub: `${respondedHHKeys.size} responded`, action: 'all' },
-    { num: guests,        lbl: 'Guests',     sub: '',                                   action: 'all' },
-    { num: pendingGuests, lbl: 'Pending',    sub: 'no response yet', amber: true,       action: 'pending' },
+    { num: households,    lbl: 'Households', sub: `${respondedHHKeys.size} responded${srcLabel ? ' · ' + srcLabel : ''}`, action: 'all' },
+    { num: guests,        lbl: 'Guests',     sub: srcLabel,                                                                action: 'all' },
+    { num: pendingGuests, lbl: 'Pending',    sub: `no response yet${srcLabel ? ' · ' + srcLabel : ''}`, amber: true,      action: 'pending' },
     ...evtStats.map(s => ({
       num: s.attending,
       lbl: s.evt.charAt(0).toUpperCase() + s.evt.slice(1) + ' Attending',
-      sub: '',
+      sub: srcLabel,
       green: true,
       action: 'evt',
       filterEvt: s.evt,
@@ -430,7 +434,7 @@ document.getElementById('stats').addEventListener('click', e => {
     btn.classList.remove('active-mehndi', 'active-shaadi', 'active-walima')
   );
   document.getElementById('search').value = '';
-  document.getElementById('filter-source').value = '';
+  // intentionally NOT resetting filter-source — preserve the selected source list
 
   if (action === 'all') {
     // Households / Guests — clear everything
@@ -484,7 +488,7 @@ document.querySelectorAll('thead th[data-col]').forEach(th => {
 // ── Filtering ─────────────────────────────────────────────────────────
 document.getElementById('search').addEventListener('input', renderTable);
 document.getElementById('filter-attending').addEventListener('change', renderTable);
-document.getElementById('filter-source').addEventListener('change', renderTable);
+document.getElementById('filter-source').addEventListener('change', () => { renderStats(); renderTable(); });
 
 function filteredGuestRows() {
   const q    = document.getElementById('search').value.toLowerCase();
