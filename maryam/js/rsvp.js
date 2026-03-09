@@ -91,7 +91,10 @@ function buildGuestCard(guest, rsvpMap) {
     return `
       <div class="event-rsvp-row" data-guest-id="${guest.id}" data-event="${evt}">
         <div class="event-row-top">
-          <span class="event-chip event-chip--${evt}">${escapeHtml(meta.label)}</span>
+          <div class="event-chip-col">
+            <span class="event-chip event-chip--${evt}">${escapeHtml(meta.label)}</span>
+            <span class="event-chip-date">${meta.day} &middot; ${meta.time}</span>
+          </div>
           <div class="attend-btns" role="group" aria-label="${escapeHtml(guest.full_name)} — ${escapeHtml(meta.label)}">
             <button type="button" class="attend-btn attend-btn--yes ${yesActive}"
               data-val="yes" aria-pressed="${attending === true}">
