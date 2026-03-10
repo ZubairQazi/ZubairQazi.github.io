@@ -554,16 +554,27 @@ function filteredGuestRows() {
 
     if (sortCol === 'updated_at') {
       // Primary: household ordered by its most-recent update
+      // Households with no responses always sink to the bottom regardless of direction
       const hhKeyA = (a.household_label ?? '') + '\0' + (a.phone_e164 ?? '');
       const hhKeyB = (b.household_label ?? '') + '\0' + (b.phone_e164 ?? '');
       if (hhKeyA !== hhKeyB) {
         const maxA = hhMaxUpdated.get(hhKeyA) ?? '';
         const maxB = hhMaxUpdated.get(hhKeyB) ?? '';
+        const aHasDt = maxA !== '';
+        const bHasDt = maxB !== '';
+        if (!aHasDt && !bHasDt) return hkA < hkB ? -1 : hkA > hkB ? 1 : 0; // both pending: alpha
+        if (!aHasDt) return 1;  // A pending → always last
+        if (!bHasDt) return -1; // B pending → always last
         return maxA < maxB ? -sortDir : maxA > maxB ? sortDir : 0;
       }
       // Secondary: individual guest updated_at within household
       const av = a.latest_updated ?? '';
       const bv = b.latest_updated ?? '';
+      const aHasDt = av !== '';
+      const bHasDt = bv !== '';
+      if (!aHasDt && !bHasDt) return 0;
+      if (!aHasDt) return 1;
+      if (!bHasDt) return -1;
       return av < bv ? -sortDir : av > bv ? sortDir : 0;
     }
 
