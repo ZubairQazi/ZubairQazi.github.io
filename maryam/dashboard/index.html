@@ -495,7 +495,7 @@ function filteredGuestRows() {
   const attF = document.getElementById('filter-attending').value;
   const srcF = document.getElementById('filter-source').value;
 
-  return guestRows.filter(g => {
+  const filtered = guestRows.filter(g => {
     if (q && !g.household_label?.toLowerCase().includes(q) && !g.full_name?.toLowerCase().includes(q)) return false;
 
     // Multi-select "Invited To" filter
@@ -530,20 +530,58 @@ function filteredGuestRows() {
 
     if (srcF && g.source_list !== srcF) return false;
     return true;
-  }).sort((a, b) => {
+  });
+
+  // Precompute per-household max latest_updated (needed for updated_at primary sort)
+  const hhMaxUpdated = new Map();
+  for (const g of filtered) {
+    const hk = (g.household_label ?? '') + '\0' + (g.phone_e164 ?? '');
+    const cur = hhMaxUpdated.get(hk) ?? '';
+    const val = g.latest_updated ?? '';
+    if (val > cur) hhMaxUpdated.set(hk, val);
+  }
+
+  return filtered.sort((a, b) => {
     const hkA = (a.household_label ?? '').toLowerCase() + '\0' + (a.phone_e164 ?? '');
     const hkB = (b.household_label ?? '').toLowerCase() + '\0' + (b.phone_e164 ?? '');
-    if (hkA < hkB) return -1;
-    if (hkA > hkB) return  1;
-    // Secondary sort within household
-    let av, bv;
-    if (sortCol === 'updated_at') {
-      av = a.latest_updated ?? '';
-      bv = b.latest_updated ?? '';
-    } else {
-      av = (a[sortCol] ?? '').toString().toLowerCase();
-      bv = (b[sortCol] ?? '').toString().toLowerCase();
+
+    if (sortCol === 'household_label') {
+      // Primary: household name with direction
+      if (hkA !== hkB) return hkA < hkB ? -sortDir : sortDir;
+      // Secondary: guest name within household (always asc)
+      return (a.full_name ?? '').toLowerCase() < (b.full_name ?? '').toLowerCase() ? -1 : 1;
     }
+
+    if (sortCol === 'updated_at') {
+      // Primary: household ordered by its most-recent update
+      // Households with no responses always sink to the bottom regardless of direction
+      const hhKeyA = (a.household_label ?? '') + '\0' + (a.phone_e164 ?? '');
+      const hhKeyB = (b.household_label ?? '') + '\0' + (b.phone_e164 ?? '');
+      if (hhKeyA !== hhKeyB) {
+        const maxA = hhMaxUpdated.get(hhKeyA) ?? '';
+        const maxB = hhMaxUpdated.get(hhKeyB) ?? '';
+        const aHasDt = maxA !== '';
+        const bHasDt = maxB !== '';
+        if (!aHasDt && !bHasDt) return hkA < hkB ? -1 : hkA > hkB ? 1 : 0; // both pending: alpha
+        if (!aHasDt) return 1;  // A pending → always last
+        if (!bHasDt) return -1; // B pending → always last
+        return maxA < maxB ? -sortDir : maxA > maxB ? sortDir : 0;
+      }
+      // Secondary: individual guest updated_at within household
+      const av = a.latest_updated ?? '';
+      const bv = b.latest_updated ?? '';
+      const aHasDt = av !== '';
+      const bHasDt = bv !== '';
+      if (!aHasDt && !bHasDt) return 0;
+      if (!aHasDt) return 1;
+      if (!bHasDt) return -1;
+      return av < bv ? -sortDir : av > bv ? sortDir : 0;
+    }
+
+    // Other cols: group by household (always asc), secondary by sortCol
+    if (hkA !== hkB) return hkA < hkB ? -1 : 1;
+    const av = (a[sortCol] ?? '').toString().toLowerCase();
+    const bv = (b[sortCol] ?? '').toString().toLowerCase();
     return av < bv ? -sortDir : av > bv ? sortDir : 0;
   });
 }
